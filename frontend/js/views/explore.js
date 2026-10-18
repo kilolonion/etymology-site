@@ -52,7 +52,7 @@ export async function viewExplore(query) {
     clearTimeout(timer);
     timer = setTimeout(() => {
       const text = input.value.trim();
-      history.replaceState(null, "", text ? `#/explore?q=${encodeURIComponent(text)}` : "#/explore");
+      history.replaceState(history.state, "", text ? `#/explore?q=${encodeURIComponent(text)}` : "#/explore");
       show(text);
     }, 180);
   });
@@ -109,7 +109,7 @@ export async function viewTheme(name, query) {
     const next = el.dataset.sub;
     for (const b of document.querySelectorAll(".subs button")) b.setAttribute("aria-pressed", String(b === el));
     document.getElementById("theme-body").innerHTML = themeBody(items, next);
-    history.replaceState(null, "", `#/explore/t/${encodeURIComponent(name)}${next ? `?sub=${encodeURIComponent(next)}` : ""}`);
+    history.replaceState(history.state, "", `#/explore/t/${encodeURIComponent(name)}${next ? `?sub=${encodeURIComponent(next)}` : ""}`);
   };
 }
 

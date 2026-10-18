@@ -34,6 +34,96 @@ const ROUTES = [
 
 let navCount = 0;
 
+// ---------- 多级跳转：返回时回到原来的位置，返回按钮写明回哪里 ----------
+//
+// 每一层页面的状态记在它自己的 history.state 里（浏览器前进后退时自动带回来）：
+//   y / open：滚动位置、哪些折叠块是展开的；
+//   from：从哪一页点进来的（返回按钮写它的名字）；
+//   root / depth：在文章之间连续跳了几层、最早是从哪个列表页出发的（可以一步回去）。
+
+/** 当前屏幕上画的是哪一页（渲染完才更新，加载中途的滚动不算它的） */
+let shown = null; // { hash, path, state }
+/** 文章页的标题（单词），返回按钮要用 */
+const titles = new Map();
+
+const STATIC_LABELS = {
+  "": "今日", explore: "探索", "explore/az": "按字母", "explore/routes": "语源之路", "explore/timeline": "时间长廊",
+  me: "我的", "me/starred": "我的收藏", "me/history": "阅读记录", "me/reminder": "每日提醒", "me/account": "账号与安全", "me/admin": "邀请与成员",
+};
+
+function labelOf(hash) {
+  const h = hash.replace(/^#\/?/, "");
+  const [path, qs] = h.split("?");
+  const q = new URLSearchParams(qs ?? "");
+  if (path === "explore" && q.get("q")) return `搜索“${q.get("q")}”`;
+  if (path.startsWith("explore/t/")) return dec(path.slice(10));
+  if (path.startsWith("w/")) return titles.get(dec(path.slice(2))) ?? dec(path.slice(2));
+  return STATIC_LABELS[path] ?? "上一页";
+}
+
+const openIndexes = () =>
+  [...document.querySelectorAll("#app details")].flatMap((d, i) => (d.open ? [i] : []));
+
+function restoreOpen(list) {
+  if (!list) return;
+  const all = [...document.querySelectorAll("#app details")];
+  for (const d of all) d.open = false;
+  for (const i of list) if (all[i]) all[i].open = true;
+}
+
+/** 把这一页的滚动位置、展开状态记进它的 history 条目 */
+function saveState() {
+  if (!shown || parseHash().path !== shown.path) return;
+  shown.hash = location.hash; // 搜索页改关键词时地址是 replaceState 换的
+  shown.state = { ...shown.state, y: Math.round(scrollY), open: openIndexes() };
+  try {
+    history.replaceState(shown.state, "");
+  } catch {}
+}
+let saveTimer;
+addEventListener("scroll", () => {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 150);
+}, { passive: true });
+document.addEventListener("toggle", () => setTimeout(saveState), true);
+// 点链接跳走之前先记一下（滚动的记录可能还没来得及写）
+document.addEventListener("click", saveState, true);
+
+/** 新打开的一页：记下从哪来；在文章之间连续跳时，记下出发的那个列表页和跳了几层 */
+function arrive(path) {
+  if (history.state?.v) return history.state; // 前进 / 后退回来的，原样用
+  const st = { v: 1 };
+  if (shown && shown.path !== path) {
+    st.from = { hash: shown.hash, label: labelOf(shown.hash) };
+    if (path.startsWith("w/")) {
+      const prevEntry = shown.path.startsWith("w/");
+      st.root = prevEntry ? shown.state?.root ?? st.from : st.from;
+      st.depth = prevEntry ? (shown.state?.depth ?? 1) + 1 : 1;
+    }
+  }
+  try {
+    history.replaceState(st, "");
+  } catch {}
+  return st;
+}
+
+/** 返回按钮写上回哪里；在文章之间跳了两层以上，再给一个“回到出发的列表”的按钮 */
+function decorateBack(st, path) {
+  const back = document.querySelector("#app .back");
+  if (!back) return;
+  if (st.from && navCount > 1) {
+    const label = st.from.label.length > 12 ? st.from.label.slice(0, 11) + "…" : st.from.label;
+    back.lastChild.textContent = label;
+    back.title = `返回${st.from.label}`;
+  }
+  if (path.startsWith("w/") && st.depth >= 2 && st.root) {
+    back.insertAdjacentHTML(
+      "afterend",
+      `<button class="back root" data-action="back-root" data-depth="${st.depth}">回到${esc(st.root.label.length > 10 ? st.root.label.slice(0, 9) + "…" : st.root.label)}</button>`,
+    );
+  }
+}
+
 /** 当前这一页：数据在后台换新且确实变了，才重新画一遍 */
 let current = null;
 let rerenderTimer;
@@ -107,11 +197,17 @@ async function route() {
     if (!signal.aborted) skeleton(skeletonFor(path));
   }, 120);
 
+  const st = arrive(path);
   try {
     await hit.view(hit.m, query);
     if (signal.aborted) return;
     current.used = new Set(nav.used);
-    window.scrollTo(0, 0);
+    if (path.startsWith("w/")) titles.set(dec(path.slice(2)), document.title.split(" · ")[0]);
+    decorateBack(st, path);
+    // 后退回来的：展开过的块重新展开，滚回原来的位置；新打开的从顶上开始
+    restoreOpen(st.open);
+    window.scrollTo(0, st.y ?? 0);
+    shown = { hash: location.hash, path, state: st };
     warmCache();
   } catch (err) {
     if (signal.aborted || err?.name === "AbortError" || err.status === 401) return;
@@ -134,10 +230,14 @@ hooks.onRevalidate = (path) => {
   clearTimeout(rerenderTimer);
   rerenderTimer = setTimeout(async () => {
     const page = current;
-    if (!page?.live || !page.used.has(path) || isTyping()) return;
+    // 正在编辑首页桌面时别重画，不然拖到一半卡片就没了
+    if (!page?.live || !page.used.has(path) || isTyping() || document.body.classList.contains("desk-editing")) return;
     const y = scrollY;
+    const open = openIndexes();
     try {
       await page.run();
+      if (shown) decorateBack(shown.state, page.path);
+      restoreOpen(open);
       window.scrollTo(0, y);
     } catch {}
   }, 90);
@@ -159,6 +259,9 @@ actions.star = async (el) => {
   invalidateSummaries();
   toast(starred ? "已收藏" : "已取消收藏");
 };
+
+/** 在文章之间跳了好几层：一步回到出发的列表页（走浏览器历史，那一页的位置和展开状态都还在） */
+actions["back-root"] = (el) => history.go(-Number(el.dataset.depth));
 
 actions.back = () => {
   if (navCount > 1) history.back();
@@ -220,5 +323,7 @@ addEventListener("online", () => {
 });
 addEventListener("offline", () => setOffline(true));
 
+// 滚动位置由我们自己按页面恢复（内容是异步画出来的，浏览器自己恢复会落空）
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 registerSW();
 boot();

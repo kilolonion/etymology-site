@@ -108,17 +108,6 @@ export function reasonText(r) {
   }
 }
 
-/** 明日预告：一封盖了火漆的信；点开就是提前拆信（明天会换一个新词） */
-export const letter = (tomorrow) =>
-  tomorrow
-    ? `<a class="letter" href="#/w/${esc(tomorrow.id)}">
-        <span class="wax" aria-hidden="true">源</span>
-        <p class="label">明日预告</p>
-        <p class="q">${rich(tomorrow.teaser)}</p>
-        <p class="hint">Tomorrow, the answer. <span>等不及？点开提前读 ${icon("arrow")}</span></p>
-      </a>`
-    : "";
-
 /** 读完之后顺势询问要不要每日提醒（已开启 / 不支持 / 关掉过就不显示） */
 export async function reminderPrompt() {
   if (local.get("reminder-dismissed")) return "";
