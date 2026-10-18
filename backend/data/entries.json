@@ -319,6 +319,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "influenza",
+        "type": "同根",
+        "why": "都源自拉丁语 *fluere*（流）"
+      }
+    ],
     "themes": [
       "文学与书刊",
       "商业与经济"
@@ -882,6 +889,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "okay",
+        "type": "衍生",
+        "why": "A-OK 由 OK 加 A 而来"
+      }
+    ],
     "themes": [
       "新词与构词",
       "历史事件"
@@ -960,6 +974,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "psychology",
+        "type": "同根",
+        "why": "都含希腊语 *logos*（话语）"
+      }
+    ],
     "themes": [
       "政治与法律",
       "文学与书刊"
@@ -1355,6 +1376,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "august",
+        "type": "同根",
+        "why": "都源自拉丁语 *augēre*（增加）"
+      }
+    ],
     "themes": [
       "商业与经济"
     ],
@@ -3054,6 +3082,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "capital",
+        "type": "同根",
+        "why": "都源自拉丁语 *caput*（头）"
+      }
+    ],
     "themes": [
       "农牧与狩猎",
       "风俗与生活"
@@ -3140,6 +3175,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "july",
+        "type": "同典故",
+        "why": "都得名于凯撒（Julius Caesar）"
+      }
+    ],
     "themes": [
       "人名",
       "风俗与生活"
@@ -3493,6 +3535,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "carnival",
+        "type": "同根",
+        "why": "都源自拉丁语 *carō, carnis*（肉）"
+      }
+    ],
     "themes": [
       "风俗与生活",
       "动物与自然"
@@ -4413,6 +4462,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "focus",
+        "type": "同根",
+        "why": "都源自拉丁语 *focus*，法语 *feu*（火）"
+      }
+    ],
     "themes": [
       "历史事件",
       "风俗与生活"
@@ -4702,6 +4758,13 @@
     ],
     "seeAlso": [
       "amazon"
+    ],
+    "links": [
+      {
+        "id": "decimate",
+        "type": "同根",
+        "why": "都源自拉丁语 *decem*（十）"
+      }
     ],
     "themes": [
       "风俗与生活",
@@ -5168,6 +5231,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "dog-days",
+        "type": "同根",
+        "why": "都含拉丁语 *diēs*（日子）"
+      }
+    ],
     "themes": [
       "风俗与生活",
       "历史事件"
@@ -5531,6 +5601,23 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "dutch-courage",
+        "type": "衍生",
+        "why": "Dutch courage 借贬义的 Dutch 构成"
+      },
+      {
+        "id": "dutch-treat",
+        "type": "衍生",
+        "why": "Dutch treat 借贬义的 Dutch 构成"
+      },
+      {
+        "id": "dutch-uncle",
+        "type": "衍生",
+        "why": "Dutch uncle 借贬义的 Dutch 构成"
+      }
+    ],
     "themes": [
       "历史事件",
       "地名"
@@ -5631,6 +5718,13 @@
     ],
     "seeAlso": [
       "dutch-courage"
+    ],
+    "links": [
+      {
+        "id": "dutch-uncle",
+        "type": "同典故",
+        "why": "都出自 17、18 世纪英荷交恶"
+      }
     ],
     "themes": [
       "风俗与生活",
@@ -6150,6 +6244,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "eleventh-hour",
+        "type": "衍生",
+        "why": "eleventh 是 eleven 的序数词"
+      }
+    ],
     "themes": [
       "风俗与生活",
       "新词与构词"
@@ -6420,6 +6521,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "scapegoat",
+        "type": "衍生",
+        "why": "scape 是 escape 的缩略"
+      }
+    ],
     "themes": [
       "航海与军事",
       "风俗与生活"
@@ -6693,6 +6801,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "guy",
+        "type": "衍生",
+        "why": "fall guy 建立在 guy（家伙）上"
+      }
+    ],
     "themes": [
       "体育与娱乐",
       "风俗与生活"
@@ -7344,6 +7459,18 @@
     "seeAlso": [
       "flour"
     ],
+    "links": [
+      {
+        "id": "sunflower",
+        "type": "衍生",
+        "why": "sunflower 由 sun 与 flower 复合而成"
+      },
+      {
+        "id": "wallflower",
+        "type": "衍生",
+        "why": "wall 加 flower 复合而成"
+      }
+    ],
     "themes": [
       "动物与自然"
     ],
@@ -7488,6 +7615,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "tomfoolery",
+        "type": "衍生",
+        "why": "由 Tom Fool（傻汤姆）派生"
+      }
+    ],
     "themes": [
       "风俗与生活"
     ],
@@ -7604,6 +7738,18 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "nightingale",
+        "type": "同根",
+        "why": "都含古英语 *niht*（夜）"
+      },
+      {
+        "id": "nightmare",
+        "type": "同根",
+        "why": "都含古英语 *niht*（夜）"
+      }
+    ],
     "themes": [
       "风俗与生活"
     ],
@@ -8470,6 +8616,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "goldbrick",
+        "type": "衍生",
+        "why": "goldbrick 是“金砖”，建立在 gold 上"
+      }
+    ],
     "themes": [
       "商业与经济",
       "体育与娱乐"
@@ -8645,6 +8798,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "gossamer",
+        "type": "同根",
+        "why": "都含古英语 *gōs*（鹅）"
+      }
+    ],
     "themes": [
       "动物与自然",
       "风俗与生活"
@@ -9108,6 +9268,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "seamy-side",
+        "type": "同典故",
+        "why": "都出自莎士比亚《奥赛罗》伊阿古挑拨一事"
+      }
+    ],
     "themes": [
       "文学与书刊",
       "风俗与生活"
@@ -11539,6 +11706,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "last-hurrah",
+        "type": "衍生",
+        "why": "last hurrah 里的 hurrah 即欢呼声"
+      }
+    ],
     "themes": [
       "历史事件"
     ],
@@ -13019,6 +13193,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "kangaroo-court",
+        "type": "衍生",
+        "why": "kangaroo court 字面是“袋鼠法庭”"
+      }
+    ],
     "themes": [
       "动物与自然",
       "地名"
@@ -14201,6 +14382,18 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "mentor",
+        "type": "同典故",
+        "why": "都出自荷马史诗《奥德赛》"
+      },
+      {
+        "id": "siren",
+        "type": "同典故",
+        "why": "都出自奥德修斯归航途中的遭遇"
+      }
+    ],
     "themes": [
       "希腊罗马神话",
       "文学与书刊"
@@ -14345,6 +14538,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "monday",
+        "type": "同根",
+        "why": "都源自拉丁语 *lūna*（月亮）"
+      }
+    ],
     "themes": [
       "希腊罗马神话",
       "风俗与生活"
@@ -14663,6 +14863,13 @@
     "seeAlso": [
       "martial"
     ],
+    "links": [
+      {
+        "id": "tuesday",
+        "type": "同典故",
+        "why": "都得名于罗马战神 Mars"
+      }
+    ],
     "themes": [
       "希腊罗马神话",
       "风俗与生活"
@@ -14713,6 +14920,13 @@
     ],
     "seeAlso": [
       "march"
+    ],
+    "links": [
+      {
+        "id": "tuesday",
+        "type": "同典故",
+        "why": "都得名于罗马战神 Mars"
+      }
     ],
     "themes": [
       "希腊罗马神话",
@@ -15129,6 +15343,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "tug-of-love",
+        "type": "同典故",
+        "why": "都源自剧作家赞格威尔的剧名"
+      }
+    ],
     "themes": [
       "文学与书刊",
       "风俗与生活"
@@ -15173,6 +15394,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "siren",
+        "type": "同典故",
+        "why": "都出自荷马史诗《奥德赛》"
+      }
+    ],
     "themes": [
       "希腊罗马神话",
       "文学与书刊"
@@ -15221,6 +15449,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "wednesday",
+        "type": "同典故",
+        "why": "都得名于罗马神使 Mercury"
+      }
+    ],
     "themes": [
       "希腊罗马神话",
       "动物与自然"
@@ -16339,6 +16574,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "nightmare",
+        "type": "同根",
+        "why": "都含古英语 *niht*（夜）"
+      }
+    ],
     "themes": [
       "动物与自然",
       "希腊罗马神话"
@@ -16547,6 +16789,18 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "november",
+        "type": "同根",
+        "why": "都源自拉丁语 *novem*（九）"
+      },
+      {
+        "id": "siesta",
+        "type": "同典故",
+        "why": "都出自古罗马按时辰计时：第九时、第六时"
+      }
+    ],
     "themes": [
       "风俗与生活",
       "新词与构词"
@@ -17449,6 +17703,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "pandoras-box",
+        "type": "同根",
+        "why": "都含希腊语 *pan*（全部）"
+      }
+    ],
     "themes": [
       "希腊罗马神话"
     ],
@@ -18240,6 +18501,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "petrol",
+        "type": "同根",
+        "why": "都源自希腊语 *pétros*（岩石）"
+      }
+    ],
     "themes": [
       "动物与自然",
       "航海与军事"
@@ -22616,6 +22884,13 @@
     "seeAlso": [
       "monday"
     ],
+    "links": [
+      {
+        "id": "sunflower",
+        "type": "同根",
+        "why": "都借译自含拉丁语 *sōlis*（太阳的）的短语"
+      }
+    ],
     "themes": [
       "风俗与生活",
       "圣经与宗教"
@@ -23861,6 +24136,13 @@
       }
     ],
     "seeAlso": [],
+    "links": [
+      {
+        "id": "uranium",
+        "type": "同典故",
+        "why": "都出自乌拉诺斯与提坦诸神的神话"
+      }
+    ],
     "themes": [
       "希腊罗马神话",
       "新词与构词"

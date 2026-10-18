@@ -3,7 +3,7 @@
 // 退出码: 0 = 无错误（可能有警告），1 = 有错误
 
 import { readFileSync } from "node:fs";
-import { LANGS, SUBTHEMES, THEMES } from "../src/types.ts";
+import { LANGS, LINK_TYPES, SUBTHEMES, THEMES } from "../src/types.ts";
 
 const ID_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const FULL_FIELDS = ["pos", "meaning", "teaser", "etymology", "examples", "themes"];
@@ -29,6 +29,7 @@ if (!Array.isArray(data)) {
 const entries = data as Record<string, any>[];
 const idSet = new Set(entries.map((e) => e?.id));
 const seen = new Set<string>();
+const linkPairs = new Set<string>();
 
 entries.forEach((e, i) => {
   const where = `#${i} (${e?.id ?? e?.headword ?? "?"})`;
@@ -68,6 +69,17 @@ entries.forEach((e, i) => {
     if (!ok) errors.push(`${where}: subtheme「${e.subtheme}」不属于它的专题 ${(e.themes ?? []).join("、")}`);
   } else if (subParents.length) {
     warnings.push(`${where}: 属于「${subParents[0]}」，但没有 subtheme`);
+  }
+  for (const l of e.links ?? []) {
+    if (!idSet.has(l?.id)) errors.push(`${where}: links 指向的 ${l?.id} 不存在`);
+    else if (l.id === e.id) errors.push(`${where}: links 不能指向自己`);
+    if (!(LINK_TYPES as readonly string[]).includes(l?.type)) errors.push(`${where}: links 的 type 只能是 ${LINK_TYPES.join("、")}`);
+    if (!l?.why) errors.push(`${where}: links → ${l?.id} 缺少 why`);
+    else if ([...l.why].length > 30) warnings.push(`${where}: links → ${l.id} 的 why 超过 30 字`);
+    if ((e.seeAlso ?? []).includes(l?.id)) warnings.push(`${where}: ${l.id} 已经是参见，links 里不用再写`);
+    const key = [e.id, l?.id].sort().join("|");
+    if (linkPairs.has(key)) errors.push(`${where}: 和 ${l?.id} 的关系重复记录了（一对只记一边）`);
+    linkPairs.add(key);
   }
   if (e.era !== undefined && (!Number.isInteger(e.era) || e.era === 0 || e.era < -40 || e.era > 21)) {
     errors.push(`${where}: era 应为 -40…21 之间的非零整数（世纪，公元前为负）`);

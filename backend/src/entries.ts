@@ -2,7 +2,7 @@
 
 import { createHash } from "node:crypto";
 import { readFileSync, watchFile } from "node:fs";
-import { isRedirect, THEMES, type FullEntry, type RawEntry, type RedirectEntry } from "./types.ts";
+import { isRedirect, THEMES, type FullEntry, type Link, type RawEntry, type RedirectEntry } from "./types.ts";
 
 export type Summary = {
   id: string;
@@ -29,6 +29,8 @@ type Index = {
   redirects: Map<string, RedirectEntry>;
   /** 每日推送顺序：按 hash(id) 排序，数据扩充时已有词条的相对顺序不变 */
   dailyOrder: string[];
+  /** 词条关系，双向：A 记了 B，B 这边也能查到 A */
+  kin: Map<string, Link[]>;
 };
 
 const ORDER_SALT = process.env.ORDER_SALT ?? "etymology-daily";
@@ -60,7 +62,19 @@ function reload(): void {
   }
   const key = (id: string) => hashHex(ORDER_SALT + id);
   const dailyOrder = [...full.keys()].sort((a, b) => (key(a) < key(b) ? -1 : 1));
-  index = { all, full, redirects, dailyOrder };
+  const kin = new Map<string, Link[]>();
+  const push = (from: string, l: Link) => {
+    if (!full.has(l.id)) return;
+    if (!kin.has(from)) kin.set(from, []);
+    if (!kin.get(from)!.some((x) => x.id === l.id)) kin.get(from)!.push(l);
+  };
+  for (const e of full.values()) {
+    for (const l of e.links ?? []) {
+      push(e.id, l);
+      push(l.id, { ...l, id: e.id });
+    }
+  }
+  index = { all, full, redirects, dailyOrder, kin };
 }
 
 export const getEntry = (id: string) => index.full.get(id);
@@ -68,6 +82,8 @@ export const allFull = () => [...index.full.values()];
 export const getRedirect = (id: string) => index.redirects.get(id);
 export const dailyOrder = () => index.dailyOrder;
 export const totalCount = () => index.full.size;
+/** 和这个词有关系的词（同根 / 同典故 / 衍生），双向 */
+export const kinOf = (id: string): Link[] => index.kin.get(id) ?? [];
 
 export function summarize(e: RawEntry): Summary {
   const letter = e.headword[0]!.toUpperCase();

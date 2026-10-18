@@ -17,7 +17,7 @@ import {
 import { recommend } from "./recommend.ts";
 import * as db from "./db.ts";
 import {
-  allSummaries, getEntry, getRedirect, loadEntries, related, search, summarize,
+  allSummaries, getEntry, getRedirect, kinOf, loadEntries, related, search, summarize,
   themeGroups, totalCount, type Summary,
 } from "./entries.ts";
 import { checkTime, initPush, isValidSub, sendToUser, vapidPublicKey } from "./push.ts";
@@ -103,6 +103,9 @@ function detail(uid: number, id: string) {
   if (!e) return undefined;
   const day = localDay();
   const seeAlso = withState(uid, summariesOf(e.seeAlso ?? []));
+  // 书外整理的关系：同根 / 同典故 / 衍生，附上一句理由
+  const kin = kinOf(id).filter((l) => !(e.seeAlso ?? []).includes(l.id));
+  const kinSum = withState(uid, summariesOf(kin.map((l) => l.id))).map((s, i) => ({ ...s, rel: kin[i]!.type, why: kin[i]!.why }));
   // 接着读：和这篇相关、又没读过的词
   const upNext = recommend({ uid, day, seed: day + id, anchor: id, exclude: busy(uid, day, id), limit: 2 }).map((p) => ({
     ...withState(uid, summariesOf([p.id]))[0]!,
@@ -112,6 +115,7 @@ function detail(uid: number, id: string) {
     ...e,
     ...db.getState(uid, id),
     seeAlso,
+    kin: kinSum,
     related: withState(uid, related(id)),
     upNext,
   };

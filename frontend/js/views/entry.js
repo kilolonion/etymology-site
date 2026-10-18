@@ -1,6 +1,6 @@
 // 文章页：一个词的完整故事（电脑上右侧是相关词和出处卡）。读到“一句话记住”、且停留几秒后才算读完，随手点开不算。
 
-import { examples, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js";
+import { examples, family, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js";
 import { actions, api, esc, icon, render, rich, toast } from "../lib.js";
 import { emblem, primaryTheme, themeTag, tint } from "../themes.js";
 import { invalidateSummaries } from "./explore.js";
@@ -18,11 +18,9 @@ export async function viewEntry(id) {
   }
 
   const theme = primaryTheme(e);
-  // 相关的词：参见在前，同专题在后；已经出现在“接着读”里的不重复
-  const nextIds = new Set(e.upNext.map((x) => x.id));
-  const more = [...e.seeAlso, ...e.related.filter((r) => !e.seeAlso.some((s) => s.id === r.id))]
-    .filter((x) => !nextIds.has(x.id))
-    .slice(0, 4);
+  // 相关的词：同专题的词；参见和有关系的词已经在“词的亲缘”里，“接着读”里有的也不重复
+  const shownIds = new Set([...e.upNext, ...e.seeAlso, ...e.kin].map((x) => x.id));
+  const more = e.related.filter((x) => !shownIds.has(x.id)).slice(0, 4);
 
   render(`
     <article style="${tint(e)}">
@@ -49,6 +47,8 @@ export async function viewEntry(id) {
 
         <h3 class="kicker">例句 <span class="en">In Use</span></h3>
         ${examples(e, 2)}
+
+        ${family(e)}
 
         <aside class="article-side">
           ${more.length ? `<h3 class="kicker">相关的词 <span class="en">Related</span></h3>${linkCards(more)}` : ""}

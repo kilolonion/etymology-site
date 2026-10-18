@@ -1062,3 +1062,48 @@ code { font: 600 .95em ui-monospace, Menlo, monospace; letter-spacing: .04em; }
 .era-body .eyebrow { margin-bottom: 10px; }
 .era-body .span::before { content: " · "; }
 .route.undated { border-top: 1px solid var(--line); }
+
+/* ---------- 文章页：词的亲缘 ---------- */
+/* 关系类型的颜色：0 衍生 1 同根 2 同典故 3 参见 */
+.kin { --r0: var(--ink-2); --r1: var(--accent); --r2: var(--gold); --r3: var(--muted); margin: 0; }
+.kin-list, .kin-legend { --r0: var(--ink-2); --r1: var(--accent); --r2: var(--gold); --r3: var(--muted); }
+.kin-map { display: block; width: 100%; max-width: 460px; height: auto; margin: 0 auto; overflow: visible; }
+.kin-map .edge { stroke-width: 1.4; }
+.kin-map .edge.r-0 { stroke: var(--r0); }
+.kin-map .edge.r-1 { stroke: var(--r1); }
+.kin-map .edge.r-2 { stroke: var(--r2); stroke-dasharray: 5 4; }
+.kin-map .edge.r-3 { stroke: var(--r3); stroke-dasharray: 2 4; }
+.kin-map text { font: italic 700 14px var(--display); text-anchor: middle; pointer-events: none; }
+.kin-node .pill { fill: var(--t-soft); stroke: var(--t-line); }
+.kin-node text { fill: var(--t-ink); }
+.kin-node:hover .pill { stroke: var(--t-ink); }
+.kin-node.read .pill { fill: var(--t-fill); stroke: var(--t-fill); }
+.kin-node.read text { fill: var(--cream); }
+.kin-center .pill { fill: var(--ink); }
+.kin-center text { fill: var(--bg); font-size: 15px; }
+.kin-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 16px; margin: 6px 0 4px; font-size: 12.5px; color: var(--muted); }
+.kin-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.kin-legend i { display: inline-block; width: 18px; border-top: 2px solid; }
+.kin-legend .r-0 { border-color: var(--r0); }
+.kin-legend .r-1 { border-color: var(--r1); }
+.kin-legend .r-2 { border-color: var(--r2); border-top-style: dashed; }
+.kin-legend .r-3 { border-color: var(--r3); border-top-style: dotted; }
+
+.kin-list { display: grid; margin-top: 10px; border-top: 1px solid var(--line); }
+.kin-row {
+  display: grid; grid-template-columns: auto auto 1fr auto; align-items: baseline; gap: 4px 10px;
+  padding: 11px 2px; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink-2);
+}
+.kin-row:hover b { text-decoration: underline; }
+.kin-row .rel { font-size: 12px; letter-spacing: .08em; padding: 1px 7px; border-radius: 6px; border: 1px solid; white-space: nowrap; }
+.kin-row .rel.r-0 { color: var(--r0); }
+.kin-row .rel.r-1 { color: var(--r1); }
+.kin-row .rel.r-2 { color: var(--r2); }
+.kin-row .rel.r-3 { color: var(--r3); }
+.kin-row b { font: italic 700 17px var(--display); color: var(--t-ink); white-space: nowrap; }
+.kin-row .why { font: 14px/1.6 var(--serif-zh); min-width: 0; }
+.kin-row .seen { font-style: normal; font-size: 12px; color: var(--muted); }
+@media (max-width: 480px) {
+  .kin-row { grid-template-columns: auto 1fr auto; }
+  .kin-row .why { grid-column: 1 / -1; }
+}

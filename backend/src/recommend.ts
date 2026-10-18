@@ -1,7 +1,7 @@
 // 推荐：让每天的新词“既有关联，又有变化”。每个用户按自己的阅读记录单独计算。
 //
 // 对每个没读过的词打分：
-//   + 和读过的词互为“参见”（最强的记忆挂钩）
+//   + 和读过的词互为“参见”，或同根、同典故、互相衍生（最强的记忆挂钩）
 //   + 和最近 7 天读过的词同专题（把新词挂到刚建立的记忆上；风俗与生活按子专题算）
 //   + 和当前文章相关（文章末尾“接着读”时）
 //   + 收藏过的专题（个人兴趣）
@@ -12,13 +12,14 @@
 
 import { createHash } from "node:crypto";
 import { allDaily, readLog, stateMap } from "./db.ts";
-import { allFull, getEntry } from "./entries.ts";
+import { allFull, getEntry, kinOf } from "./entries.ts";
 import { SUBTHEMES, type FullEntry } from "./types.ts";
 
 export type Reason =
   | { type: "link"; word: string } // 和你读过的 X 互为参见
+  | { type: "kin"; word: string; rel: string } // 和你读过的 X 同根 / 同典故 / 衍生
   | { type: "theme"; word: string; theme: string } // 你读过的 X 也属于这个专题
-  | { type: "anchor"; word: string; theme?: string } // 正在读的 X 的参见词 / 同专题
+  | { type: "anchor"; word: string; theme?: string; rel?: string } // 正在读的 X 的参见词 / 有关系的词 / 同专题
   | { type: "taste"; theme: string } // 你收藏过同专题的词
   | { type: "new"; theme: string } // 还没读过的专题
   | null;
@@ -42,6 +43,8 @@ function daysBefore(day: string, n: number): string {
 
 /** 两个词是否互为“参见” */
 const linked = (a: FullEntry, b: FullEntry) => (a.seeAlso ?? []).includes(b.id) || (b.seeAlso ?? []).includes(a.id);
+/** 书外整理的关系（双向），返回关系类型 */
+const kinType = (a: FullEntry, b: FullEntry) => kinOf(a.id).find((l) => l.id === b.id)?.type;
 
 export function recommend(opts: {
   uid: number;
@@ -90,9 +93,13 @@ export function recommend(opts: {
     if (anchorEntry) {
       const anchorTopics = topics(anchorEntry);
       const shared = topics(e).find((t) => anchorTopics.includes(t));
+      const rel = kinType(e, anchorEntry);
       if (linked(e, anchorEntry)) {
         score += 4;
         reason = { type: "anchor", word: anchorEntry.headword };
+      } else if (rel) {
+        score += 3.5;
+        reason = { type: "anchor", word: anchorEntry.headword, rel };
       } else if (shared) {
         score += 2;
         reason = { type: "anchor", word: anchorEntry.headword, theme: shared };
@@ -103,6 +110,12 @@ export function recommend(opts: {
     if (link) {
       score += 3;
       reason ??= { type: "link", word: link.headword };
+    } else {
+      const kin = readEntries.find((r) => kinType(e, r));
+      if (kin) {
+        score += 2.5;
+        reason ??= { type: "kin", word: kin.headword, rel: kinType(e, kin)! };
+      }
     }
 
     const mine = topics(e);

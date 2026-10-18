@@ -21,6 +21,12 @@ export const LANGS = [
 
 export type Example = { en: string; zh: string };
 
+/** 词条之间的关系（书里的“参见”之外另行整理的）：同根、同典故、一个由另一个衍生 */
+export const LINK_TYPES = ["同根", "同典故", "衍生"] as const;
+export type LinkType = (typeof LINK_TYPES)[number];
+/** 一对关系只记在其中一个词条上，加载时自动补成双向 */
+export type Link = { id: string; type: LinkType; why: string };
+
 export type FullEntry = {
   id: string;
   headword: string;
@@ -36,6 +42,8 @@ export type FullEntry = {
   etymology: string[];
   examples: Example[];
   seeAlso?: string[];
+  /** 书外整理的关系，见 Link */
+  links?: Link[];
   themes: string[];
   langs?: string[];
   /** 所属专题下的子专题（见 SUBTHEMES） */
