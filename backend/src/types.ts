@@ -6,6 +6,14 @@ export const THEMES = [
   "商业与经济", "政治与法律", "新词与构词",
 ] as const;
 
+/** 词条太多的专题再细分一层；每个词条在该专题下只归一个子专题 */
+export const SUBTHEMES: Partial<Record<(typeof THEMES)[number], readonly string[]>> = {
+  风俗与生活: [
+    "饮食", "衣饰容貌", "居家器物", "出行交通", "岁时节令", "婚恋家庭",
+    "身体情绪", "众生百态", "交际礼俗", "消遣娱乐", "花草风物", "世情俗语",
+  ],
+};
+
 export const LANGS = [
   "希腊语", "拉丁语", "法语", "古法语", "阿拉伯语", "希伯来语", "日耳曼语",
   "古英语", "意大利语", "西班牙语", "荷兰语", "德语", "美国英语", "其他",
@@ -30,6 +38,10 @@ export type FullEntry = {
   seeAlso?: string[];
   themes: string[];
   langs?: string[];
+  /** 所属专题下的子专题（见 SUBTHEMES） */
+  subtheme?: string;
+  /** 故事起点所在的世纪：正文提到的最早年代，16 即 16 世纪，公元前为负数 */
+  era?: number;
   page: number;
 };
 

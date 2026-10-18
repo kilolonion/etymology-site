@@ -3,7 +3,7 @@
 // 退出码: 0 = 无错误（可能有警告），1 = 有错误
 
 import { readFileSync } from "node:fs";
-import { LANGS, THEMES } from "../src/types.ts";
+import { LANGS, SUBTHEMES, THEMES } from "../src/types.ts";
 
 const ID_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const FULL_FIELDS = ["pos", "meaning", "teaser", "etymology", "examples", "themes"];
@@ -61,6 +61,17 @@ entries.forEach((e, i) => {
     if (!themeSet.has(t)) errors.push(`${where}: themes 不在固定列表里: ${t}`);
   }
   if ((e.themes ?? []).length > 3) warnings.push(`${where}: themes 超过 3 个`);
+  // 有子专题的专题：词条得归进其中一个，且子专题要属于它所在的某个专题
+  const subParents = (e.themes ?? []).filter((t: string) => t in SUBTHEMES);
+  if (e.subtheme !== undefined) {
+    const ok = subParents.some((t: string) => SUBTHEMES[t as keyof typeof SUBTHEMES]!.includes(e.subtheme));
+    if (!ok) errors.push(`${where}: subtheme「${e.subtheme}」不属于它的专题 ${(e.themes ?? []).join("、")}`);
+  } else if (subParents.length) {
+    warnings.push(`${where}: 属于「${subParents[0]}」，但没有 subtheme`);
+  }
+  if (e.era !== undefined && (!Number.isInteger(e.era) || e.era === 0 || e.era < -40 || e.era > 21)) {
+    errors.push(`${where}: era 应为 -40…21 之间的非零整数（世纪，公元前为负）`);
+  }
   for (const l of e.langs ?? []) {
     if (!langSet.has(l)) warnings.push(`${where}: langs 不在推荐列表里: ${l}`);
   }

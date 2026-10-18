@@ -5,7 +5,7 @@ import { disablePush, registerSW } from "./push.js";
 import { viewAccount, viewAdmin } from "./views/account.js";
 import { renderJoin, renderJoinWhileLoggedIn, renderLogin } from "./views/auth.js";
 import { viewEntry } from "./views/entry.js";
-import { invalidateSummaries, viewAZ, viewExplore, viewTheme } from "./views/explore.js";
+import { invalidateSummaries, viewAZ, viewExplore, viewRoutes, viewTheme, viewTimeline } from "./views/explore.js";
 import { viewHome } from "./views/home.js";
 import { viewHistory, viewMe, viewReminder, viewStarred } from "./views/me.js";
 
@@ -18,8 +18,10 @@ const ROUTES = [
   [/^read\/([^/?]+)/, "explore", (m) => location.replace(`#/w/${m[1]}`)],
   [/^w\/(.+)$/, "explore", (m) => viewEntry(dec(m[1]))],
   [/^explore$/, "explore", (_, q) => viewExplore(q)],
-  [/^explore\/t\/(.+)$/, "explore", (m) => viewTheme(dec(m[1]))],
+  [/^explore\/t\/(.+)$/, "explore", (m, q) => viewTheme(dec(m[1]), q)],
   [/^explore\/az$/, "explore", () => viewAZ()],
+  [/^explore\/routes$/, "explore", () => viewRoutes()],
+  [/^explore\/timeline$/, "explore", () => viewTimeline()],
   [/^me$/, "me", () => viewMe()],
   [/^me\/starred$/, "me", () => viewStarred()],
   [/^me\/history$/, "me", () => viewHistory()],

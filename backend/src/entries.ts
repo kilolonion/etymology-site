@@ -13,6 +13,11 @@ export type Summary = {
   teaser?: string;
   keyline?: string;
   themes?: string[];
+  subtheme?: string;
+  /** 故事起点所在的世纪，公元前为负 */
+  era?: number;
+  /** 词源涉及的语言，按大致的先后排好（数据里的顺序不一定是路线） */
+  langs?: string[];
   letter: string;
   page: number;
   redirect?: string;
@@ -78,10 +83,23 @@ export function summarize(e: RawEntry): Summary {
     teaser: e.teaser,
     keyline: e.keyline,
     themes: e.themes,
+    subtheme: e.subtheme,
+    era: e.era,
+    langs: routeOf(e.langs),
     letter,
     page: e.page,
   };
 }
+
+/** 语言大致的先后：古典语言 → 中古 → 近代欧洲语言 → 美国英语；“其他”放最后 */
+const LANG_ORDER = [
+  "希伯来语", "希腊语", "阿拉伯语", "拉丁语", "日耳曼语", "古英语", "古法语",
+  "意大利语", "西班牙语", "法语", "荷兰语", "德语", "美国英语", "其他",
+];
+const routeOf = (langs?: string[]) =>
+  langs?.length
+    ? [...langs].sort((a, b) => (LANG_ORDER.indexOf(a) + 1 || 99) - (LANG_ORDER.indexOf(b) + 1 || 99))
+    : undefined;
 
 /** 全部词条摘要，按书中顺序 */
 export const allSummaries = () => index.all.map(summarize);
@@ -97,6 +115,7 @@ export function related(id: string, limit = 4): Summary[] {
     if (other.id === id) continue;
     let score = 0;
     if (other.themes[0] === e.themes[0]) score += 2;
+    if (e.subtheme && other.subtheme === e.subtheme) score += 2;
     score += other.themes.filter((t) => e.themes.includes(t) && !VAGUE_THEMES.has(t)).length;
     if (score) scored.push({ score, e: other });
   }

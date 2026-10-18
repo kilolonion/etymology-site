@@ -1,4 +1,4 @@
-// 探索：搜索、专题、按字母。想多看一点的时候来这里。
+// 探索：搜索、专题（大专题再分子专题）、语源之路、时间长廊、按字母。想多看一点的时候来这里。
 
 import { actions, api, empty, esc, icon, invalidate, render, rich, row } from "../lib.js";
 import { emblem, primaryTheme, themeOf, tint } from "../themes.js";
@@ -26,7 +26,12 @@ export async function viewExplore(query) {
   const home = `
     <h3 class="kicker" style="margin-top:12px">专题展厅 <span class="en">Galleries</span></h3>
     <div class="gallery">${halls.map((t, i) => hall(t, i === 0)).join("")}</div>
-    <a class="az-link" href="#/explore/az"><b>按字母浏览</b><span>A — Z</span></a>`;
+    <h3 class="kicker">换个角度 <span class="en">Other Ways In</span></h3>
+    <div class="browse-links">
+      <a class="az-link" href="#/explore/routes"><b>语源之路</b><span>Routes</span></a>
+      <a class="az-link" href="#/explore/timeline"><b>时间长廊</b><span>Timeline</span></a>
+      <a class="az-link" href="#/explore/az"><b>按字母浏览</b><span>A — Z</span></a>
+    </div>`;
 
   const show = async (text) => {
     if (!text) {
@@ -74,12 +79,16 @@ function hall(t, featured) {
   </a>`;
 }
 
-export async function viewTheme(name) {
+export async function viewTheme(name, query) {
   const items = await api(`/themes/${encodeURIComponent(name)}`);
   const unread = items.filter((s) => !s.read);
   const read = items.filter((s) => s.read);
   const pct = Math.round((read.length / items.length) * 100);
   const meta = themeOf(name);
+  // 分了子专题的（风俗与生活）：顶上一排子专题，点一下只看那一类
+  const subs = new Map();
+  for (const s of items) if (s.subtheme) subs.set(s.subtheme, (subs.get(s.subtheme) ?? 0) + 1);
+  const sub = subs.has(query?.get("sub")) ? query.get("sub") : "";
   render(`
     <button class="back" data-action="back">${icon("left")}探索</button>
     <header class="band" style="--t:${meta.color}">
@@ -90,8 +99,26 @@ export async function viewTheme(name) {
       <p class="band-meta"><span>${items.length} 个词</span><span>已读 ${read.length}</span>${unread.length ? "" : "<span>全部读完 ✓</span>"}</p>
       <div class="progress"><span style="width:${pct}%"></span></div>
     </header>
+    ${subs.size ? `<nav class="subs" aria-label="子专题">${[["", items.length], ...[...subs].sort((x, y) => y[1] - x[1])]
+      .map(([k, n]) => `<button data-action="sub" data-sub="${esc(k)}" aria-pressed="${k === sub}">${k ? esc(k) : "全部"}<span>${n}</span></button>`)
+      .join("")}</nav>` : ""}
+    <div id="theme-body">${themeBody(items, sub)}</div>`);
+
+  actions.sub = (el) => {
+    const next = el.dataset.sub;
+    for (const b of document.querySelectorAll(".subs button")) b.setAttribute("aria-pressed", String(b === el));
+    document.getElementById("theme-body").innerHTML = themeBody(items, next);
+    history.replaceState(null, "", `#/explore/t/${encodeURIComponent(name)}${next ? `?sub=${encodeURIComponent(next)}` : ""}`);
+  };
+}
+
+function themeBody(items, sub) {
+  const list = sub ? items.filter((s) => s.subtheme === sub) : items;
+  const unread = list.filter((s) => !s.read);
+  const read = list.filter((s) => s.read);
+  return `
     ${unread.length ? `<h3 class="kicker">还没读 <span class="en">${unread.length} to go</span></h3>${questions(unread)}` : ""}
-    ${read.length ? `<h3 class="kicker">读过的 <span class="en">Remembered</span></h3><div class="recalls">${read.map(recallCard).join("")}</div>` : ""}`);
+    ${read.length ? `<h3 class="kicker">读过的 <span class="en">Remembered</span></h3><div class="recalls">${read.map(recallCard).join("")}</div>` : ""}`;
 }
 
 /** 没读过的：只露出问题，勾起好奇；太多时先显示一部分 */
@@ -136,3 +163,93 @@ export async function viewAZ() {
 }
 
 actions.jump = (el) => document.getElementById(`letter-${el.dataset.letter}`)?.scrollIntoView({ behavior: "smooth" });
+
+/** 一串单词小标签；读过的实心 */
+const wordChips = (list) =>
+  `<div class="chips left">${list
+    .map((s) => `<a class="chip${s.read ? " read" : ""}" href="#/w/${esc(s.id)}" style="${tint(s)}" title="${esc(s.meaning ?? "")}">${esc(s.headword)}</a>`)
+    .join("")}</div>`;
+const readOf = (list) => list.filter((s) => s.read).length;
+const arrow = '<i aria-hidden="true">→</i>';
+
+/** 语源之路：从哪种语言出发、经过哪些语言来到英语 */
+export async function viewRoutes() {
+  const all = (await loadSummaries()).filter((s) => !s.redirect && s.langs?.length);
+  const groupBy = (key) => {
+    const m = new Map();
+    for (const s of all) {
+      const k = key(s);
+      if (!m.has(k)) m.set(k, []);
+      m.get(k).push(s);
+    }
+    return [...m].sort((a, b) => b[1].length - a[1].length);
+  };
+  const origins = groupBy((s) => s.langs[0]);
+  const routes = groupBy((s) => s.langs.join("|"));
+  const common = routes.filter(([, l]) => l.length >= 3);
+  const max = origins[0]?.[1].length ?? 1;
+  // 美国英语本身就是英语，路线不再接“英语”
+  const path = (k) => {
+    const ls = k.split("|");
+    return [...ls.map(esc), ...(ls.at(-1) === "美国英语" ? [] : ["<b>英语</b>"])].join(arrow);
+  };
+
+  render(`
+    <button class="back" data-action="back">${icon("left")}探索</button>
+    <header class="page-head"><h1>语源之路<span class="en">Routes</span></h1>
+      <p>${all.length} 个词标注了来源语言。路线按语言大致的先后排列，是近似的走法，细节以正文为准。</p></header>
+
+    <h3 class="kicker">出发地 <span class="en">Origins</span></h3>
+    <div class="bars">${origins
+      .map(([lang, list]) => `<details class="bar-row">
+        <summary><span class="name">${esc(lang)}</span><span class="bar"><span style="width:${(list.length / max) * 100}%"></span></span><span class="n">${list.length}</span></summary>
+        ${wordChips(list)}
+      </details>`)
+      .join("")}</div>
+
+    <h3 class="kicker">常见路线 <span class="en">Well-trodden</span></h3>
+    <div class="routes">${common
+      .map(([k, list]) => `<details class="route">
+        <summary><span class="path">${path(k)}</span><span class="n">${list.length}</span></summary>
+        ${wordChips(list)}
+      </details>`)
+      .join("")}</div>
+    <p class="eyebrow note">另有 ${routes.length - common.length} 条少见的路线，可以从上面的出发地里找到。实心的是读过的词。</p>`);
+}
+
+const eraLabel = (c) => (c < 0 ? `公元前 ${-c} 世纪` : `${c} 世纪`);
+/** 时间长廊里的一格：公元前合成一格，公元 1–10 世纪合成一格，之后每个世纪一格 */
+const eraBucket = (c) => (c < 0 ? -1 : c <= 10 ? 10 : c);
+const BUCKET_NAME = { [-1]: ["BC", "公元前"], 10: ["1—10", "世纪"] };
+
+/** 时间长廊：按故事起点（正文提到的最早年代）排列 */
+export async function viewTimeline() {
+  const all = (await loadSummaries()).filter((s) => !s.redirect);
+  const dated = all.filter((s) => s.era).sort((a, b) => a.era - b.era);
+  const undated = all.filter((s) => !s.era);
+  const buckets = new Map();
+  for (const s of dated) {
+    const b = eraBucket(s.era);
+    if (!buckets.has(b)) buckets.set(b, []);
+    buckets.get(b).push(s);
+  }
+
+  render(`
+    <button class="back" data-action="back">${icon("left")}探索</button>
+    <header class="page-head"><h1>时间长廊<span class="en">Timeline</span></h1>
+      <p>按故事的起点排列：正文里提到的最早年代。比如 labyrinth 从公元前 2000 年的克里特讲起，虽然它 14 世纪才进入英语。</p></header>
+    <ol class="timeline">${[...buckets]
+      .map(([b, list]) => {
+        const [big, small] = BUCKET_NAME[b] ?? [String(b), "世纪"];
+        const span = b === -1 || b === 10 ? `<span class="span">${eraLabel(list[0].era)} — ${eraLabel(list.at(-1).era)}</span>` : "";
+        return `<li class="era">
+          <div class="era-mark"><b>${big}</b><span>${small}</span></div>
+          <div class="era-body">
+            <p class="eyebrow">${list.length} 个词${readOf(list) ? ` · 已读 ${readOf(list)}` : ""}${span}</p>
+            ${wordChips(list)}
+          </div>
+        </li>`;
+      })
+      .join("")}</ol>
+    ${undated.length ? `<details class="route undated"><summary><span class="path">年代不详</span><span class="n">${undated.length}</span></summary>${wordChips(undated)}</details>` : ""}`);
+}

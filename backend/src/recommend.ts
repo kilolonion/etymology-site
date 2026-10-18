@@ -2,7 +2,7 @@
 //
 // 对每个没读过的词打分：
 //   + 和读过的词互为“参见”（最强的记忆挂钩）
-//   + 和最近 7 天读过的词同专题（把新词挂到刚建立的记忆上）
+//   + 和最近 7 天读过的词同专题（把新词挂到刚建立的记忆上；风俗与生活按子专题算）
 //   + 和当前文章相关（文章末尾“接着读”时）
 //   + 收藏过的专题（个人兴趣）
 //   + 读得少的专题（覆盖面）
@@ -13,7 +13,7 @@
 import { createHash } from "node:crypto";
 import { allDaily, readLog, stateMap } from "./db.ts";
 import { allFull, getEntry } from "./entries.ts";
-import type { FullEntry } from "./types.ts";
+import { SUBTHEMES, type FullEntry } from "./types.ts";
 
 export type Reason =
   | { type: "link"; word: string } // 和你读过的 X 互为参见
@@ -28,6 +28,9 @@ export type Pick = { id: string; reason: Reason; score: number };
 const VAGUE = new Set(["人名", "地名"]);
 const primary = (e: FullEntry) => e.themes.find((t) => !VAGUE.has(t)) ?? e.themes[0] ?? "";
 const concrete = (e: FullEntry) => e.themes.filter((t) => !VAGUE.has(t));
+/** 判断“同专题”用的粒度：分了子专题的大专题（风俗与生活）细到子专题，不然一半的词都算同专题 */
+const topics = (e: FullEntry) =>
+  concrete(e).map((t) => (t in SUBTHEMES && e.subtheme ? `${t}·${e.subtheme}` : t));
 const initial = (e: FullEntry) => e.headword[0]!.toLowerCase();
 const jitter = (seed: string, id: string) =>
   parseInt(createHash("sha1").update(seed + id).digest("hex").slice(0, 6), 16) / 0xffffff;
@@ -85,7 +88,8 @@ export function recommend(opts: {
     const p = primary(e);
 
     if (anchorEntry) {
-      const shared = concrete(e).find((t) => anchorEntry.themes.includes(t));
+      const anchorTopics = topics(anchorEntry);
+      const shared = topics(e).find((t) => anchorTopics.includes(t));
       if (linked(e, anchorEntry)) {
         score += 4;
         reason = { type: "anchor", word: anchorEntry.headword };
@@ -101,10 +105,11 @@ export function recommend(opts: {
       reason ??= { type: "link", word: link.headword };
     }
 
-    const near = recent.find((r) => concrete(e).some((t) => r.themes.includes(t)));
+    const mine = topics(e);
+    const near = recent.find((r) => topics(r).some((t) => mine.includes(t)));
     if (near) {
       score += 1.5;
-      reason ??= { type: "theme", word: near.headword, theme: concrete(e).find((t) => near.themes.includes(t))! };
+      reason ??= { type: "theme", word: near.headword, theme: mine.find((t) => topics(near).includes(t))! };
     }
 
     if (picks[0] && primary(picks[0]) === p) score -= 2;
