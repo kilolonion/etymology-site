@@ -1,6 +1,7 @@
 // 入口：路由、全局动作、登录状态
 
 import { actions, api, beginNav, empty, esc, hooks, nav, prefetch, render, skeleton, skeletonFor, speak, toast } from "./lib.js";
+import { clearOfflineData, flushReads, precacheLoaded, setOffline, warmForOffline } from "./offline.js";
 import { disablePush, registerSW } from "./push.js";
 import { viewAccount, viewAdmin } from "./views/account.js";
 import { renderJoin, renderJoinWhileLoggedIn, renderLogin } from "./views/auth.js";
@@ -52,6 +53,12 @@ function warmCache() {
   if (warmed) return;
   warmed = true;
   prefetch(["/today", "/next", "/entries", "/themes", "/shelf", "/history", "/reminder", "/me", "/starred"]);
+  // 离线阅读：补交离线时读完的词，把可能要读的词先存下来
+  syncReads();
+  setTimeout(() => {
+    precacheLoaded();
+    warmForOffline(api);
+  }, 4000);
 }
 
 async function route() {
@@ -111,6 +118,8 @@ async function route() {
     render(
       err.status === 404
         ? empty("找不到这个词条，可能是链接写错了", `<a class="btn sm" href="#/">回到今日</a><a class="btn sm ghost" href="#/explore">去探索</a>`)
+        : err.offline
+        ? empty("离线中，这一页还没有存下来<br>联网后再来看看", `<a class="btn sm" href="#/">回到今日</a><button class="btn sm ghost" data-action="reload">重试</button>`)
         : empty(`出错了：${esc(err.message)}`, `<button class="btn sm" data-action="reload">重新加载</button>`),
     );
   } finally {
@@ -155,10 +164,11 @@ actions.back = () => {
   else location.hash = parseHash().path.startsWith("me/") ? "#/me" : "#/explore";
 };
 
-/** 退出：先取消这台设备的推送订阅（免得下一个登录的人收到你的提醒），再整页刷新清掉内存里的数据 */
+/** 退出：先取消这台设备的推送订阅（免得下一个登录的人收到你的提醒），清掉离线缓存，再整页刷新清掉内存里的数据 */
 actions.logout = async () => {
   await disablePush().catch(() => {});
   await api("/logout", { method: "POST" });
+  await clearOfflineData();
   location.replace("#/");
   location.reload();
 };
@@ -201,5 +211,13 @@ const boot = () => route().catch((err) => {
 });
 
 window.addEventListener("hashchange", boot);
+/** 离线时读完的词，联网后补交 */
+const syncReads = () => flushReads((id, read) => api(`/entries/${encodeURIComponent(id)}/read`, { method: "POST", body: { read } }));
+addEventListener("online", () => {
+  setOffline(false);
+  syncReads();
+});
+addEventListener("offline", () => setOffline(true));
+
 registerSW();
 boot();

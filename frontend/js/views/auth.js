@@ -1,6 +1,7 @@
 // 登录与凭邀请码注册。登录 / 注册成功后整页刷新，清掉上一个账号留在内存里的数据。
 
 import { actions, api, esc, render } from "../lib.js";
+import { clearOfflineData } from "../offline.js";
 
 const brand = (sub) => `
   <span class="seal"></span>
@@ -12,8 +13,9 @@ function lock() {
   document.body.classList.remove("bleed", "home");
 }
 
-/** 进入应用：带着当前的地址刷新（注册页则回到今日） */
-function enter() {
+/** 进入应用：清掉上一个账号的离线缓存，带着当前的地址刷新（注册页则回到今日） */
+async function enter() {
+  await clearOfflineData();
   if (location.hash.startsWith("#/join")) location.replace("#/");
   location.reload();
 }

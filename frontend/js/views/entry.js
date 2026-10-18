@@ -3,6 +3,7 @@
 import { examples, family, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js";
 import { actions, api, esc, icon, render, rich, toast } from "../lib.js";
 import { emblem, primaryTheme, themeTag, tint } from "../themes.js";
+import { queueRead } from "../offline.js";
 import { invalidateSummaries } from "./explore.js";
 
 /** 至少停留这么久，读到结尾才记为已读 */
@@ -114,7 +115,15 @@ function watchReading(e) {
 }
 
 async function setRead(id, read, { quiet = true } = {}) {
-  await api(`/entries/${id}/read`, { method: "POST", body: { read } });
+  let offline = false;
+  try {
+    await api(`/entries/${id}/read`, { method: "POST", body: { read } });
+  } catch (err) {
+    if (!err.offline) throw err;
+    // 没网：先记在本地，联网后自动补交；界面照常显示成已读
+    queueRead(id, read);
+    offline = true;
+  }
   invalidateSummaries();
   const state = document.querySelector(".read-state");
   if (state) {
@@ -126,12 +135,14 @@ async function setRead(id, read, { quiet = true } = {}) {
     btn.dataset.read = String(read);
     btn.textContent = read ? "标为未读" : "标为已读";
   }
-  if (!quiet) toast("读完了，已记入本周");
+  if (offline) toast("离线中，已先记下，联网后自动同步");
+  else if (!quiet) toast("读完了，已记入本周");
+  return offline;
 }
 
 actions["toggle-read"] = async (el) => {
   const read = el.dataset.read !== "true";
   unwatch?.();
-  await setRead(el.dataset.id, read);
+  if (await setRead(el.dataset.id, read)) return; // 离线时 setRead 已经提示过了
   toast(read ? "已标为已读" : "已标为未读，之后还会推荐给你");
 };

@@ -13,6 +13,7 @@
 - **随手翻一页**：推荐一个没读过的词，先看问题，可以“换一个”。
 - **文章页**：词源正文 → 词源之路 → 一句话记住 → 例句 → 词的亲缘（参见、同根、同典故、衍生的词，一张小关系图加逐条理由）→ 相关的词 → 接着读 → 出处卡片。读到“一句话记住”并停留 8 秒以上才记为已读，随手点开不算。
 - **账号**：管理员在“我的 → 邀请与成员”里生成邀请链接（7 天有效、只能用一次），朋友打开链接设置用户名和密码即可；也能重置成员密码、删除成员。每人可在“账号与安全”里改密码、退出登录。
+- **离线阅读**：今天的词、明日预告、接着读、收藏和最近读过的词会提前存在手机里，没网也能打开；离线时读完的词先记在本地，联网后自动同步。退出登录会清掉这些缓存。
 - **探索**：搜索、专题展厅（没读的露出问题，读过的显示“一句话记住”；“风俗与生活”可按 12 个子专题筛选）、语源之路（从哪种语言出发、经哪些语言来到英语）、时间长廊（按故事起点的世纪排列）、按字母。**我的**：书架、阅读足迹、专题纹章、语源分布，以及收藏卡片墙、阅读时间线、每日提醒。
 
 ## 推荐逻辑（backend/src/recommend.ts）
@@ -38,8 +39,8 @@
 
 ```
 frontend/    静态前端，原生 JS，无构建步骤
-  index.html  css/  fonts/（自托管英文字体）  icons/  sw.js（推送）  manifest.webmanifest
-  js/        main.js（路由）lib.js themes.js components.js push.js
+  index.html  css/  fonts/（自托管英文字体）  icons/  sw.js（推送 + 离线缓存）  manifest.webmanifest
+  js/        main.js（路由）lib.js themes.js components.js push.js offline.js（离线提示、预缓存、离线已读补交）
   js/views/  home  entry  explore  me  auth（登录 / 注册）account（账号、邀请与成员）
 backend/     API 服务：Node 24（直接运行 .ts）+ Hono + node:sqlite
   src/       main.ts（路由）auth.ts（账号、会话、邀请码）db.ts（SQLite）recommend.ts daily.ts push.ts entries.ts

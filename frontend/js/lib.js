@@ -1,5 +1,6 @@
 // 公共工具：请求、转义、图标、朗读、提示
 
+import { setOffline } from "./offline.js";
 import { tint } from "./themes.js";
 
 const PATHS = {
@@ -119,19 +120,31 @@ export function invalidate(prefix) {
 
 async function request(path, { method = "GET", body } = {}, signal) {
   const write = method !== "GET";
-  const res = await fetch("/api" + path, {
-    method,
-    credentials: "same-origin",
-    headers: write ? { "content-type": "application/json" } : undefined,
-    body: write ? JSON.stringify(body ?? {}) : undefined,
-    signal,
-  });
+  let res;
+  try {
+    res = await fetch("/api" + path, {
+      method,
+      credentials: "same-origin",
+      headers: write ? { "content-type": "application/json" } : undefined,
+      body: write ? JSON.stringify(body ?? {}) : undefined,
+      signal,
+    });
+  } catch (err) {
+    if (err?.name === "AbortError") throw err;
+    // 请求根本发不出去：没网（读的请求由 Service Worker 兜底，走到这里的多半是写操作）
+    setOffline(true);
+    throw Object.assign(new Error("离线中，联网后再试"), { offline: true });
+  }
+  // Service Worker 拿缓存顶上时会带 x-offline
+  setOffline(res.headers.get("x-offline") === "1");
   const data = await res.json().catch(() => ({}));
   if (res.status === 401) {
     hooks.onUnauthorized();
     throw Object.assign(new Error("unauthorized"), { status: 401 });
   }
-  if (!res.ok) throw Object.assign(new Error(data.error ?? res.statusText), { status: res.status });
+  if (!res.ok) {
+    throw Object.assign(new Error(data.error ?? res.statusText), { status: res.status, offline: res.headers.get("x-offline") === "1" });
+  }
   return data;
 }
 

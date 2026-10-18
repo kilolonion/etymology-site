@@ -1107,3 +1107,11 @@ code { font: 600 .95em ui-monospace, Menlo, monospace; letter-spacing: .04em; }
   .kin-row { grid-template-columns: auto 1fr auto; }
   .kin-row .why { grid-column: 1 / -1; }
 }
+
+/* ---------- 离线提示 ---------- */
+.offline-bar {
+  position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 10px); z-index: 60; transform: translateX(-50%);
+  padding: 6px 14px; border-radius: 999px; background: var(--ink); color: var(--bg);
+  font-size: 13px; letter-spacing: .04em; white-space: nowrap; box-shadow: var(--shadow); pointer-events: none;
+}
+.offline-bar[hidden] { display: none; }
