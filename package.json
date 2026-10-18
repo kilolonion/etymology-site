@@ -7,6 +7,7 @@
     "start": "npm --prefix backend start",
     "admin": "npm --prefix backend run admin --",
     "validate": "npm --prefix backend run validate",
-    "typecheck": "npm --prefix backend run typecheck"
+    "typecheck": "npm --prefix backend run typecheck",
+    "deploy": "bash deploy/deploy.sh"
   }
 }

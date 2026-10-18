@@ -27,27 +27,24 @@ nginx -t && systemctl reload nginx
 
 ## 更新代码
 
-```bash
-# 本地打包（排除 node_modules / var）
-tar czf /tmp/etymology-site.tgz --exclude='backend/node_modules' --exclude='backend/var' .
-scp /tmp/etymology-site.tgz overseas:/tmp/
-ssh overseas 'tar xzf /tmp/etymology-site.tgz -C /opt/etymology-site \
-  && cd /opt/etymology-site/backend && /opt/node24/bin/npm ci --omit=dev \
-  && chmod -R a+rX /opt/etymology-site/frontend /opt/etymology-site/backend/node_modules \
-  && systemctl restart etymology'
-```
-
-改完前端：把 `frontend/index.html` 里三处 `?v=`（fonts.css / style.css / main.js）日期序号往上推，然后在服务器上跑一次
+在本机项目根目录：
 
 ```bash
-cd /opt/etymology-site && python3 deploy/version-assets.py frontend && chmod -R a+rX frontend
+npm run deploy                  # 部署当前 HEAD（只带已提交的内容）
+npm run deploy -- --dry-run     # 先看看会改哪些文件
+npm run deploy -- HEAD~1        # 回滚到上一个提交（任何提交、标签都行）
+npm run deploy -- status        # 服务器上现在是哪个版本
 ```
 
-这一步会给所有 `import ... from "./x.js"` 补上同一个 `?v=`。**必须跑**：站点在 Cloudflare 后面，CF 会给 js/css 盖 4 小时浏览器缓存 TTL（源站的 no-cache 被覆盖），只有 index.html 带版本号的话，用户可能拿到旧模块 + 新入口，直接白屏（页面只剩顶栏和底部 tab）。
+脚本（`deploy/deploy.sh`）会依次：用 `git archive` 打包指定提交 → 类型检查 + 词条校验 → 给前端打版本号 → 后端有变化时先备份数据库（`backend/var/backups/`，留最近 10 份）→ rsync 后端，依赖变了才 `npm ci`、代码变了才重启，并做健康检查 → rsync 前端（`index.html` 最后传）→ 把版本信息写进 `/opt/etymology-site/.deploy-info`。后端起不来就停下，前端保持旧版；修好或回滚后再跑一次，会自动重启。
+
+服务器地址等配置默认就是本页的值；要改就复制 `deploy/deploy.env.example` 为 `deploy/deploy.env`。前提：本机能 `ssh overseas`，两边都有 `rsync`。
+
+前端版本号**不用再手动推**：`version-assets.py` 按前端文件内容算哈希，给 index.html 里的 css/js 和所有模块的 `import` 打上同一个 `?v=`，前端没改版本号就不变。这一步不能省：站点在 Cloudflare 后面，CF 会给 js/css 盖 4 小时浏览器缓存 TTL（源站的 no-cache 被覆盖），只有 index.html 带版本号的话，用户可能拿到旧模块 + 新入口，直接白屏（页面只剩顶栏和底部 tab）。
 
 ## 注意
 
 - `.env` 里 `COOKIE_SECURE=1`（站点是 HTTPS），`HOST=127.0.0.1`（只监听回环）。上 docker 部署时要在 compose 里覆盖成 `0.0.0.0`，见仓库里的 `docker-compose.yml`。
 - 第一个管理员邀请码只会在**还没有任何账号**时打印在日志里，7 天有效；过期或漏看了就重启服务拿新的。
-- 备份只要数据库：`sqlite3 /opt/etymology-site/backend/var/app.db ".backup /root/ety-backup-$(date +%F).db"`（或直接停服务拷 app.db*）。
+- 部署时会自动备份；手动备份：`npm run admin -- backup`，或 `sqlite3 /opt/etymology-site/backend/var/app.db ".backup /root/ety-backup-$(date +%F).db"`（或直接停服务拷 app.db*）。
 - 备份/迁移时 `backend/var/` 里三个文件（app.db / -wal / -shm）要一起拷，或者先停服务。

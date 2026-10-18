@@ -80,6 +80,8 @@ npm run dev
 | `npm run admin -- invite [备注]` | 生成一个普通邀请码 |
 | `npm run admin -- invite-admin` | 生成管理员邀请码（24 小时有效，忘了管理员密码时用） |
 | `npm run admin -- reset <用户名>` | 重置某人的密码，打印临时密码 |
+| `npm run admin -- backup [目录]` | 给数据库拍一份快照（默认 `backend/var/backups/`，留最近 10 份） |
+| `npm run deploy` | 一键部署到服务器，见下方“更新” |
 
 ## 部署到服务器
 
@@ -121,7 +123,18 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ### 更新
 
-- **前端**：覆盖 `frontend/` 里的文件即可，不用重启；页面和脚本每次都会向服务器校验，刷新就是新版。
+**一键部署**（在本机运行，需要能 ssh 到服务器、两边都装了 rsync）：
+
+```bash
+cp deploy/deploy.env.example deploy/deploy.env   # 第一次：填服务器地址、目录等
+npm run deploy                                   # 部署当前提交；--dry-run 试运行，HEAD~1 回滚，status 看线上版本
+```
+
+它会校验、自动给前端打版本号、备份数据库、按需 `npm ci` 和重启并做健康检查，详见 `DEPLOY-NOTES.md`。
+
+手动更新时：
+
+- **前端**：先对一份拷贝运行 `python3 deploy/version-assets.py <拷贝目录>` 再覆盖 `frontend/`，不用重启。在 CDN 后面不打版本号会读到旧模块。
 - **后端**：替换 `backend/src/` 后重启（`docker compose up -d --build` 或 `systemctl restart etymology`）。
 - **词条数据**：覆盖 `backend/data/entries.json`，无需重启。阅读进度按词条 `id` 记录，已有词条的 `id` 不要改。
 

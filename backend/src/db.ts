@@ -74,6 +74,12 @@ export function openDb(path: string): void {
 
 const now = () => new Date().toISOString();
 
+/** 把整个库拷成一个独立文件；服务在跑也能做（VACUUM INTO 读的是一个一致的快照） */
+export function backupTo(path: string): void {
+  mkdirSync(dirname(path), { recursive: true });
+  db.prepare("VACUUM INTO ?").run(path);
+}
+
 /** 在一个事务里执行 */
 export function tx<T>(fn: () => T): T {
   db.exec("BEGIN IMMEDIATE");
