@@ -1,0 +1,4 @@
+node_modules/
+var/
+.env
+.local-test.mjs

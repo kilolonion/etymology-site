@@ -1,0 +1,14 @@
+[Unit]
+Description=词源一日 API
+After=network.target
+
+[Service]
+WorkingDirectory=/workspace/etymology-site/backend
+EnvironmentFile=/workspace/etymology-site/.env
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning src/main.ts
+Restart=on-failure
+User=box
+Group=box
+
+[Install]
+WantedBy=multi-user.target

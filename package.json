@@ -1,0 +1,12 @@
+{
+  "name": "etymology-daily",
+  "private": true,
+  "description": "词源一日：frontend/ 是静态前端，backend/ 是 API 服务。这里的命令都转给 backend。",
+  "scripts": {
+    "dev": "npm --prefix backend run dev",
+    "start": "npm --prefix backend start",
+    "admin": "npm --prefix backend run admin --",
+    "validate": "npm --prefix backend run validate",
+    "typecheck": "npm --prefix backend run typecheck"
+  }
+}

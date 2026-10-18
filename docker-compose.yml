@@ -1,0 +1,16 @@
+# 只跑后端 API；前端由宿主机 nginx 托管（见 deploy/nginx.conf）
+services:
+  api:
+    build: ./backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # .env 里写的是 HOST=127.0.0.1（systemd / start-api.sh 用得上），
+      # 但容器里必须监听 0.0.0.0，否则宿主机端口映射连不上
+      HOST: 0.0.0.0
+      PORT: "8787"
+    ports:
+      - "127.0.0.1:8787:8787"          # 只对本机开放，由 nginx 转发 /api
+    volumes:
+      - ./backend/data:/app/data:ro    # 词条数据：替换 entries.json 后自动重新加载
+      - ./backend/var:/app/var         # 账号与阅读进度数据库
