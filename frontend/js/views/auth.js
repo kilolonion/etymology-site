@@ -3,7 +3,7 @@
 import { actions, api, esc, render } from "../lib.js";
 
 const brand = (sub) => `
-  <span class="seal">源</span>
+  <span class="seal"></span>
   <h1>词源一日</h1>
   <p class="en">${sub}</p>`;
 
@@ -61,7 +61,7 @@ export async function renderJoin(code = "") {
     if (!res.ok) {
       const tooMany = /太多/.test(res.error ?? "");
       render(`<div class="empty">
-        <span class="seal">源</span>
+        <span class="seal"></span>
         <div><b>${tooMany ? "稍等一下再试" : "这个邀请码不能用了"}</b><br>
           <code>${esc(typed)}</code>${tooMany ? "" : ` · ${esc(res.error ?? "邀请码不对")}`}</div>
         <div class="empty-acts">
@@ -115,7 +115,7 @@ actions["join-reload"] = () => location.reload();
 export function renderJoinWhileLoggedIn(user) {
   render(`
     <div class="empty">
-      <span class="seal">源</span>
+      <span class="seal"></span>
       <div>你已经以 <b>${esc(user.username)}</b> 的身份登录。<br>要用这个邀请码注册新账号，请先退出。</div>
       <div class="empty-acts"><a class="btn sm" href="#/">回到今日</a><button class="btn sm ghost" data-action="logout">退出登录</button></div>
     </div>`);

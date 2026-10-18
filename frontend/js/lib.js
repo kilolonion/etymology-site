@@ -268,7 +268,7 @@ export const local = {
 
 /** 空状态：一枚淡印章、一句话，再给一两个去处 */
 export const empty = (text, acts = "") =>
-  `<div class="empty"><span class="seal">源</span><div>${text}</div>${acts ? `<div class="empty-acts">${acts}</div>` : ""}</div>`;
+  `<div class="empty"><span class="seal"></span><div>${text}</div>${acts ? `<div class="empty-acts">${acts}</div>` : ""}</div>`;
 
 /** 列表行：左侧圆点是词条的专题色 */
 export function row(s, { sub = "meaning", query = "" } = {}) {

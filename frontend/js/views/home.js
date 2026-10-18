@@ -32,11 +32,10 @@ export async function viewHome() {
 
 function masthead(t) {
   return `<header class="mast">
-    <div class="mast-meta"><span class="no">No. ${t.issue}</span><span>${cnDate(t.day)} · ${weekday(t.day)}</span></div>
-    <div class="mast-rule"></div>
-    <h1 class="mast-title"><span class="seal">源</span>词源一日</h1>
+    <div class="mast-meta"><span class="no">No. ${t.issue} · Etymon</span><span class="date">${cnDate(t.day)} · ${weekday(t.day)}</span></div>
+    <h1 class="mast-title"><span class="seal"></span>词源一日</h1>
     <p class="mast-sub">A Word &amp; Its Story, Every Day</p>
-    <div class="mast-rule thin"></div>
+    <div class="mast-rule"></div>
   </header>`;
 }
 

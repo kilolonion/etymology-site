@@ -285,7 +285,7 @@ const notice = (teaser, time) =>
     ? `<figure class="notice-demo">
         <figcaption>每天 ${esc(time)}，如果还没读，你会收到：</figcaption>
         <div class="notice">
-          <span class="seal">源</span>
+          <span class="seal"></span>
           <div><p class="n-top"><b>词源一日</b><span>${esc(time)}</span></p><p class="n-title">今天的问题</p><p class="n-body">${esc(teaser.replace(/\*/g, ""))}</p></div>
         </div>
       </figure>`
