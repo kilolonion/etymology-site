@@ -1,6 +1,7 @@
 // 我的：书架、阅读足迹、专题纹章、语源分布，以及收藏、阅读记录、每日提醒、账号、（管理员）邀请与成员的入口
 
-import { actions, api, empty, esc, fmtDay, icon, local, render, rich, row, toast } from "../lib.js";
+import { actions, api, empty, esc, fmtDay, getAccent, icon, local, render, rich, row, setAccent, speak, toast } from "../lib.js";
+import { fold, isWide } from "../components.js";
 import { emblem, primaryTheme, themeOf, themeTag, tint } from "../themes.js";
 import { disablePush, enablePush, isStandalone, pushStatus } from "../push.js";
 
@@ -42,6 +43,7 @@ export async function viewMe() {
       <a href="#/me/starred">${icon("star")}<span class="grow">我的收藏</span><span class="val">${s.starred}</span>${icon("right", "i chev")}</a>
       <a href="#/me/history">${icon("clock")}<span class="grow">阅读记录</span><span class="val">${history.length ? `${history.length} 天` : ""}</span>${icon("right", "i chev")}</a>
       <a href="#/me/reminder">${icon("bell")}<span class="grow">每日提醒</span><span class="val">${reminderVal}</span>${icon("right", "i chev")}</a>
+      <button class="menu-btn" data-action="accent">${icon("sound")}<span class="grow">发音</span><span class="val accent-val">${ACCENT[getAccent()]}</span><span class="swap">切换</span></button>
     </nav>
     <nav class="menu">
       <a href="#/me/account">${icon("key")}<span class="grow">账号与安全</span><span class="val">${esc(me.username)}</span>${icon("right", "i chev")}</a>
@@ -51,6 +53,21 @@ export async function viewMe() {
     </div>`);
   document.querySelector(".spines")?.scrollTo({ left: 0 });
 }
+
+const ACCENT = { uk: "英音", us: "美音" };
+
+/** 英音 / 美音切换，切完读一个词听听 */
+actions.accent = (el) => {
+  const next = getAccent() === "uk" ? "us" : "uk";
+  setAccent(next);
+  el.querySelector(".accent-val").textContent = ACCENT[next];
+  speak("etymology", el);
+  toast(`发音改为${ACCENT[next]}`);
+};
+
+/** 可折叠的卡片：标题行就是 sec-head */
+const foldCard = (key, cls, title, meta, body, open = true) =>
+  fold(`<div class="sec-head"><h2>${title}</h2><span>${meta}</span></div>`, body, { key, open, cls: `panel-card ${cls}` });
 
 /** 字符串散列成 0~1，让书脊高矮错落但每次一样 */
 const hash01 = (s) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % 1000 / 1000;
@@ -96,12 +113,10 @@ function footprints(f, totalDays) {
     .filter((x, i) => !months[i + 1] || months[i + 1].col - x.col >= 3)
     .map((x) => `<span style="grid-column:${x.col + 1}">${MONTH_CN[x.mon - 1]}月</span>`)
     .join("");
-  return `<section class="panel-card fp-card">
-    <div class="sec-head"><h2>阅读足迹</h2><span>近 ${weeks} 周 · 累计 <b>${totalDays}</b> 天读过</span></div>
-    <div class="fp-months" style="--weeks:${weeks}">${labels}</div>
+  return foldCard("me.footprints", "fp-card", "阅读足迹", `近 ${weeks} 周 · 累计 <b>${totalDays}</b> 天读过`,
+    `<div class="fp-months" style="--weeks:${weeks}">${labels}</div>
     <div class="fp-grid" style="--weeks:${weeks}">${cells.join("")}</div>
-    <p class="fp-legend"><span class="fp"></span>没读<span class="fp on" style="--t:#8a3b2c"></span>读过，颜色是那个词的专题</p>
-  </section>`;
+    <p class="fp-legend"><span class="fp"></span>没读<span class="fp on" style="--t:#8a3b2c"></span>读过，颜色是那个词的专题</p>`);
 }
 
 /** 专题收集：每个专题一枚纹章，外圈是这个专题的阅读进度 */
@@ -118,23 +133,20 @@ function collection(themes) {
       </a>`;
     })
     .join("");
-  return `<section class="panel-card medal-card">
-    <div class="sec-head"><h2>专题纹章</h2><span>点亮 <b>${lit}</b> / ${themes.length}</span></div>
-    <div class="medals">${items}</div>
-  </section>`;
+  return foldCard("me.medals", "medal-card", "专题纹章", `点亮 <b>${lit}</b> / ${themes.length}`, `<div class="medals">${items}</div>`, isWide());
 }
 
 /** 词从哪里来：读过的词按语源统计 */
 function origins(langs, read) {
   if (!langs.length) return "";
   const max = langs[0].n;
-  return `<section class="panel-card origin-card">
-    <div class="sec-head"><h2>词从哪里来</h2><span>按语源统计读过的 ${read} 个词</span></div>
-    <ul class="origins">${langs
-      .map((l) => `<li><span class="lang">${esc(l.lang)}</span><span class="bar"><span style="width:${Math.max(6, (l.n / max) * 100)}%"></span></span><b>${l.n}</b></li>`)
-      .join("")}</ul>
-    <p class="fine">一个词可能先后经过几种语言，所以加起来会比读过的词多。</p>
-  </section>`;
+  const li = (l) => `<li><span class="lang">${esc(l.lang)}</span><span class="bar"><span style="width:${Math.max(6, (l.n / max) * 100)}%"></span></span><b>${l.n}</b></li>`;
+  // 前 5 种语言直接看，其余的收起来
+  const rest = langs.slice(5);
+  return foldCard("me.origins", "origin-card", "词从哪里来", `按语源统计读过的 ${read} 个词`,
+    `<ul class="origins">${langs.slice(0, 5).map(li).join("")}</ul>
+    ${rest.length ? `<details class="more-q origins-more"><summary>其余 ${rest.length} 种语言</summary><ul class="origins">${rest.map(li).join("")}</ul></details>` : ""}
+    <p class="fine">一个词可能先后经过几种语言，所以加起来会比读过的词多。</p>`, isWide());
 }
 
 /** 收藏：一面卡片墙，可以按专题筛选 */
@@ -205,13 +217,13 @@ export async function viewHistory() {
     <header class="page-head"><h1>阅读记录<span class="en">Reading Log</span></h1><p>${days.length ? `${days.length} 天，${words} 个词。含每日推送和你主动读的` : "每读完一个词，这里就多一行"}</p></header>
     ${days.length
       ? [...months]
-          .map(([key, list]) => {
+          .map(([key, list], i) => {
             const [y, m] = key.split("-").map(Number);
             const n = list.reduce((a, d) => a + d.entries.length, 0);
-            return `<section class="tl-month">
-              <h2><b>${m}</b><span>月</span><small>${y} · 读了 ${n} 个词</small></h2>
-              <ol class="timeline">${list.map(item).join("")}</ol>
-            </section>`;
+            const head = `<h2><b>${m}</b><span>月</span><small>${y} · 读了 ${n} 个词</small></h2>`;
+            const body = `<ol class="timeline">${list.map(item).join("")}</ol>`;
+            // 宽屏左边月份停靠、右边时间线，本来就不长；手机上最近两个月展开，更早的收起来，点月份再看
+            return isWide() ? `<section class="tl-month">${head}${body}</section>` : fold(head, body, { open: i < 2, cls: "tl-month" });
           })
           .join("")
       : empty("还没有读过的词，从今天开始", `<a class="btn sm primary" href="#/">读今天的故事</a>`)}`);

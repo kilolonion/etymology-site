@@ -2,6 +2,7 @@
 
 import { setOffline } from "./offline.js";
 import { tint } from "./themes.js";
+import { linkItalic, linkText } from "./words.js";
 
 const PATHS = {
   today: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>',
@@ -30,8 +31,18 @@ export const icon = (name, cls = "i") =>
 export const esc = (s = "") =>
   String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
 
-/** 转义后把 *斜体* 变成 <em> */
-export const rich = (s = "") => esc(s).replace(/\*([^*]+)\*/g, "<em>$1</em>");
+/**
+ * 转义后把 *斜体* 变成 <em>。
+ * link：给书里有的词加上词卡链接（只用在不在链接里的文字上，链接里再套链接不合法）；
+ * used：这一篇里已经链过的词条（含这篇自己），每个词只链第一次；tap：其余英文词也能点（例句）。
+ */
+export function rich(s = "", { link = false, used = new Set(), tap = false } = {}) {
+  if (!link) return esc(s).replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  return String(s)
+    .split(/\*([^*]+)\*/)
+    .map((p, i) => (i % 2 ? `<em>${linkItalic(p, used)}</em>` : linkText(p, used, tap)))
+    .join("");
+}
 
 const WEEKDAYS = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 
@@ -64,15 +75,101 @@ export function greeting() {
   return "晚上好";
 }
 
-export function speak(text) {
-  if (!("speechSynthesis" in window)) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text.replace(/\*/g, ""));
-  const voices = speechSynthesis.getVoices();
-  u.voice = voices.find((v) => v.lang === "en-GB") ?? voices.find((v) => v.lang.startsWith("en")) ?? null;
-  u.lang = u.voice?.lang ?? "en-GB";
+// ---------- 朗读：先放服务器取来的真人录音 / 词典发音，取不到再用浏览器自带的语音 ----------
+
+/** 英音还是美音，记在本机 */
+export const getAccent = () => local.get("accent", "uk");
+export const setAccent = (a) => local.set("accent", a === "us" ? "us" : "uk");
+
+// 用 Web Audio 播：点按的那一刻就把 AudioContext 唤醒，iPhone 上等音频取回来之后也能出声；
+// 也不用管 <audio> 的分段请求。
+let ctx = null;
+let playing = null; // { src, btn }
+
+function stopSpeaking() {
+  if (playing) {
+    try {
+      playing.src?.stop();
+    } catch {}
+    playing.btn?.classList.remove("playing", "loading");
+    playing = null;
+  }
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+}
+
+function pickVoice(lang) {
+  const voices = speechSynthesis.getVoices().filter((v) => v.lang.replace("_", "-").startsWith("en"));
+  const score = (v) =>
+    (v.lang.replace("_", "-") === lang ? 4 : 0) +
+    (/natural|neural|premium|enhanced|增强|高品质/i.test(v.name) ? 3 : 0) +
+    (/google|microsoft|siri|daniel|samantha|serena|kate|arthur|ava|zoe/i.test(v.name) ? 1 : 0) +
+    (v.localService ? 0 : 0.5);
+  return voices.sort((a, b) => score(b) - score(a))[0] ?? null;
+}
+
+function speakLocally(text, accent, btn) {
+  const me = { src: null, btn };
+  playing = me;
+  btn?.classList.remove("loading");
+  if (!("speechSynthesis" in window)) return stopSpeaking();
+  const lang = accent === "us" ? "en-US" : "en-GB";
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice = pickVoice(lang);
+  u.lang = u.voice?.lang ?? lang;
   u.rate = 0.9;
+  u.onend = u.onerror = () => {
+    if (playing === me) {
+      btn?.classList.remove("playing");
+      playing = null;
+    }
+  };
+  btn?.classList.add("playing");
   speechSynthesis.speak(u);
+}
+
+const sayUrl = (q, accent = getAccent()) => `/api/say?accent=${accent}&q=${encodeURIComponent(q)}`;
+
+/** 先把发音取回来存着（打开文章时取单词的），点朗读时就不用等 */
+export function warmSpeech(text) {
+  const q = text.replace(/\*/g, "").replace(/\s+/g, " ").trim();
+  if (q && navigator.onLine) fetch(sayUrl(q), { credentials: "same-origin" }).catch(() => {});
+}
+
+/** 读一段英文。btn 是被点的按钮：取音频时闪一闪，读的时候高亮；读的时候再点一下就停 */
+export function speak(text, btn = null) {
+  const q = text.replace(/\*/g, "").replace(/\s+/g, " ").trim();
+  if (!q) return;
+  const again = btn && playing?.btn === btn;
+  stopSpeaking();
+  if (again) return;
+  const accent = getAccent();
+  const AC = window.AudioContext ?? window.webkitAudioContext;
+  if (q.length > 200 || !AC) {
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
+    return speakLocally(q, accent, btn);
+  }
+  ctx ??= new AC();
+  ctx.resume?.(); // 必须在点按的同一拍里调用
+  const me = { src: null, btn };
+  playing = me;
+  btn?.classList.add("playing", "loading");
+  (async () => {
+    const res = await fetch(sayUrl(q, accent), { credentials: "same-origin" });
+    if (!res.ok) throw new Error(String(res.status));
+    const buf = await ctx.decodeAudioData(await res.arrayBuffer());
+    if (playing !== me) return; // 等的时候又点了别的
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.onended = () => {
+      if (playing === me) stopSpeaking();
+    };
+    me.src = src;
+    btn?.classList.remove("loading");
+    src.start();
+  })().catch(() => {
+    if (playing === me) speakLocally(q, accent, btn); // 服务器取不到发音、离线又没存过：用浏览器的语音
+  });
 }
 if ("speechSynthesis" in window) speechSynthesis.getVoices();
 

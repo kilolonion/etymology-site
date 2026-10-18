@@ -3,6 +3,7 @@
 import { actions, api, beginNav, empty, esc, hooks, nav, prefetch, render, skeleton, skeletonFor, speak, toast } from "./lib.js";
 import { clearOfflineData, flushReads, precacheLoaded, setOffline, warmForOffline } from "./offline.js";
 import { disablePush, registerSW } from "./push.js";
+import "./wordcard.js";
 import { viewAccount, viewAdmin } from "./views/account.js";
 import { renderJoin, renderJoinWhileLoggedIn, renderLogin } from "./views/auth.js";
 import { viewEntry } from "./views/entry.js";
@@ -144,7 +145,7 @@ hooks.onRevalidate = (path) => {
 
 // ---------- 全局动作 ----------
 
-actions.say = (el) => speak(el.dataset.text);
+actions.say = (el) => speak(el.dataset.text, el);
 
 actions.reload = () => location.reload();
 

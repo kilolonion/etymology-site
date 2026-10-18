@@ -4,11 +4,14 @@
 // - 带内容哈希版本号的 css/js（部署脚本打的 ?v=0123abcd89）：同一个地址内容永远不变，先读缓存；
 // - 页面本身、没带哈希的静态文件（本地开发时）：先走网络，失败才用缓存；
 // - 字体、图标：先读缓存；
+// - 发音 /api/say：同一段话的发音不会变，先读缓存（单独一个缓存，不随退出登录清掉，太多了删最早的）；
 // - GET /api：先走网络（4 秒等不到就用缓存），成功的回包顺手存一份；没网又没存过，回 503。
 // 退出登录时页面会清掉接口缓存，换人登录看不到上一个人的数据。
 
 const STATIC = "ety-static";
 const API = "ety-api";
+const AUDIO = "ety-audio";
+const AUDIO_MAX = 400;
 const NET_TIMEOUT = 4000;
 const HASHED = /[?&]v=[0-9a-f]{10}$/;
 // 管理、推送、邀请这些接口不缓存
@@ -24,6 +27,7 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   if (req.mode === "navigate") event.respondWith(page(req));
+  else if (url.pathname === "/api/say") event.respondWith(audioGet(req));
   else if (url.pathname.startsWith("/api/")) {
     if (!NO_CACHE_API.test(url.pathname)) event.respondWith(apiGet(req));
   } else if (HASHED.test(url.search) || /^\/(fonts|icons)\//.test(url.pathname)) event.respondWith(cacheFirst(req));
@@ -71,6 +75,19 @@ async function page(req) {
     return res;
   }
   return res ?? (await caches.match("/")) ?? Response.error();
+}
+
+async function audioGet(req) {
+  const cache = await caches.open(AUDIO);
+  const hit = await cache.match(req);
+  if (hit) return hit;
+  const res = await fetch(req);
+  if (res.status === 200) {
+    await cache.put(req, res.clone());
+    const keys = await cache.keys();
+    for (const k of keys.slice(0, Math.max(0, keys.length - AUDIO_MAX))) cache.delete(k);
+  }
+  return res;
 }
 
 async function pruneStatic(ver) {

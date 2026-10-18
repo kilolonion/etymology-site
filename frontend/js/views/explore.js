@@ -1,6 +1,7 @@
 // 探索：搜索、专题（大专题再分子专题）、语源之路、时间长廊、按字母。想多看一点的时候来这里。
 
 import { actions, api, empty, esc, icon, invalidate, render, rich, row } from "../lib.js";
+import { fold, foldHead } from "../components.js";
 import { emblem, primaryTheme, themeOf, tint } from "../themes.js";
 
 /** 词条目录：api 自己有短缓存，这里不再另存一份 */
@@ -116,9 +117,13 @@ function themeBody(items, sub) {
   const list = sub ? items.filter((s) => s.subtheme === sub) : items;
   const unread = list.filter((s) => !s.read);
   const read = list.filter((s) => s.read);
+  // 读过的：先露出 6 张，其余收起；整块也能收起，专心看还没读的
+  const SHOW_R = 6;
+  const recalls = `<div class="recalls">${read.slice(0, SHOW_R).map(recallCard).join("")}</div>${
+    read.length > SHOW_R ? `<details class="more-q"><summary>再看 ${read.length - SHOW_R} 个</summary><div class="recalls">${read.slice(SHOW_R).map(recallCard).join("")}</div></details>` : ""}`;
   return `
-    ${unread.length ? `<h3 class="kicker">还没读 <span class="en">${unread.length} to go</span></h3>${questions(unread)}` : ""}
-    ${read.length ? `<h3 class="kicker">读过的 <span class="en">Remembered</span></h3><div class="recalls">${read.map(recallCard).join("")}</div>` : ""}`;
+    ${unread.length ? fold(foldHead("还没读", `${unread.length} to go`), questions(unread), { key: "theme.unread" }) : ""}
+    ${read.length ? fold(foldHead("读过的", "Remembered", `${read.length} 个`), recalls, { key: "theme.read" }) : ""}`;
 }
 
 /** 没读过的：只露出问题，勾起好奇；太多时先显示一部分 */
@@ -152,17 +157,37 @@ export async function viewAZ() {
   }
   render(`
     <button class="back" data-action="back">${icon("left")}探索</button>
-    <header class="page-head"><h1>按字母<span class="en">A to Z</span></h1><p>按书中顺序排列</p></header>
+    <header class="page-head"><h1>按字母<span class="en">A to Z</span></h1><p>按书中顺序排列。点字母展开那一组，不用从头翻到尾</p></header>
     <div class="letters">${"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
       .split("")
       .map((l) => `<button data-action="jump" data-letter="${l}" ${groups.has(l) ? "" : "disabled"}>${l}</button>`)
-      .join("")}</div>
+      .join("")}<button class="all" data-action="toggle-letters">全部展开</button></div>
     ${[...groups]
-      .map(([l, list]) => `<h2 class="group-letter" id="letter-${l}">${l}</h2><div class="list">${list.map((s) => row(s)).join("")}</div>`)
+      .map(([l, list]) => {
+        const read = list.filter((s) => s.read && !s.redirect).length;
+        return fold(
+          `<h2 class="group-letter" id="letter-${l}">${l}</h2><span class="group-meta">${list.length} 个词${read ? ` · 已读 ${read}` : ""}</span>`,
+          `<div class="list">${list.map((s) => row(s)).join("")}</div>`,
+          { open: false, cls: "letter-group" },
+        );
+      })
       .join("")}`);
 }
 
-actions.jump = (el) => document.getElementById(`letter-${el.dataset.letter}`)?.scrollIntoView({ behavior: "smooth" });
+/** 点字母：展开那一组并滚过去 */
+actions.jump = (el) => {
+  const h = document.getElementById(`letter-${el.dataset.letter}`);
+  const d = h?.closest("details");
+  if (d) d.open = true;
+  h?.scrollIntoView({ behavior: "smooth" });
+};
+
+actions["toggle-letters"] = (el) => {
+  const groups = [...document.querySelectorAll(".letter-group")];
+  const open = !groups.every((d) => d.open);
+  for (const d of groups) d.open = open;
+  el.textContent = open ? "全部收起" : "全部展开";
+};
 
 /** 一串单词小标签；读过的实心 */
 const wordChips = (list) =>
@@ -170,6 +195,12 @@ const wordChips = (list) =>
     .map((s) => `<a class="chip${s.read ? " read" : ""}" href="#/w/${esc(s.id)}" style="${tint(s)}" title="${esc(s.meaning ?? "")}">${esc(s.headword)}</a>`)
     .join("")}</div>`;
 const readOf = (list) => list.filter((s) => s.read).length;
+/** 词多的格子先露出一部分，其余收起 */
+const SHOW_CHIPS = 24;
+const moreChips = (list) =>
+  list.length <= SHOW_CHIPS + 4
+    ? wordChips(list)
+    : `${wordChips(list.slice(0, SHOW_CHIPS))}<details class="more-q chips-more"><summary>再看 ${list.length - SHOW_CHIPS} 个</summary>${wordChips(list.slice(SHOW_CHIPS))}</details>`;
 const arrow = '<i aria-hidden="true">→</i>';
 
 /** 语源之路：从哪种语言出发、经过哪些语言来到英语 */
@@ -246,7 +277,7 @@ export async function viewTimeline() {
           <div class="era-mark"><b>${big}</b><span>${small}</span></div>
           <div class="era-body">
             <p class="eyebrow">${list.length} 个词${readOf(list) ? ` · 已读 ${readOf(list)}` : ""}${span}</p>
-            ${wordChips(list)}
+            ${moreChips(list)}
           </div>
         </li>`;
       })

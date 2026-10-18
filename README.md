@@ -13,6 +13,9 @@
 - **随手翻一页**：推荐一个没读过的词，先看问题，可以“换一个”。
 - **文章页**：词源正文 → 词源之路 → 一句话记住 → 例句 → 词的亲缘（参见、同根、同典故、衍生的词，一张小关系图加逐条理由）→ 相关的词 → 接着读 → 出处卡片。读到“一句话记住”并停留 8 秒以上才记为已读，随手点开不算。
 - **账号**：管理员在“我的 → 邀请与成员”里生成邀请链接（7 天有效、只能用一次），朋友打开链接设置用户名和密码即可；也能重置成员密码、删除成员。每人可在“账号与安全”里改密码、退出登录。
+- **点词看词卡**：文章里提到的书中词条带虚线下划线，点一下就地弹出词卡（音标、发音、释义、故事开头），不用离开当前这篇；例句里其余的英文词也能点，查简明释义（来自有道）。电脑上贴着词弹出，手机上从底部升起。
+- **发音**：单词优先用 Wiktionary 的真人录音，没有再用有道词典发音，整句用 Google 朗读；都取不到时退回浏览器自带的语音。“我的”里可切换英音 / 美音。取到的音频存在服务器和手机上，第二次不用再等。
+- **少翻几屏**：词源之路、例句、词的亲缘、相关的词、阅读记录的月份、我的页面各卡片都能点标题收起，点过的会记住；手机上次要的区块默认收起。按字母浏览按字母分组折叠，点字母展开那一组。
 - **离线阅读**：今天的词、明日预告、接着读、收藏和最近读过的词会提前存在手机里，没网也能打开；离线时读完的词先记在本地，联网后自动同步。退出登录会清掉这些缓存。
 - **探索**：搜索、专题展厅（没读的露出问题，读过的显示“一句话记住”；“风俗与生活”可按 12 个子专题筛选）、语源之路（从哪种语言出发、经哪些语言来到英语）、时间长廊（按故事起点的世纪排列）、按字母。**我的**：书架、阅读足迹、专题纹章、语源分布，以及收藏卡片墙、阅读时间线、每日提醒。
 
@@ -40,13 +43,16 @@
 ```
 frontend/    静态前端，原生 JS，无构建步骤
   index.html  css/  fonts/（自托管英文字体）  icons/  sw.js（推送 + 离线缓存）  manifest.webmanifest
-  js/        main.js（路由）lib.js themes.js components.js push.js offline.js（离线提示、预缓存、离线已读补交）
+  js/        main.js（路由）lib.js（请求、朗读）themes.js components.js（含可折叠区块）push.js offline.js（离线提示、预缓存、离线已读补交）
+             words.js（正文里的词自动加词卡链接）wordcard.js（词卡弹窗）
   js/views/  home  entry  explore  me  auth（登录 / 注册）account（账号、邀请与成员）
 backend/     API 服务：Node 24（直接运行 .ts）+ Hono + node:sqlite
   src/       main.ts（路由）auth.ts（账号、会话、邀请码）db.ts（SQLite）recommend.ts daily.ts push.ts entries.ts
+             speech.ts（发音来源与缓存、查词释义）
   data/      entries.json   ← 词条数据，替换后约 2 秒内自动重新加载
   scripts/   validate-entries.ts（数据校验）admin.ts（服务器上的管理命令）
   var/       app.db         ← 账号与阅读进度（运行时生成）
+             audio/         ← 发音缓存（运行时生成，删了会重新取）
 deploy/      nginx.conf  etymology.service
 docs/        DATA_FORMAT.md（词条数据格式）
 ```
@@ -148,6 +154,7 @@ npm run deploy                                   # 部署当前提交；--dry-ru
 | `HOST` / `PORT` | `127.0.0.1` / `8787` | 后端监听地址 |
 | `ENTRIES_PATH` | `backend/data/entries.json` | 词条文件 |
 | `STATE_DB` | `backend/var/app.db` | 账号与阅读进度数据库 |
+| `AUDIO_CACHE` | 数据库旁边的 `audio/` | 发音缓存目录 |
 | `FRONTEND_DIR` | 空 | 设置后后端顺便托管前端（`npm run dev` 已设为 `../frontend`）；生产环境留空 |
 | `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | 自动生成 | 推送密钥；不填则首次启动时生成并存进数据库 |
 | `VAPID_SUBJECT` | `mailto:admin@localhost` | 推送联系方式，建议填你的邮箱 |

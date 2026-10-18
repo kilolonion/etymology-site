@@ -1,10 +1,11 @@
 // 文章页：一个词的完整故事（电脑上右侧是相关词和出处卡）。读到“一句话记住”、且停留几秒后才算读完，随手点开不算。
 
-import { examples, family, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js";
-import { actions, api, esc, icon, render, rich, toast } from "../lib.js";
+import { examples, family, fold, foldHead, isWide, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js";
+import { actions, api, esc, icon, render, rich, toast, warmSpeech } from "../lib.js";
 import { emblem, primaryTheme, themeTag, tint } from "../themes.js";
 import { queueRead } from "../offline.js";
 import { invalidateSummaries } from "./explore.js";
+import { setWordIndex } from "../words.js";
 
 /** 至少停留这么久，读到结尾才记为已读 */
 const MIN_DWELL = 8000;
@@ -12,7 +13,9 @@ let unwatch = null;
 
 export async function viewEntry(id) {
   unwatch?.();
-  const e = await api(`/entries/${encodeURIComponent(id)}`);
+  // 词条目录用来给正文里的词加词卡链接；拿不到也不耽误看文章
+  const [e, all] = await Promise.all([api(`/entries/${encodeURIComponent(id)}`), api("/entries").catch(() => null)]);
+  if (all) indexWords(all);
   if (e.redirect) {
     location.replace(`#/w/${e.redirect}`);
     return;
@@ -22,6 +25,8 @@ export async function viewEntry(id) {
   // 相关的词：同专题的词；参见和有关系的词已经在“词的亲缘”里，“接着读”里有的也不重复
   const shownIds = new Set([...e.upNext, ...e.seeAlso, ...e.kin].map((x) => x.id));
   const more = e.related.filter((x) => !shownIds.has(x.id)).slice(0, 4);
+  // 这一篇里已经加过词卡链接的词条，每个词只链第一次；自己不链
+  const used = new Set([e.id]);
 
   render(`
     <article style="${tint(e)}">
@@ -36,23 +41,22 @@ export async function viewEntry(id) {
         ${e.variants?.length ? `<p class="variants">亦作 ${e.variants.map(esc).join(", ")}</p>` : ""}
         <div class="phon">${sayBtn(e.headword)}<span class="ipa">/${esc(e.ipa)}/</span><span class="pos">${esc(e.pos)}</span></div>
         <p class="meaning">${esc(e.meaning)}</p>
-        <p class="teaser">${rich(e.teaser)}</p>
+        <p class="teaser">${rich(e.teaser, { link: true, used })}</p>
       </header>
 
       <div class="article-body">
         <h3 class="kicker">词源 <span class="en">The Story</span></h3>
-        ${prose(e.etymology, "dropcap")}
-        ${route(e)}
-        ${pull(e)}
+        ${prose(e.etymology, "dropcap", used)}
+        ${route(e, used)}
+        ${pull(e, used)}
         <div class="read-mark" aria-hidden="true"></div>
 
-        <h3 class="kicker">例句 <span class="en">In Use</span></h3>
-        ${examples(e, 2)}
+        ${fold(foldHead("例句", "In Use", `${e.examples.length} 句`), examples(e, 2, used), { key: "entry.examples" })}
 
         ${family(e)}
 
         <aside class="article-side">
-          ${more.length ? `<h3 class="kicker">相关的词 <span class="en">Related</span></h3>${linkCards(more)}` : ""}
+          ${more.length ? fold(foldHead("相关的词", "Related", `${more.length} 个`), linkCards(more), { key: "entry.related", open: isWide() }) : ""}
 
           <section class="catalog" aria-label="出处">
             <div class="r"><span>出处</span><span>《英语词源典故词典》第 ${e.page} 页</span></div>
@@ -77,7 +81,16 @@ export async function viewEntry(id) {
     </article>`);
   document.title = `${e.headword} · 词源一日`;
 
+  warmSpeech(e.headword);
   if (!e.read) watchReading(e);
+}
+
+/** 目录没变就不重建索引 */
+let indexed = null;
+function indexWords(all) {
+  if (all === indexed) return;
+  indexed = all;
+  setWordIndex(all);
 }
 
 function nextCard(x) {

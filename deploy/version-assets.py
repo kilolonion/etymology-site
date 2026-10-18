@@ -23,8 +23,8 @@ from pathlib import Path
 
 # index.html 里指向本站的 css / js：href="/css/style.css" 或 src="/js/main.js?v=旧版本"
 HTML_REF = re.compile(r"""((?:href|src)=["'])(/[^"'?]+\.(?:css|js))(\?v=[\w.-]+)?(["'])""")
-# 模块里的 import ... from "./x.js" / 'x.js' / "./x.js?v=旧版本"
-JS_IMPORT = re.compile(r"""(from\s*["'])([^"']+?\.js)(\?v=[\w.-]+)?(["'])""")
+# 模块里的 import ... from "./x.js" / 'x.js' / "./x.js?v=旧版本"，以及只为副作用的 import "./x.js"
+JS_IMPORT = re.compile(r"""((?:from|import)\s*["'])([^"']+?\.js)(\?v=[\w.-]+)?(["'])""")
 # 算哈希前先把已有的版本号抹掉，这样对已经打过版本号的目录再算一次，结果也一样
 ANY_VER = re.compile(r"\?v=[\w.-]+")
 

@@ -1115,3 +1115,78 @@ code { font: 600 .95em ui-monospace, Menlo, monospace; letter-spacing: .04em; }
   font-size: 13px; letter-spacing: .04em; white-space: nowrap; box-shadow: var(--shadow); pointer-events: none;
 }
 .offline-bar[hidden] { display: none; }
+
+/* ---------- 可折叠的区块 ---------- */
+.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; -webkit-tap-highlight-color: transparent; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary > :first-child { flex: 1; min-width: 0; }
+.fold-chev { flex: none; display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: var(--muted); transition: transform .2s, background .2s; }
+.fold-chev .i { width: 16px; height: 16px; }
+.fold[open] > summary .fold-chev { transform: rotate(90deg); }
+.fold > summary:hover .fold-chev { background: var(--bg-2); color: var(--ink); }
+.fold > summary .kicker { margin-bottom: 16px; }
+.fold:not([open]) > summary .kicker { margin-bottom: 0; }
+.fold > summary .kicker .meta { order: 3; font: 12.5px var(--sans); letter-spacing: .04em; color: var(--muted); }
+.fold > summary:has(.kicker) .fold-chev { margin-top: 24px; }
+.fold:not([open]) > summary:has(.kicker) .fold-chev { margin-top: 24px; margin-bottom: -16px; }
+.fold:not([open]) + .fold:not([open]) > summary .kicker { margin-top: 26px; }
+/* 卡片式（“我的”页）：标题行就是卡片的头 */
+.fold.panel-card > summary .sec-head { margin-bottom: 0; }
+.fold.panel-card[open] > summary { margin-bottom: 14px; }
+.fold.panel-card > summary .fold-chev { margin: -4px -6px -4px 0; }
+/* 亲缘关系里的“逐条看关系” */
+.fold.sub > summary { justify-content: center; gap: 2px; margin-top: 6px; color: var(--muted); font-size: 14px; }
+.fold.sub > summary > :first-child { flex: none; }
+.fold.sub > summary:hover { color: var(--accent); }
+/* 阅读记录的月份、A–Z 的字母组 */
+.tl-month > summary h2 { margin-bottom: 0; }
+.tl-month[open] > summary { margin-bottom: 12px; }
+.tl-month > summary .fold-chev { margin-top: 6px; }
+.letter-group > summary { border-bottom: 1px solid var(--line); padding: 8px 0 6px; }
+.letter-group > summary > :first-child { flex: none; }
+.letter-group > summary .group-meta { flex: 1; font-size: 13px; color: var(--muted); }
+.letter-group .group-letter { margin: 0; scroll-margin-top: 80px; }
+.letter-group[open] .fold-body { padding-top: 4px; }
+.letters .all { width: auto; padding: 0 12px; font: 13px var(--sans); color: var(--muted); }
+.origins-more summary, .chips-more summary { margin-top: 10px; text-align: left; }
+.origins-more .origins { margin-top: 9px; }
+.chips-more .chips { margin-top: 8px; }
+
+/* ---------- 正文里的词卡链接 ---------- */
+a.wl { color: inherit; text-decoration: underline dotted color-mix(in srgb, var(--t-ink, var(--accent)) 70%, transparent); text-decoration-thickness: 1.5px; text-underline-offset: .22em; cursor: pointer; border-radius: 3px; }
+a.wl:hover, a.wl.on { color: var(--t-ink, var(--accent)); background: color-mix(in srgb, var(--t-ink, var(--accent)) 9%, transparent); }
+.tw { cursor: pointer; border-radius: 3px; }
+.tw:hover, .tw.on { background: color-mix(in srgb, var(--gold) 16%, transparent); }
+
+.wcard {
+  position: absolute; z-index: 60; width: min(340px, calc(100vw - 24px));
+  padding: 14px 16px 14px; border-radius: 18px; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); box-shadow: var(--shadow-lg);
+}
+.wcard.sheet {
+  position: fixed; left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 70vh; overflow: auto;
+  padding: 16px 20px calc(18px + env(safe-area-inset-bottom)); border-radius: 22px 22px 0 0; border-bottom: 0;
+}
+.wcard.sheet::before { content: ""; display: block; width: 38px; height: 4px; margin: -6px auto 10px; border-radius: 4px; background: var(--line); }
+.wc-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--t-ink, var(--muted)); }
+.wc-top .theme-tag { flex: 1; }
+.wc-top .seen { font-style: normal; font-size: 12px; color: var(--muted); }
+.wc-head { display: flex; align-items: center; gap: 4px; }
+.wc-head b { flex: 1; font: italic 700 26px/1.2 var(--display); }
+.wc-x { color: var(--muted); }
+.wc-head .wc-x { margin-left: auto; }
+.wc-phon { margin: 2px 0 6px; font: 15px var(--serif-en); color: var(--muted); }
+.wc-mean { margin: 0 0 8px; font: 600 15px/1.6 var(--serif-zh); }
+.wc-gist { margin: 0 0 10px; font: 14.5px/1.85 var(--serif-zh); color: var(--ink-2); }
+.wc-gist em { color: var(--t-ink); }
+.wc-note { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); }
+.wc-go { display: inline-flex; align-items: center; gap: 4px; color: var(--t-ink, var(--accent)); font-size: 14px; font-weight: 600; text-decoration: none; }
+.wc-go .i { width: 16px; height: 16px; }
+.wc-wait { display: grid; gap: 8px; padding: 8px 0 4px; }
+.wc-wait .sk { height: 12px; }
+.wc-wait .sk + .sk { width: 70%; }
+
+/* 朗读按钮：取音频时轻轻闪，正在读时换成强调色 */
+[data-action="say"].playing { color: var(--accent) !important; }
+[data-action="say"].loading svg { animation: sk-glow 1s ease-in-out infinite; }
+.menu .swap { font-size: 13px; color: var(--accent); }

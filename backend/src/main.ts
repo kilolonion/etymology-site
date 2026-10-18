@@ -1,7 +1,7 @@
 // 后端：只提供 /api。前端是独立的静态站点，生产环境由 nginx 托管并把 /api 转发到这里。
 // 本地开发时设置 FRONTEND_DIR，后端顺便托管前端文件，一个进程就能跑起来。
 
-import { relative, resolve } from "node:path";
+import { dirname, relative, resolve } from "node:path";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono, type Context } from "hono";
@@ -17,10 +17,11 @@ import {
 import { recommend } from "./recommend.ts";
 import * as db from "./db.ts";
 import {
-  allSummaries, getEntry, getRedirect, kinOf, loadEntries, related, search, summarize,
+  allSummaries, findWord, getEntry, getRedirect, gist, kinOf, loadEntries, related, search, summarize,
   themeGroups, totalCount, type Summary,
 } from "./entries.ts";
 import { checkTime, initPush, isValidSub, sendToUser, vapidPublicKey } from "./push.ts";
+import { cleanSpeech, gloss, initSpeech, speech, type Accent } from "./speech.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const PORT = Number(process.env.PORT ?? 8787);
@@ -28,9 +29,12 @@ const HOST = process.env.HOST ?? "127.0.0.1";
 const FRONTEND_DIR = process.env.FRONTEND_DIR ? resolve(process.env.FRONTEND_DIR) : "";
 
 loadEntries(process.env.ENTRIES_PATH ?? resolve(ROOT, "data/entries.json"));
-db.openDb(process.env.STATE_DB ?? resolve(ROOT, "var/app.db"));
+const STATE_DB = process.env.STATE_DB ?? resolve(ROOT, "var/app.db");
+db.openDb(STATE_DB);
 db.purgeExpiredSessions();
 initPush();
+// 发音缓存放在数据库旁边，部署时不会被覆盖
+initSpeech(process.env.AUDIO_CACHE ?? resolve(dirname(STATE_DB), "audio"));
 
 const app = new Hono<AppEnv>();
 app.use(secureHeaders());
@@ -243,6 +247,45 @@ api.get("/history", (c) => {
       return { day, entries: withState(uid, summariesOf(ids)).map((s) => ({ ...s, daily: daily.has(s.id) })) };
     }),
   );
+});
+
+// ---------- 发音与词卡 ----------
+
+/** 发音：真人录音优先，取不到返回 404，页面改用浏览器朗读 */
+api.get("/say", async (c) => {
+  const text = cleanSpeech(c.req.query("q") ?? "");
+  const accent: Accent = c.req.query("accent") === "us" ? "us" : "uk";
+  if (!text || !/[a-z]/i.test(text)) return c.json({ error: "没有可读的内容" }, 400);
+  const clip = await speech(text, accent);
+  if (!clip) return c.json({ error: "暂时取不到发音" }, 404);
+  return c.body(new Uint8Array(clip.audio), 200, {
+    "content-type": "audio/mpeg",
+    // 同一段话的发音不会变
+    "cache-control": "private, max-age=31536000, immutable",
+    "x-audio-source": clip.source,
+  });
+});
+
+/** 词卡：点正文里的词弹出的小卡片 */
+function card(uid: number, id: string) {
+  const e = getEntry(id);
+  if (!e) return undefined;
+  return { ...withState(uid, [summarize(e)])[0]!, gist: gist(e) };
+}
+
+api.get("/card/:id", (c) => {
+  const d = card(uidOf(c), c.req.param("id"));
+  return d ? c.json(d) : c.json({ error: "not found" }, 404);
+});
+
+/** 查一个英文词：书里有就给词卡，没有就给有道的简明释义 */
+api.get("/lookup", async (c) => {
+  const word = (c.req.query("w") ?? "").trim().slice(0, 40);
+  if (!/^[a-z][a-z'’-]*$/i.test(word)) return c.json({ error: "只能查英文单词" }, 400);
+  // 首字母大写的词条（May、March）只认大写的写法，免得情态动词 may 也弹出五月
+  const e = findWord(word);
+  if (e && !(/^[A-Z]/.test(e.headword) && /^[a-z]/.test(word))) return c.json({ word, card: card(uidOf(c), e.id) });
+  return c.json({ word, gloss: await gloss(word) });
 });
 
 api.get("/stats", (c) => c.json(stats(uidOf(c))));

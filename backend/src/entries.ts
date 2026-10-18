@@ -7,6 +7,8 @@ import { isRedirect, THEMES, type FullEntry, type Link, type RawEntry, type Redi
 export type Summary = {
   id: string;
   headword: string;
+  /** 其他拼法，页面上自动给词加链接时也认 */
+  variants?: string[];
   ipa: string;
   pos?: string;
   meaning?: string;
@@ -31,6 +33,8 @@ type Index = {
   dailyOrder: string[];
   /** 词条关系，双向：A 记了 B，B 这边也能查到 A */
   kin: Map<string, Link[]>;
+  /** 小写的词头和其他拼法 → 词条 id（参见条目指向它跳转到的词条） */
+  words: Map<string, string>;
 };
 
 const ORDER_SALT = process.env.ORDER_SALT ?? "etymology-daily";
@@ -74,7 +78,15 @@ function reload(): void {
       push(l.id, { ...l, id: e.id });
     }
   }
-  index = { all, full, redirects, dailyOrder, kin };
+  const words = new Map<string, string>();
+  for (const e of all) {
+    const target = isRedirect(e) ? e.redirect : e.id;
+    for (const w of [e.headword, ...(isRedirect(e) ? [] : (e.variants ?? []))]) {
+      const k = w.toLowerCase().replace(/^the /, "");
+      if (!words.has(k) || !isRedirect(e)) words.set(k, target);
+    }
+  }
+  index = { all, full, redirects, dailyOrder, kin, words };
 }
 
 export const getEntry = (id: string) => index.full.get(id);
@@ -85,6 +97,28 @@ export const totalCount = () => index.full.size;
 /** 和这个词有关系的词（同根 / 同典故 / 衍生），双向 */
 export const kinOf = (id: string): Link[] => index.kin.get(id) ?? [];
 
+/** 一个英文词是不是书里的词条：先原样查，再试着去掉复数、所有格这些词尾 */
+export function findWord(word: string): FullEntry | undefined {
+  const w = word.toLowerCase().replace(/’/g, "'").trim();
+  const forms = [w, w.replace(/'s$/, ""), w.replace(/s$/, ""), w.replace(/es$/, ""), w.replace(/ies$/, "y")];
+  for (const f of forms) {
+    const id = index.words.get(f);
+    if (id && index.full.has(id)) return index.full.get(id);
+  }
+  return undefined;
+}
+
+/** 词卡上的一小段故事：正文第一段，太长就在句号处截断 */
+export function gist(e: FullEntry, max = 120): string {
+  const p = e.etymology[0] ?? "";
+  if (p.length <= max) return p;
+  const cut = p.slice(0, max);
+  const end = Math.max(cut.lastIndexOf("。"), cut.lastIndexOf("；"));
+  let s = end > 40 ? cut.slice(0, end + 1) : cut + "…";
+  if ((s.match(/\*/g)?.length ?? 0) % 2) s = s.replace(/\*([^*]*)$/, "$1"); // 别截断在斜体中间
+  return s;
+}
+
 export function summarize(e: RawEntry): Summary {
   const letter = e.headword[0]!.toUpperCase();
   if (isRedirect(e)) {
@@ -93,6 +127,7 @@ export function summarize(e: RawEntry): Summary {
   return {
     id: e.id,
     headword: e.headword,
+    variants: e.variants?.length ? e.variants : undefined,
     ipa: e.ipa,
     pos: e.pos,
     meaning: e.meaning,

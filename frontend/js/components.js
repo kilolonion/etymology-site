@@ -10,28 +10,62 @@ export const starBtn = (e) =>
 export const sayBtn = (text, cls = "icon-btn") =>
   `<button class="${cls}" data-action="say" data-text="${esc(text)}" aria-label="朗读">${icon("sound")}</button>`;
 
-export const prose = (paras, cls = "") =>
-  `<div class="prose ${cls}">${paras.map((p) => `<p>${rich(p)}</p>`).join("")}</div>`;
+/** 正文段落；传 used 就给书里有的词加词卡链接（见 words.js） */
+export const prose = (paras, cls = "", used = null) =>
+  `<div class="prose ${cls}">${paras.map((p) => `<p>${rich(p, { link: !!used, used: used ?? undefined })}</p>`).join("")}</div>`;
+
+// ---------- 可折叠的区块：点标题收起 / 展开；有 key 的会记住你上次的选择 ----------
+
+const FOLDS = "folds";
+/** 手机上默认收起次要的区块，少翻几屏 */
+export const isWide = () => matchMedia("(min-width: 760px)").matches;
+
+export function fold(summary, body, { key = "", open = true, cls = "" } = {}) {
+  const saved = key ? local.get(FOLDS, {})[key] : undefined;
+  const isOpen = typeof saved === "boolean" ? saved : open;
+  return `<details class="fold ${cls}"${key ? ` data-fold="${esc(key)}"` : ""}${isOpen ? " open" : ""}>
+    <summary>${summary}<span class="fold-chev" aria-hidden="true">${icon("right")}</span></summary>
+    <div class="fold-body">${body}</div>
+  </details>`;
+}
+
+/** 区块标题（和 .kicker 一样的样式），放在 fold 的 summary 里 */
+export const foldHead = (zh, en, meta = "") =>
+  `<h3 class="kicker">${zh} <span class="en">${en}</span>${meta ? `<span class="meta">${meta}</span>` : ""}</h3>`;
+
+// 用户点了标题之后记住开合（默认值随屏幕宽窄变，只有点过的才记）
+document.addEventListener("click", (ev) => {
+  const d = ev.target.closest?.("details[data-fold] > summary")?.parentElement;
+  if (!d) return;
+  setTimeout(() => {
+    const all = local.get(FOLDS, {});
+    all[d.dataset.fold] = d.open;
+    local.set(FOLDS, all);
+  });
+});
 
 /** 词源之路：首尾节点标“源”“今” */
-export function route(e) {
+export function route(e, used = null) {
   if (!e.evolution?.length) return "";
   const n = e.evolution.length;
   const label = (i) => (i === 0 ? "源" : i === n - 1 ? "今" : String(i));
-  return `<h3 class="kicker">词源之路 <span class="en">The Journey</span></h3>
-    <ol class="route">${e.evolution
-      .map((s, i) => `<li><span class="node">${label(i)}</span><span class="txt">${rich(s)}</span></li>`)
-      .join("")}</ol>`;
+  return fold(
+    foldHead("词源之路", "The Journey", `${n} 站`),
+    `<ol class="route">${e.evolution
+      .map((s, i) => `<li><span class="node">${label(i)}</span><span class="txt">${rich(s, { link: !!used, used: used ?? undefined })}</span></li>`)
+      .join("")}</ol>`,
+    { key: "entry.route" },
+  );
 }
 
 /** 一句话记住（大号引文） */
-export const pull = (e) =>
-  e.keyline ? `<blockquote class="pull">${rich(e.keyline)}<small>一句话记住</small></blockquote>` : "";
+export const pull = (e, used = null) =>
+  e.keyline ? `<blockquote class="pull">${rich(e.keyline, { link: !!used, used: used ?? undefined })}<small>一句话记住</small></blockquote>` : "";
 
-/** 例句：默认显示前 show 条，其余折叠 */
-export function examples(e, show = 2) {
+/** 例句：默认显示前 show 条，其余折叠；例句里的英文词都能点（书里有的词带下划线） */
+export function examples(e, show = 2, used = null) {
   const li = (x) => `<li>
-    <p class="ex-en"><span>${rich(x.en)}</span>${sayBtn(x.en, "icon-btn sm")}</p>
+    <p class="ex-en"><span>${used ? rich(x.en, { link: true, used, tap: true }) : rich(x.en)}</span>${sayBtn(x.en, "icon-btn sm")}</p>
     <p class="ex-zh">${esc(x.zh)}</p>
   </li>`;
   const head = e.examples.slice(0, show);
@@ -167,7 +201,10 @@ export function family(e) {
       ${n.read ? `<i class="seen">已读</i>` : ""}
     </a>`)
     .join("");
-  return `<h3 class="kicker">词的亲缘 <span class="en">${used.length === 1 ? REL_EN[used[0]] : "Word Family"}</span></h3>
-    <figure class="kin">${svg}${legend}</figure>
-    <div class="kin-list">${list}</div>`;
+  return fold(
+    foldHead("词的亲缘", used.length === 1 ? REL_EN[used[0]] : "Word Family", `${nodes.length} 个词`),
+    `<figure class="kin">${svg}${legend}</figure>
+    ${fold(`<span class="kin-more">逐条看关系</span>`, `<div class="kin-list">${list}</div>`, { key: "entry.kin-list", open: isWide(), cls: "sub" })}`,
+    { key: "entry.kin" },
+  );
 }
