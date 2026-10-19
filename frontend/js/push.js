@@ -68,7 +68,12 @@ function showUpdateBar() {
   bar.textContent = "词源一日已更新，点这里刷新";
   bar.addEventListener("click", () => location.reload());
   document.body.append(bar);
-  setTimeout(() => bar.remove(), 15000);
+  // 到点淡出再摘掉，别突然消失
+  setTimeout(() => {
+    bar.classList.add("leaving");
+    bar.addEventListener("animationend", () => bar.remove(), { once: true });
+    setTimeout(() => bar.remove(), 600); // 兜底：动画被系统“减少动效”关掉时 animationend 可能不来
+  }, 15000);
 }
 
 /**

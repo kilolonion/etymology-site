@@ -859,7 +859,10 @@ a.fp:hover { transform: scale(1.25); }
 }
 
 /* ---------- 账号与安全、邀请与成员 ---------- */
-.account-grid, .admin-grid { display: grid; gap: 14px; }
+/* 单列网格的列宽默认是 auto，会被里面最宽的不可折行内容（长命令、长令牌的输入框）撑开，
+   整列卡片一起超出屏幕。minmax(0, 1fr) 让列可以收缩，长内容留在自己的框里横向滚动。 */
+.account-grid, .admin-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.admin-grid > *, .account-grid > * { min-width: 0; }
 .kv { margin: 0; }
 .kv div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .kv dt { color: var(--muted); font-size: 14px; }
@@ -995,7 +998,7 @@ textarea.links { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1
 @media (min-width: 1000px) { .stats { grid-template-columns: repeat(6, 1fr); } }
 
 @media (min-width: 900px) {
-  .account-grid, .admin-grid { grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .account-grid, .admin-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 }
 
 /* ---------- 探索：子专题、语源之路、时间长廊 ---------- */
@@ -1102,12 +1105,17 @@ textarea.links { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1
 }
 .offline-bar[hidden] { display: none; }
 .update-bar {
-  position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 10px); z-index: 61; transform: translateX(-50%);
+  position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 10px); z-index: 61;
   padding: 8px 16px; border-radius: 999px; background: var(--accent); color: var(--accent-ink);
   font-size: 13px; letter-spacing: .04em; white-space: nowrap; box-shadow: var(--shadow-lg); border: 0; cursor: pointer;
-  animation: update-bar-in .25s ease-out;
+  /* 入场：从上方滑下并淡入；退场由 .leaving 触发。translate 单独写，不和居中用的 transform 打架 */
+  transform: translateX(-50%);
+  animation: update-bar-in .3s cubic-bezier(.2, .8, .2, 1) both;
 }
-@keyframes update-bar-in { from { opacity: 0; transform: translate(-50%, -8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+.update-bar.leaving { animation: update-bar-out .25s ease-in both; }
+@keyframes update-bar-in { from { opacity: 0; transform: translate(-50%, -12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes update-bar-out { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -12px); } }
+@media (prefers-reduced-motion: reduce) { .update-bar, .update-bar.leaving { animation-duration: .01s; } }
 
 /* ---------- 可折叠的区块 ---------- */
 .fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; -webkit-tap-highlight-color: transparent; }
@@ -1840,15 +1848,19 @@ a.w-era:hover .era-big b { color: var(--accent); }
   background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-lg); color: var(--muted);
   transform: translateY(calc(var(--d) + 8px)) scale(calc(.6 + var(--p) * .4)); opacity: 0; pointer-events: none;
 }
+.ptr { will-change: transform, opacity; }
 .ptr.on { opacity: calc(.4 + var(--p) * .6); }
-.ptr.back { transition: transform .25s ease, opacity .25s ease; }
-.ptr-ic { display: grid; transform: rotate(calc(var(--p) * 270deg)); }
+/* 收起：位移和淡出一起走，用减速曲线；跟手和转圈的时候不能有过渡，不然会慢半拍 */
+.ptr.back { transition: transform .26s cubic-bezier(.2, .8, .2, 1), opacity .26s ease; }
+.ptr-ic { display: grid; transform: rotate(calc(var(--p) * 270deg)); will-change: transform; }
 .ptr .i { width: 20px; height: 20px; }
 .ptr.ready { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
-.ptr.spin, .ptr.done { opacity: 1; color: var(--accent); transition: transform .2s ease; }
-.ptr.spin .ptr-ic { animation: ptr-spin .7s linear infinite; }
-.ptr.done .ptr-ic { transform: none; }
-@keyframes ptr-spin { to { transform: rotate(360deg); } }
+/* 转圈：起点必须写死成 0deg。以前只写了 to，起点取的是松手时的角度（最多 270deg），每圈只转不到一整圈，看起来一顿一顿 */
+.ptr.spin, .ptr.done { opacity: 1; color: var(--accent); transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
+.ptr.spin .ptr-ic { animation: ptr-spin .8s linear infinite; }
+.ptr.done .ptr-ic { transform: none; animation: ptr-pop .28s cubic-bezier(.2, .8, .2, 1); }
+@keyframes ptr-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes ptr-pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .ptr.spin .ptr-ic { animation-duration: 2s; } }
 
 /* ---------- 可靠性标记：AI 整理 / 编辑撰写 / 补写 ---------- */
@@ -1989,6 +2001,10 @@ button.ae-chip { cursor: pointer; }
 .ae-token-form input, .ae-token-form select { height: 42px; padding: 0 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-size: 15px; min-width: 0; }
 @media (max-width: 620px) { .ae-token-form { grid-template-columns: 1fr 1fr; } .ae-token-form input { grid-column: 1 / -1; } }
 .ae-tokens li b { font-weight: 600; }
+.ae-tokens li > span { min-width: 0; overflow-wrap: anywhere; }
+.invite-new { min-width: 0; }
+.invite-new .link-box input { text-overflow: ellipsis; }
+.invite-new textarea.links { box-sizing: border-box; max-width: 100%; white-space: pre; overflow-x: auto; }
 /* 文章页头图是深色底：标签用浅色字，圆点保留颜色 */
 .hero .src-badge { color: var(--cream); border-color: rgb(255 255 255 / .3); background: rgb(255 255 255 / .1); }
 .hero .src-badge:hover { background: rgb(255 255 255 / .18); }
