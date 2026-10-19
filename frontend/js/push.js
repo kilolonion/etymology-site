@@ -1,6 +1,7 @@
 // 网页推送：注册 Service Worker、订阅 / 取消订阅
 
 import { api } from "./lib.js";
+import { isStale, versionOfHtml } from "./update.js";
 
 const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -8,40 +9,66 @@ export const isStandalone = () =>
   matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 
 let regPromise;
+let pageVersion = ""; // 这个页面自己跑的前端版本
 
 /**
  * 注册 Service Worker。地址带上当前前端的内容版本号：Cloudflare 会给 .js 盖几小时缓存，
- * 不带版本号的话，新部署的 sw.js 要等缓存过期才被手机发现，页面就一直停在旧版上。
- * 版本号由 main.js 从自己的 import 地址里取出。
+ * 不带版本号的话，新部署的 sw.js 要等缓存过期才被手机发现。版本号由 main.js 从自己的 import 地址里取出。
+ *
+ * 注意：页面跑的是旧版时注册的也是旧地址，所以“有没有新版”不能靠 SW 更新来发现，
+ * 而是页面直接去比对线上首页的版本号（checkForUpdate）。
  */
 export function registerSW(version = "") {
   if (!("serviceWorker" in navigator)) return;
+  pageVersion = version;
   regPromise = navigator.serviceWorker.register(version ? `/sw.js?v=${version}` : "/sw.js").catch(() => null);
-  // 回到前台时主动查一次更新，开着不动也能跟上新版本
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") regPromise?.then((r) => r?.update().catch(() => {}));
-  });
-  // 服务端换了新的 SW（跟着就是新版页面）：提示一声，让人自己决定什么时候刷新
+
+  // SW 换新时会告诉页面它自己的版本；只有和页面版本不一样才提示（页面本来就是新版就别吵）
   navigator.serviceWorker.addEventListener("message", (ev) => {
     if (ev.data?.type !== "updated") return;
-    if (!navigator.serviceWorker.controller) return; // 首次安装，页面本来就是新版，不用提示
-    if (sessionStorage.getItem("ety-updated") === ev.data.version) return; // 同一次更新只提醒一遍
-    sessionStorage.setItem("ety-updated", ev.data.version ?? "1");
-    showUpdateBar();
+    if (!navigator.serviceWorker.controller) return; // 首次安装，页面本来就是新版
+    if (isStale(pageVersion, ev.data.version)) promptUpdate(ev.data.version);
   });
+
+  // 打开几秒后、以及每次回到前台，去看一眼线上是不是已经有新版本了
+  setTimeout(checkForUpdate, 4000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") checkForUpdate();
+  });
+}
+
+let lastCheck = 0;
+/** 拉一份线上首页，版本号和自己不一样就提示刷新（一分钟内最多查一次） */
+export async function checkForUpdate() {
+  if (!pageVersion || Date.now() - lastCheck < 60_000) return;
+  lastCheck = Date.now();
+  try {
+    const res = await fetch("/", { cache: "no-store" });
+    if (!res.ok) return;
+    const latest = versionOfHtml(await res.text());
+    if (isStale(pageVersion, latest)) promptUpdate(latest);
+  } catch {}
+}
+
+/** 同一个新版本在一次会话里只提醒一遍 */
+function promptUpdate(version) {
+  try {
+    if (sessionStorage.getItem("ety-updated") === version) return;
+    sessionStorage.setItem("ety-updated", version);
+  } catch {}
+  showUpdateBar();
 }
 
 /** 顶部小条：有新版本，点一下刷新 */
 function showUpdateBar() {
-  let bar = document.querySelector(".update-bar");
-  if (bar) return;
-  bar = document.createElement("button");
+  if (document.querySelector(".update-bar")) return;
+  const bar = document.createElement("button");
   bar.className = "update-bar";
   bar.setAttribute("role", "status");
   bar.textContent = "词源一日已更新，点这里刷新";
   bar.addEventListener("click", () => location.reload());
   document.body.append(bar);
-  setTimeout(() => bar?.remove(), 15000);
+  setTimeout(() => bar.remove(), 15000);
 }
 
 /**

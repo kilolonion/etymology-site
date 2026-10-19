@@ -26,7 +26,8 @@ self.addEventListener("activate", (event) =>
     self.clients.claim().then(() =>
       // 换上新 SW 后，打开着的页面大概率还在跑旧版前端，提醒它们刷新
       self.clients.matchAll({ type: "window" }).then((list) => {
-        const version = self.registration.active?.scriptURL.match(/v=([\w.-]+)/)?.[1] ?? "";
+        // 自己的版本号就在脚本地址里（/sw.js?v=xxxx）；页面拿它和自己的版本比，一样就不提示
+        const version = new URL(self.location.href).searchParams.get("v") ?? "";
         for (const client of list) client.postMessage({ type: "updated", version });
       }),
     ),
