@@ -19,12 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Exception / 例外说明：
-The word-entry data under `backend/data/` is NOT covered by this license.
-Its copyright belongs to the original book's authors, publisher and rights
-holders. See README.md.
-`backend/data/` 目录下的词条数据不适用本许可，权利归《英语词源典故词典》
-原书作者、出版社及相应权利人所有，详见 README.md。
