@@ -1,7 +1,8 @@
 // 入口：路由、全局动作、登录状态
 
-import { actions, api, beginNav, empty, esc, hooks, nav, prefetch, render, skeleton, skeletonFor, speak, toast } from "./lib.js";
+import { actions, api, beginNav, empty, esc, hooks, invalidate, nav, prefetch, render, skeleton, skeletonFor, speak, toast } from "./lib.js";
 import { clearOfflineData, flushReads, precacheLoaded, setOffline, warmForOffline } from "./offline.js";
+import { initPull } from "./pull.js";
 import { disablePush, registerSW } from "./push.js";
 import "./wordcard.js";
 import { viewAccount } from "./views/account.js";
@@ -244,6 +245,22 @@ hooks.onRevalidate = (path) => {
   }, 90);
 };
 
+// 下拉刷新：清掉接口缓存，把当前这一页重新画一遍（不整页重载）；顺便让 Service Worker 检查前端新版本
+async function refreshPage() {
+  navigator.serviceWorker?.getRegistration().then((r) => r?.update()).catch(() => {});
+  syncReads();
+  const page = current;
+  if (!page) return location.reload();
+  invalidate();
+  const open = openIndexes();
+  await page.run();
+  if (current !== page) return; // 刷新途中切到别的页了
+  page.used = new Set(nav.used);
+  if (shown) decorateBack(shown.state, page.path);
+  restoreOpen(open);
+}
+initPull(refreshPage);
+
 // ---------- 全局动作 ----------
 
 actions.say = (el) => speak(el.dataset.text, el);
@@ -317,7 +334,7 @@ const boot = () => route().catch((err) => {
 
 window.addEventListener("hashchange", boot);
 /** 离线时读完的词，联网后补交 */
-const syncReads = () => flushReads((id, read) => api(`/entries/${encodeURIComponent(id)}/read`, { method: "POST", body: { read } }));
+const syncReads = () => flushReads((id, read, manual) => api(`/entries/${encodeURIComponent(id)}/read`, { method: "POST", body: { read, manual } }));
 addEventListener("online", () => {
   setOffline(false);
   syncReads();

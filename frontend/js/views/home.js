@@ -6,6 +6,7 @@ import { reasonText, reminderPrompt, sayBtn } from "../components.js";
 import { actions, api, cnDate, esc, icon, local, rich, render, weekday } from "../lib.js";
 import { emblem, primaryTheme, THEMES, themeOf, themeTag, tint } from "../themes.js";
 import { loadLayout, mountDesk, shell } from "../desk.js";
+import { readMinutes } from "./entry.js";
 
 /** 单词越长，字号越小 */
 const sizeClass = (w) => (w.length <= 8 ? "xl" : w.length <= 13 ? "l" : "m");
@@ -91,7 +92,7 @@ const WIDGETS = {
   discover: { name: "随手翻一页", desc: "推荐一个没读过的词，可以换", sizes: ["m", "l"], icon: "shuffle", group: "widget", draw: wDiscover },
   stats: { name: "阅读统计", desc: "读了多少、连续几天", sizes: ["s", "m", "bar"], icon: "spark", group: "widget", draw: wStats },
   quiz: { name: "考考你", desc: "看“一句话记住”，猜是哪个读过的词", sizes: ["m", "l"], icon: "quiz", group: "widget", draw: wQuiz, late: true },
-  board: { name: "排行榜", desc: "今天 / 这周大家各读了几个词", sizes: ["m", "l", "s"], icon: "users", group: "widget", draw: wBoard },
+  board: { name: "排行榜", desc: "今天 / 这周大家各读了几个词（只露名字第一个字）", sizes: ["m", "l", "s"], icon: "users", group: "widget", draw: wBoard },
   example: { name: "今日例句", desc: "今天这个词怎么用，可以听", sizes: ["m", "s"], icon: "quote", group: "widget", draw: wExample },
   kin: { name: "今天这个词的亲戚", desc: "参见、同根、同典故、衍生的词", sizes: ["m", "l"], icon: "users", group: "widget", draw: wKin },
   era: { name: "同一个世纪", desc: "和今天的词在同一个世纪起步的故事", sizes: ["m", "l"], icon: "hourglass", group: "widget", draw: wEra, late: true },
@@ -166,7 +167,7 @@ function wToday() {
   const line = t.done && e.keyline ? `<p class="w-q key"><small>一句话记住</small>${rich(e.keyline)}</p>` : `<p class="w-q">${rich(e.teaser)}</p>`;
   return `<a class="w-body w-cover${t.done ? " done" : ""}" href="#/w/${esc(e.id)}" style="${tint(e)}">
     ${emblem(theme)}
-    <div class="w-top">${themeTag(theme)}${t.done ? `<span class="stamp">已<br>读</span>` : `<span class="mins">约 3 分钟</span>`}</div>
+    <div class="w-top">${themeTag(theme)}${t.done ? `<span class="stamp">已<br>读</span>` : `<span class="mins">约 ${readMinutes(e)} 分钟</span>`}</div>
     ${why ? `<p class="w-why">${why}</p>` : ""}
     <div class="w-word ${sizeClass(e.headword)}"><b>${esc(e.headword)}</b><span>/${esc(e.ipa)}/ · ${esc(e.meaning)}</span></div>
     ${line}
@@ -201,8 +202,7 @@ function wTomorrow() {
 const STEPS = [3, 7, 14, 30, 60, 120, 240];
 
 /** 间隔复习的进度条：走到第几站了 */
-function recallTrack(ago) {
-  const k = STEPS.reduce((best, s, i) => (Math.abs(s - ago) < Math.abs(STEPS[best] - ago) ? i : best), 0);
+function recallTrack(k) {
   return `<ol class="rc-track" aria-label="间隔复习：第 ${k + 1} 站，共 ${STEPS.length} 站">${STEPS
     .map((s, i) => `<li class="${i < k ? "past" : i === k ? "now" : ""}"><span>${s}</span></li>`)
     .join("")}</ol>`;
@@ -221,18 +221,55 @@ function wRecall(size) {
         <small>旧词重逢 · ${x.ago} 天前</small>
         <b>${esc(x.headword)}</b>
         <span>还记得它的来历吗？点一下翻面</span>
-        ${wide ? recallTrack(x.ago) : ""}
+        ${wide ? recallTrack(x.stage ?? 0) : ""}
       </div>
       <div class="face face-back">
         ${wide ? `<small class="rc-meta"><b>${esc(x.headword)}</b>${esc(x.meaning)}${x.langs?.length ? ` · ${esc(x.langs.join(" → "))}` : ""}</small>` : ""}
         <p>${rich(x.keyline || x.meaning)}</p>
-        <a href="#/w/${esc(x.id)}">重读全文 ${icon("arrow")}</a>
+        ${recallButtons(x)}
       </div>
     </div>
   </div>`;
 }
 
-actions.flip = (el) => el.classList.toggle("flipped");
+/** 背面：记得 / 忘了。记得就推后下次见面，忘了明天再来；今天点过的显示结果 */
+function recallButtons(x) {
+  if (x.reviewed) {
+    const when = x.due ? daysUntil(x.due) : 0;
+    return `<div class="rc-done">${x.reviewed === "ok" ? `${icon("check")}记得，${when} 天后再见` : "明天再来考你一次"}<a href="#/w/${esc(x.id)}">重读${icon("right")}</a></div>`;
+  }
+  return `<div class="rc-acts">
+    <button data-action="recall" data-id="${esc(x.id)}" data-ok="1">${icon("check")}记得</button>
+    <button data-action="recall" data-id="${esc(x.id)}" data-ok="0">忘了</button>
+    <a href="#/w/${esc(x.id)}">重读${icon("right")}</a>
+  </div>`;
+}
+
+const daysUntil = (day) => Math.max(1, Math.round((Date.parse(day) - Date.parse(ctx.t.day)) / 86_400_000));
+
+actions.recall = async (el, ev) => {
+  ev?.stopPropagation?.();
+  const box = el.closest(".w");
+  const x = ctx.t.resurface;
+  if (!box || !x) return;
+  for (const b of box.querySelectorAll("[data-action=recall]")) b.disabled = true;
+  const ok = el.dataset.ok === "1";
+  const r = await api(`/entries/${encodeURIComponent(el.dataset.id)}/review`, { method: "POST", body: { ok } }).catch(() => null);
+  if (!r) {
+    for (const b of box.querySelectorAll("[data-action=recall]")) b.disabled = false;
+    return;
+  }
+  Object.assign(x, { reviewed: ok ? "ok" : "no", due: r.dueDay, stage: r.stage });
+  box.outerHTML = widget("recall", box.dataset.size);
+  // 重画后保持翻在背面
+  document.querySelector('.w[data-w="recall"] .flip')?.classList.add("flipped");
+};
+
+actions.flip = (el, ev) => {
+  // 背面的按钮、链接自己处理，不翻回去
+  if (ev?.target?.closest?.("button, a")) return;
+  el.classList.toggle("flipped");
+};
 
 const WEEK_CN = ["一", "二", "三", "四", "五", "六", "日"];
 
@@ -249,13 +286,17 @@ function wWeek(size) {
       <p class="dots" aria-label="本周">${dots}</p>
     </a>`;
   }
+  const p = t.progress ?? { today: 0, goal: 1, repair: null, patched: [] };
+  const patched = new Set(p.patched);
   const cells = t.week
     .map((d, i) => {
       const isToday = d.day === t.day;
       const future = d.day > t.day;
       const x = d.entry;
-      const state = future ? "future" : x?.read ? "read" : isToday ? "today" : x ? "missed" : "none";
-      const mark = x?.read ? `<span class="mark" style="${tint(x)}">${esc(x.headword[0])}</span>` : `<span class="mark"></span>`;
+      // 补签的那天：没读推送的词，但第二天多读补上了
+      const fixed = !x?.read && patched.has(d.day);
+      const state = future ? "future" : x?.read ? "read" : fixed ? "patched" : isToday ? "today" : x ? "missed" : "none";
+      const mark = x?.read ? `<span class="mark" style="${tint(x)}">${esc(x.headword[0])}</span>` : fixed ? `<span class="mark" title="补签">补</span>` : `<span class="mark"></span>`;
       // 格子高的时候，读过的那天下面写上读的是哪个词
       const word = x?.read ? `<span class="ww" style="${tint(x)}">${esc(x.headword)}</span>` : `<span class="ww"></span>`;
       const inner = `<span class="wd">${WEEK_CN[i]}</span><span class="dn">${Number(d.day.slice(8))}</span>${mark}${word}`;
@@ -263,14 +304,19 @@ function wWeek(size) {
       return x && !future ? `<a class="${cls}" href="#/w/${esc(x.id)}" title="${esc(x.headword)}"${x.read ? ` style="${tint(x)}"` : ""}>${inner}</a>` : `<span class="${cls}">${inner}</span>`;
     })
     .join("");
-  // 底下一行：这周读了几天，今天读没读（没读就给个入口）
-  const n = t.week.filter((d) => d.entry?.read).length;
+  // 底下一行：左边今日目标；右边昨天漏了怎么补，或者今天读没读（没读就给个入口）
   const e = t.entry;
-  const now = t.done || !e ? `<span class="ok">${icon("check")}今天读完了</span>` : `<a href="#/w/${esc(e.id)}">去读今天的 <em>${esc(e.headword)}</em>${icon("right")}</a>`;
+  const r = p.repair;
+  const now = r && !r.repaired
+    ? `<span class="fix">昨天漏了，今天读满 ${r.need} 个可补签</span>`
+    : t.done || !e
+      ? `<span class="ok">${icon("check")}${r?.repaired ? "昨天已补签" : "今天读完了"}</span>`
+      : `<a href="#/w/${esc(e.id)}">去读今天的 <em>${esc(e.headword)}</em>${icon("right")}</a>`;
+  const goal = `<span class="goal${p.today >= p.goal ? " met" : ""}">今日 <b>${p.today}</b>/${p.goal} 个${p.today >= p.goal ? icon("check") : ""}</span>`;
   return `<div class="w-body w-card w-week">
     <div class="w-head"><h2>本周</h2><span>连续 <b>${s.streak}</b> 天 · 已读 <b>${s.read}</b></span></div>
     <div class="days">${cells}</div>
-    <p class="wk-foot"><span>这周读了 <b>${n}</b> / 7 天</span>${now}</p>
+    <p class="wk-foot">${goal}${now}</p>
   </div>`;
 }
 
@@ -513,6 +559,8 @@ actions.quiz = (el) => {
   }
   if (!ok) el.classList.add("wrong");
   if (x) box.querySelector(".qz-q").innerHTML = rich(x.keyline);
+  // 答对答错都记一次复习：答错的词很快会在“旧词重逢”里再见
+  api(`/entries/${encodeURIComponent(id)}/review`, { method: "POST", body: { ok } }).catch(() => {});
   box.querySelector(".qz-score").innerHTML = `今天答对 <b>${quiz.right}</b> / ${quiz.done}`;
   box.querySelector(".qz-res").innerHTML = `<span class="verdict">${icon(ok ? "check" : "close")}${ok ? "答对了" : `是 <em>${esc(x?.headword ?? "")}</em>`}</span>
     <a href="#/w/${esc(id)}">重读${icon("right")}</a><button class="next" data-action="quiz-next">下一题${icon("arrow")}</button>`;
@@ -592,6 +640,7 @@ function wBoard(size) {
   if (ctx.board === undefined && !boardBusy) loadBoard();
   if (ctx.board === undefined) return loading("排行榜");
   if (!ctx.board) return quiet("排行榜", "暂时取不到排行，联网后再看看", "users");
+  if (ctx.board.off) return quiet("排行榜", "你在“我的”里关掉了排行榜，别人的榜上也看不到你", "users", ["#/me", "去打开"]);
   const { rows, range } = ctx.board;
   const me = rows.find((r) => r.me);
   const when = RANGE[range];

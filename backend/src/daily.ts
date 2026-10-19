@@ -2,7 +2,8 @@
 // 另外负责“旧词重逢”：按间隔重现以前读过的词。所有函数的第一个参数都是用户 id。
 
 import {
-  allDaily, getDaily, getDailyReasons, getResurface, readDays, readLog, recentResurfaced, setDaily, setResurface, stateMap,
+  allDaily, getDaily, getDailyReasons, getResurface, getReview, listReviews, readDayCounts, readLog, recentResurfaced, saveReview,
+  setDaily, setResurface, stateMap, type Review,
 } from "./db.ts";
 import { dailyOrder, getEntry } from "./entries.ts";
 import { recommend, type Reason } from "./recommend.ts";
@@ -105,28 +106,82 @@ const daysBetween = (a: string, b: string) => Math.round((Date.parse(b) - Date.p
 
 /** 旧词重逢的间隔（天）：越久远的记忆越优先；昨天读的还新鲜，不重现 */
 const INTERVALS = [240, 120, 60, 30, 14, 7, 3];
+/** 间隔复习的各站（天），从短到长；记得就往后走一站，忘了回到起点、明天再见 */
+export const STEPS = [3, 7, 14, 30, 60, 120, 240];
 
-/** 旧词重逢：按间隔挑一个以前读过的词，当天固定 */
-export function resurface(uid: number, day = localDay()): { id: string; ago: number } | undefined {
+/** 还没复习过的词：按读过多少天，算它现在大概在第几站 */
+const stageFromAgo = (ago: number) => Math.max(0, STEPS.findLastIndex((s) => s <= ago));
+
+/**
+ * 旧词重逢：当天固定一个。先挑复习到期的（忘过的会很快回来），没有到期的再按读过的天数正好落在间隔上的挑；
+ * 已经排了以后复习日期的词，没到日子不提前出来。
+ */
+export function resurface(uid: number, day = localDay()): { id: string; ago: number; stage: number; review: Review | null } | undefined {
   const log = readLog(uid).filter((r) => r.read_day < day && getEntry(r.id));
+  const info = (id: string, readDay: string) => {
+    const review = getReview(uid, id) ?? null;
+    const ago = daysBetween(readDay, day);
+    return { id, ago, stage: review?.stage ?? stageFromAgo(ago), review };
+  };
   const stored = getResurface(uid, day);
   const storedRow = stored ? log.find((r) => r.id === stored) : undefined;
-  if (storedRow) return { id: storedRow.id, ago: daysBetween(storedRow.read_day, day) };
+  if (storedRow) return info(storedRow.id, storedRow.read_day);
 
   const recent = recentResurfaced(uid, shiftDay(day, -2));
   const today = new Set(getDaily(uid, day) ?? []);
+  const reviews = new Map(listReviews(uid).map((r) => [r.id, r]));
   const cand = log.filter((r) => !recent.has(r.id) && !today.has(r.id));
-  let hit = INTERVALS.map((iv) => cand.find((r) => daysBetween(r.read_day, day) === iv)).find(Boolean);
+  // 到期的复习：最早到期的先来
+  let hit: (typeof log)[number] | undefined = cand
+    .filter((r) => reviews.get(r.id) && reviews.get(r.id)!.dueDay <= day && reviews.get(r.id)!.lastDay < day)
+    .sort((a, b) => reviews.get(a.id)!.dueDay.localeCompare(reviews.get(b.id)!.dueDay))[0];
+  const fresh = cand.filter((r) => !reviews.has(r.id));
+  hit ??= INTERVALS.map((iv) => fresh.find((r) => daysBetween(r.read_day, day) === iv)).find(Boolean);
   // 没有正好落在间隔上的，就挑最早读过、三天以上的
-  hit ??= cand.filter((r) => daysBetween(r.read_day, day) >= 3).at(-1);
+  hit ??= fresh.filter((r) => daysBetween(r.read_day, day) >= 3).at(-1);
   if (!hit) return undefined;
   setResurface(uid, day, hit.id);
-  return { id: hit.id, ago: daysBetween(hit.read_day, day) };
+  return info(hit.id, hit.read_day);
+}
+
+/** 记一次复习（旧词重逢点“记得 / 忘了”，或考考你答对 / 答错） */
+export function review(uid: number, id: string, ok: boolean, day = localDay()): Review | undefined {
+  const row = readLog(uid).find((r) => r.id === id);
+  if (!row) return undefined;
+  const prev = getReview(uid, id);
+  // 同一天对同一个词只记第一次，免得来回点刷进度
+  if (prev?.lastDay === day) return prev;
+  // 记得：从现在这一站往后走一站；忘了：回到第一站，明天再见
+  const now = prev?.stage ?? stageFromAgo(daysBetween(row.read_day, day));
+  const stage = ok ? Math.min(STEPS.length - 1, now + 1) : 0;
+  const next: Review = { id, stage, dueDay: shiftDay(day, ok ? STEPS[stage]! : 1), lastDay: day, lastOk: ok };
+  saveReview(uid, next);
+  return next;
+}
+
+/** 漏了一天，第二天读满这么多个就能补上 */
+export const REPAIR_NEED = 2;
+
+/**
+ * 算连续天数用的“有效阅读日”：真读过的日子，加上补签的日子。
+ * 补签：某天没读，但前一天读过、后一天读了不少于 REPAIR_NEED 个，这一天就算接上了（只补单独漏掉的一天）。
+ * 手动“标为已读”的不算。
+ */
+export function streakDays(uid: number): { days: Set<string>; patched: Set<string>; counts: Map<string, number> } {
+  const counts = readDayCounts(uid);
+  const days = new Set(counts.keys());
+  const patched = new Set<string>();
+  for (const [d, n] of counts) {
+    const gap = shiftDay(d, -1);
+    if (n >= REPAIR_NEED && !days.has(gap) && days.has(shiftDay(d, -2))) patched.add(gap);
+  }
+  for (const d of patched) days.add(d);
+  return { days, patched, counts };
 }
 
 /** 历史上最长的连续阅读天数 */
 export function bestStreak(uid: number): number {
-  const days = [...readDays(uid)].sort();
+  const days = [...streakDays(uid).days].sort();
   let best = 0;
   let run = 0;
   for (let i = 0; i < days.length; i++) {
@@ -136,15 +191,32 @@ export function bestStreak(uid: number): number {
   return best;
 }
 
-/** 连续阅读天数（今天还没读则从昨天算起） */
-export function streak(uid: number): number {
-  const days = new Set(readDays(uid));
-  const cursor = new Date();
-  if (!days.has(localDay(cursor))) cursor.setUTCDate(cursor.getUTCDate() - 1);
+/** 连续阅读天数（今天还没读则从昨天算起；昨天漏了但今天补上的也接着算） */
+export function streak(uid: number, day = localDay()): number {
+  const { days } = streakDays(uid);
+  let cursor = days.has(day) ? day : shiftDay(day, -1);
   let n = 0;
-  while (days.has(localDay(cursor))) {
+  while (days.has(cursor)) {
     n++;
-    cursor.setUTCDate(cursor.getUTCDate() - 1);
+    cursor = shiftDay(cursor, -1);
   }
   return n;
+}
+
+/**
+ * 今天的打卡情况：今天读了几个、目标几个；昨天漏了而前天读过时，提示今天读满几个能补上
+ */
+export function todayProgress(uid: number, goal: number, day = localDay()) {
+  const { days, patched, counts } = streakDays(uid);
+  const have = counts.get(day) ?? 0;
+  const yesterday = shiftDay(day, -1);
+  const canRepair = !counts.has(yesterday) && counts.has(shiftDay(day, -2));
+  return {
+    today: have,
+    goal,
+    // need：还差几个能补上昨天；repaired：已经补上了
+    repair: canRepair ? { day: yesterday, need: REPAIR_NEED, have, repaired: patched.has(yesterday) } : null,
+    patched: [...patched].filter((d) => d >= shiftDay(day, -7)),
+    streakToday: days.has(day),
+  };
 }

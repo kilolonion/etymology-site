@@ -44,6 +44,8 @@ export async function viewMe() {
       <a href="#/me/history">${icon("clock")}<span class="grow">阅读记录</span><span class="val">${history.length ? `${history.length} 天` : ""}</span>${icon("right", "i chev")}</a>
       <a href="#/me/reminder">${icon("bell")}<span class="grow">每日提醒</span><span class="val">${reminderVal}</span>${icon("right", "i chev")}</a>
       <button class="menu-btn" data-action="accent">${icon("sound")}<span class="grow">发音</span><span class="val accent-val">${ACCENT[getAccent()]}</span><span class="swap">切换</span></button>
+      <button class="menu-btn" data-action="goal" data-goal="${me.goal ?? 1}">${icon("today")}<span class="grow">每日目标</span><span class="val goal-val">每天 ${me.goal ?? 1} 个</span><span class="swap">调整</span></button>
+      <button class="menu-btn" data-action="board-opt" data-on="${!!me.onBoard}">${icon("users")}<span class="grow">参加排行榜</span><span class="val board-val">${me.onBoard ? "参加中" : "已关闭"}</span><span class="swap">${me.onBoard ? "关闭" : "打开"}</span></button>
     </nav>
     <nav class="menu">
       <a href="#/me/account">${icon("key")}<span class="grow">账号与安全</span><span class="val">${esc(me.username)}</span>${icon("right", "i chev")}</a>
@@ -63,6 +65,36 @@ actions.accent = (el) => {
   el.querySelector(".accent-val").textContent = ACCENT[next];
   speak("etymology", el);
   toast(`发音改为${ACCENT[next]}`);
+};
+
+/** 每日目标：1 → 2 → 3 → 5 → 1 轮着换；首页“本周”和读完时的收尾都按它算 */
+const GOALS = [1, 2, 3, 5];
+actions.goal = async (el) => {
+  const next = GOALS[(GOALS.indexOf(Number(el.dataset.goal)) + 1) % GOALS.length];
+  el.disabled = true;
+  try {
+    const { goal } = await api("/me/goal", { method: "PUT", body: { goal: next } });
+    el.dataset.goal = String(goal);
+    el.querySelector(".goal-val").textContent = `每天 ${goal} 个`;
+    toast(`每日目标改为 ${goal} 个`);
+  } finally {
+    el.disabled = false;
+  }
+};
+
+/** 排行榜开关：关掉后别人的榜上没有你，你的首页也不显示榜；榜上别人的名字只露第一个字 */
+actions["board-opt"] = async (el) => {
+  const on = el.dataset.on !== "true";
+  el.disabled = true;
+  try {
+    const { onBoard } = await api("/me/board", { method: "PUT", body: { on } });
+    el.dataset.on = String(onBoard);
+    el.querySelector(".board-val").textContent = onBoard ? "参加中" : "已关闭";
+    el.querySelector(".swap").textContent = onBoard ? "关闭" : "打开";
+    toast(onBoard ? "已加入排行榜" : "已退出排行榜：别人看不到你，你的首页也不再显示排名");
+  } finally {
+    el.disabled = false;
+  }
 };
 
 /** 可折叠的卡片：标题行就是 sec-head */

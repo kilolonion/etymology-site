@@ -59,6 +59,15 @@ export function openDb(path: string): void {
       id      TEXT NOT NULL,
       PRIMARY KEY (user_id, day)
     );
+    CREATE TABLE IF NOT EXISTS reviews (
+      user_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      id       TEXT NOT NULL,
+      stage    INTEGER NOT NULL,
+      due_day  TEXT NOT NULL,
+      last_day TEXT NOT NULL,
+      last_ok  INTEGER NOT NULL,
+      PRIMARY KEY (user_id, id)
+    );
     CREATE TABLE IF NOT EXISTS push_subs (
       endpoint   TEXT PRIMARY KEY,
       user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -82,6 +91,12 @@ export function openDb(path: string): void {
   const cols = new Set((db.prepare("PRAGMA table_info(users)").all() as { name: string }[]).map((c) => c.name));
   if (!cols.has("disabled")) db.exec("ALTER TABLE users ADD COLUMN disabled INTEGER NOT NULL DEFAULT 0");
   if (!cols.has("last_seen")) db.exec("ALTER TABLE users ADD COLUMN last_seen TEXT");
+  if (!cols.has("on_board")) db.exec("ALTER TABLE users ADD COLUMN on_board INTEGER NOT NULL DEFAULT 1");
+  if (!cols.has("daily_goal")) db.exec("ALTER TABLE users ADD COLUMN daily_goal INTEGER NOT NULL DEFAULT 1");
+  if (!cols.has("last_recap_day")) db.exec("ALTER TABLE users ADD COLUMN last_recap_day TEXT");
+  // 手动“标为已读”的：书架照常算，排行榜、连续天数、每日目标不算
+  const pcols = new Set((db.prepare("PRAGMA table_info(progress)").all() as { name: string }[]).map((c) => c.name));
+  if (!pcols.has("manual")) db.exec("ALTER TABLE progress ADD COLUMN manual INTEGER NOT NULL DEFAULT 0");
   dbFile = path;
 }
 
@@ -173,14 +188,18 @@ export function setReminderTime(uid: number, time: string): void {
 }
 
 /** 有推送订阅的用户，以及各自的提醒时间和上次推送日期 */
-export function pushTargets(): { id: number; reminderTime: string; lastPushDay: string | null }[] {
+export function pushTargets(): { id: number; reminderTime: string; lastPushDay: string | null; lastRecapDay: string | null }[] {
   const rows = db
     .prepare(
-      `SELECT id, reminder_time, last_push_day FROM users
-        WHERE id IN (SELECT DISTINCT user_id FROM push_subs)`,
+      `SELECT id, reminder_time, last_push_day, last_recap_day FROM users
+        WHERE disabled = 0 AND id IN (SELECT DISTINCT user_id FROM push_subs)`,
     )
-    .all() as { id: number; reminder_time: string; last_push_day: string | null }[];
-  return rows.map((r) => ({ id: r.id, reminderTime: r.reminder_time, lastPushDay: r.last_push_day }));
+    .all() as { id: number; reminder_time: string; last_push_day: string | null; last_recap_day: string | null }[];
+  return rows.map((r) => ({ id: r.id, reminderTime: r.reminder_time, lastPushDay: r.last_push_day, lastRecapDay: r.last_recap_day }));
+}
+
+export function setLastRecapDay(uid: number, day: string): void {
+  db.prepare("UPDATE users SET last_recap_day = ? WHERE id = ?").run(day, uid);
 }
 
 export function setLastPushDay(uid: number, day: string): void {
@@ -305,21 +324,74 @@ export function getState(uid: number, id: string): EntryState {
   return stateMap(uid).get(id) ?? { read: false, starred: false };
 }
 
-export function markRead(uid: number, id: string, day: string): void {
+/** 记为已读；manual 是在文章页手动点的“标为已读”。已经读过的不改（第一次读的那天和方式为准） */
+export function markRead(uid: number, id: string, day: string, manual = false): void {
   db.prepare(
-    `INSERT INTO progress (user_id, id, read_at, read_day) VALUES (?, ?, ?, ?)
+    `INSERT INTO progress (user_id, id, read_at, read_day, manual) VALUES (?, ?, ?, ?, ?)
      ON CONFLICT(user_id, id) DO UPDATE SET read_at = COALESCE(read_at, excluded.read_at),
-                                            read_day = COALESCE(read_day, excluded.read_day)`,
-  ).run(uid, id, now(), day);
+                                            read_day = COALESCE(read_day, excluded.read_day),
+                                            manual = CASE WHEN read_at IS NULL THEN excluded.manual ELSE manual END`,
+  ).run(uid, id, now(), day, manual ? 1 : 0);
 }
 
-/** 排行榜用：每个没停用的成员，以及他在 [since, day] 这几天读完的词条（一行一个；一个没读的也有一行，entry 为 null） */
+/** 每日目标：一天想读几个词（默认 1） */
+export function getGoal(uid: number): number {
+  const r = db.prepare("SELECT daily_goal FROM users WHERE id = ?").get(uid) as { daily_goal: number } | undefined;
+  return r?.daily_goal ?? 1;
+}
+
+export function setGoal(uid: number, goal: number): void {
+  db.prepare("UPDATE users SET daily_goal = ? WHERE id = ?").run(goal, uid);
+}
+
+/** 只认真读完（非手动标记）的那几天，每天几个 */
+export function readDayCounts(uid: number): Map<string, number> {
+  const rows = db
+    .prepare("SELECT read_day AS day, COUNT(*) AS n FROM progress WHERE user_id = ? AND read_at IS NOT NULL AND manual = 0 GROUP BY read_day")
+    .all(uid) as { day: string; n: number }[];
+  return new Map(rows.map((r) => [r.day, r.n]));
+}
+
+export type Review = { id: string; stage: number; dueDay: string; lastDay: string; lastOk: boolean };
+
+/** 复习记录：每个读过的词在间隔复习里走到第几站、哪天该再见 */
+export function getReview(uid: number, id: string): Review | undefined {
+  const r = db.prepare("SELECT id, stage, due_day, last_day, last_ok FROM reviews WHERE user_id = ? AND id = ?").get(uid, id) as
+    | { id: string; stage: number; due_day: string; last_day: string; last_ok: number }
+    | undefined;
+  return r && { id: r.id, stage: r.stage, dueDay: r.due_day, lastDay: r.last_day, lastOk: !!r.last_ok };
+}
+
+export function listReviews(uid: number): Review[] {
+  return (db.prepare("SELECT id, stage, due_day, last_day, last_ok FROM reviews WHERE user_id = ?").all(uid) as {
+    id: string; stage: number; due_day: string; last_day: string; last_ok: number;
+  }[]).map((r) => ({ id: r.id, stage: r.stage, dueDay: r.due_day, lastDay: r.last_day, lastOk: !!r.last_ok }));
+}
+
+export function saveReview(uid: number, r: Review): void {
+  db.prepare(
+    `INSERT INTO reviews (user_id, id, stage, due_day, last_day, last_ok) VALUES (?, ?, ?, ?, ?, ?)
+     ON CONFLICT(user_id, id) DO UPDATE SET stage = excluded.stage, due_day = excluded.due_day, last_day = excluded.last_day, last_ok = excluded.last_ok`,
+  ).run(uid, r.id, r.stage, r.dueDay, r.lastDay, r.lastOk ? 1 : 0);
+}
+
+/** 参不参加排行榜（默认参加）；关掉后自己不出现在别人的榜上，也看不到榜 */
+export function getOnBoard(uid: number): boolean {
+  const r = db.prepare("SELECT on_board FROM users WHERE id = ?").get(uid) as { on_board: number } | undefined;
+  return !!r?.on_board;
+}
+
+export function setOnBoard(uid: number, on: boolean): void {
+  db.prepare("UPDATE users SET on_board = ? WHERE id = ?").run(on ? 1 : 0, uid);
+}
+
+/** 排行榜用：每个没停用、没关掉排行榜的成员，以及他在 [since, day] 这几天读完的词条（一行一个；一个没读的也有一行，entry 为 null） */
 export function boardRows(since: string, day: string): { id: number; username: string; entry: string | null }[] {
   return db
     .prepare(
       `SELECT u.id, u.username, p.id AS entry FROM users u
-       LEFT JOIN progress p ON p.user_id = u.id AND p.read_at IS NOT NULL AND p.read_day >= ? AND p.read_day <= ?
-       WHERE u.disabled = 0`,
+       LEFT JOIN progress p ON p.user_id = u.id AND p.read_at IS NOT NULL AND p.manual = 0 AND p.read_day >= ? AND p.read_day <= ?
+       WHERE u.disabled = 0 AND u.on_board = 1`,
     )
     .all(since, day) as { id: number; username: string; entry: string | null }[];
 }
@@ -327,12 +399,12 @@ export function boardRows(since: string, day: string): { id: number; username: s
 /** 某人从 since 起每天读完几个（只列有读的那几天） */
 export function dailyCounts(uid: number, since: string): { day: string; n: number }[] {
   return db
-    .prepare("SELECT read_day AS day, COUNT(*) AS n FROM progress WHERE user_id = ? AND read_at IS NOT NULL AND read_day >= ? GROUP BY read_day")
+    .prepare("SELECT read_day AS day, COUNT(*) AS n FROM progress WHERE user_id = ? AND read_at IS NOT NULL AND manual = 0 AND read_day >= ? GROUP BY read_day")
     .all(uid, since) as { day: string; n: number }[];
 }
 
 export function markUnread(uid: number, id: string): void {
-  db.prepare("UPDATE progress SET read_at = NULL, read_day = NULL WHERE user_id = ? AND id = ?").run(uid, id);
+  db.prepare("UPDATE progress SET read_at = NULL, read_day = NULL, manual = 0 WHERE user_id = ? AND id = ?").run(uid, id);
 }
 
 export function setStarred(uid: number, id: string, starred: boolean): void {
@@ -349,18 +421,19 @@ export function starredLog(uid: number): { id: string; starred_at: string }[] {
     .all(uid) as { id: string; starred_at: string }[];
 }
 
-export type ReadRow = { id: string; read_at: string; read_day: string };
+/** manual：1 是手动“标为已读”的 */
+export type ReadRow = { id: string; read_at: string; read_day: string; manual: number };
 
 /** 所有读过的记录，新的在前 */
 export function readLog(uid: number): ReadRow[] {
   return db
-    .prepare("SELECT id, read_at, read_day FROM progress WHERE user_id = ? AND read_at IS NOT NULL ORDER BY read_at DESC")
+    .prepare("SELECT id, read_at, read_day, manual FROM progress WHERE user_id = ? AND read_at IS NOT NULL ORDER BY read_at DESC")
     .all(uid) as ReadRow[];
 }
 
 export function readDays(uid: number): string[] {
   const rows = db
-    .prepare("SELECT DISTINCT read_day FROM progress WHERE user_id = ? AND read_day IS NOT NULL ORDER BY read_day DESC")
+    .prepare("SELECT DISTINCT read_day FROM progress WHERE user_id = ? AND read_day IS NOT NULL AND manual = 0 ORDER BY read_day DESC")
     .all(uid) as { read_day: string }[];
   return rows.map((r) => r.read_day);
 }

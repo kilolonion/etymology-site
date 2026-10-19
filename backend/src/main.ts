@@ -13,7 +13,8 @@ import {
   requireAdmin, requireAuth, resetPassword, type AppEnv,
 } from "./auth.ts";
 import {
-  bestStreak, futureAssigned, isDone, localDay, resurface, shiftDay, streak, todayId, todayReason, tomorrowId, weekDays,
+  bestStreak, futureAssigned, isDone, localDay, resurface, review, shiftDay, streak, todayId, todayProgress, todayReason, tomorrowId,
+  weekDays,
 } from "./daily.ts";
 import { recommend } from "./recommend.ts";
 import * as db from "./db.ts";
@@ -153,6 +154,8 @@ api.get("/today", (c) => {
     // 明日预告只显示问题（单词不显示），点开可提前读
     tomorrow: tomorrow ? { id: tomorrow.id, teaser: tomorrow.teaser } : null,
     stats: stats(uid),
+    // 今天读了几个 / 目标几个；昨天漏了时怎么补
+    progress: todayProgress(uid, db.getGoal(uid), day),
     // 本周七天：每天推送的词（今天之后的不透露）
     week: weekDays(day).map((d) => {
       const wid = d <= day ? db.getDaily(uid, d)?.find((x) => getEntry(x)) : undefined;
@@ -161,7 +164,9 @@ api.get("/today", (c) => {
     // 旧词重逢：按间隔重现一个以前读过的词
     resurface: (() => {
       const r = resurface(uid, day);
-      return r ? { ...withState(uid, summariesOf([r.id]))[0], ago: r.ago } : null;
+      // reviewed：今天已经点过“记得 / 忘了”的结果，刷新后按钮也显示成点过的样子
+      const reviewed = r?.review?.lastDay === day ? (r.review.lastOk ? "ok" : "no") : null;
+      return r ? { ...withState(uid, summariesOf([r.id]))[0], ago: r.ago, stage: r.stage, reviewed, due: r.review?.dueDay ?? null } : null;
     })(),
   });
 });
@@ -190,10 +195,46 @@ api.post("/entries/:id/read", async (c) => {
   const uid = uidOf(c);
   const id = c.req.param("id");
   if (!getEntry(id)) return c.json({ error: "not found" }, 404);
-  const { read = true } = await body<{ read?: boolean }>(c);
-  if (read) db.markRead(uid, id, localDay());
+  const { read = true, manual = false } = await body<{ read?: boolean; manual?: boolean }>(c);
+  const day = localDay();
+  const before = db.getState(uid, id).read;
+  if (read) db.markRead(uid, id, day, !!manual);
   else db.markUnread(uid, id);
-  return c.json({ ...db.getState(uid, id), stats: stats(uid) });
+  return c.json({ ...db.getState(uid, id), stats: stats(uid), finish: read && !manual && !before ? finishInfo(uid, id, day) : null });
+});
+
+/** 读完一篇时的收尾：连续天数、今日目标、补签、名次、（读的是今天的词时）明日预告 */
+function finishInfo(uid: number, id: string, day: string) {
+  const goal = db.getGoal(uid);
+  const p = todayProgress(uid, goal, day);
+  const isToday = todayId(uid, day) === id;
+  const t = isToday ? getEntry(tomorrowId(uid, day) ?? "") : undefined;
+  let rank = null;
+  if (db.getOnBoard(uid)) {
+    const rows = boardRows(uid, day, day);
+    const me = rows.find((r) => r.me);
+    if (me && rows.length > 1) rank = { rank: me.rank, of: rows.length };
+  }
+  return {
+    streak: streak(uid, day),
+    best: bestStreak(uid),
+    today: p.today,
+    goal,
+    repair: p.repair,
+    isToday,
+    tomorrow: t ? { id: t.id, teaser: t.teaser } : null,
+    rank,
+  };
+}
+
+/** 复习一次：旧词重逢的“记得 / 忘了”、考考你的对错，决定这个词下次多久后再出现 */
+api.post("/entries/:id/review", async (c) => {
+  const uid = uidOf(c);
+  const id = c.req.param("id");
+  if (!getEntry(id)) return c.json({ error: "not found" }, 404);
+  const { ok = true } = await body<{ ok?: boolean }>(c);
+  const r = review(uid, id, !!ok);
+  return r ? c.json(r) : c.json({ error: "还没读过这个词" }, 400);
 });
 
 api.post("/entries/:id/star", async (c) => {
@@ -291,12 +332,14 @@ api.get("/lookup", async (c) => {
 
 api.get("/stats", (c) => c.json(stats(uidOf(c))));
 
-/** 排行榜：今天（range=week 时是这周一到今天）每人读完几个词；一样多的并列，同名次按连续天数排 */
-api.get("/board", (c) => {
-  const uid = uidOf(c);
-  const day = localDay();
-  const range = c.req.query("range") === "week" ? "week" : "day";
-  const since = range === "week" ? weekDays(day)[0]! : day;
+/** 别人的名字只给第一个字，后面用星号（最多三个），全名不出服务器 */
+const maskName = (name: string) => {
+  const [first = "", ...rest] = [...name];
+  return first + "*".repeat(Math.min(3, Math.max(1, rest.length)));
+};
+
+/** 排行：[since, day] 里每人认真读完几个词（手动标记的不算）；一样多的并列，同名次按连续天数排；别人的名字打码 */
+function boardRows(uid: number, since: string, day: string) {
   const by = new Map<number, { name: string; n: number }>();
   for (const r of db.boardRows(since, day)) {
     let u = by.get(r.id);
@@ -305,8 +348,19 @@ api.get("/board", (c) => {
   }
   const rows = [...by]
     .map(([id, u]) => ({ ...u, streak: streak(id), me: id === uid, rank: 0 }))
-    .sort((a, b) => b.n - a.n || b.streak - a.streak || a.name.localeCompare(b.name));
+    .sort((a, b) => b.n - a.n || b.streak - a.streak || a.name.localeCompare(b.name))
+    .map((r) => (r.me ? r : { ...r, name: maskName(r.name) }));
   rows.forEach((r, i) => (r.rank = i && r.n === rows[i - 1]!.n ? rows[i - 1]!.rank : i + 1));
+  return rows;
+}
+
+/** 排行榜：今天（range=week 时是这周一到今天）。自己关掉了排行榜就只回 off */
+api.get("/board", (c) => {
+  const uid = uidOf(c);
+  if (!db.getOnBoard(uid)) return c.json({ off: true });
+  const day = localDay();
+  const range = c.req.query("range") === "week" ? "week" : "day";
+  const rows = boardRows(uid, range === "week" ? weekDays(day)[0]! : day, day);
   // 自己近 7 天每天读了几个，大号排行榜底下画成小柱子
   const counts = new Map(db.dailyCounts(uid, shiftDay(day, -6)).map((x) => [x.day, x.n]));
   const mine = Array.from({ length: 7 }, (_, i) => shiftDay(day, i - 6)).map((d) => ({ day: d, n: counts.get(d) ?? 0 }));
@@ -347,7 +401,22 @@ api.get("/shelf", (c) => {
 
 // ---------- 账号 ----------
 
-api.get("/me", (c) => c.json(c.get("user")));
+api.get("/me", (c) => c.json({ ...c.get("user"), onBoard: db.getOnBoard(uidOf(c)), goal: db.getGoal(uidOf(c)) }));
+
+/** 每日目标只能选这几个 */
+const GOALS = [1, 2, 3, 5];
+api.put("/me/goal", async (c) => {
+  const { goal } = await body<{ goal?: number }>(c);
+  if (!GOALS.includes(Number(goal))) return c.json({ error: `目标只能是 ${GOALS.join(" / ")} 个` }, 400);
+  db.setGoal(uidOf(c), Number(goal));
+  return c.json({ goal: db.getGoal(uidOf(c)) });
+});
+
+api.put("/me/board", async (c) => {
+  const { on } = await body<{ on?: boolean }>(c);
+  db.setOnBoard(uidOf(c), on !== false);
+  return c.json({ onBoard: db.getOnBoard(uidOf(c)) });
+});
 
 api.put("/me/password", async (c) => {
   const { old = "", password = "" } = await body<{ old?: string; password?: string }>(c);

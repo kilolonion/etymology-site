@@ -39,8 +39,9 @@ const writePending = (list) => {
   } catch {}
 };
 
-export function queueRead(id, read) {
-  writePending([...readPending().filter((x) => x.id !== id), { id, read }]);
+/** manual：手动点的“标为已读”（不算进排行榜和连续天数），补交时原样带上 */
+export function queueRead(id, read, manual = false) {
+  writePending([...readPending().filter((x) => x.id !== id), { id, read, manual }]);
 }
 
 /** 把离线时记下的“读完 / 标为未读”补交给服务器；交成功一条删一条 */
@@ -48,7 +49,7 @@ export async function flushReads(post) {
   let list = readPending();
   for (const x of list) {
     try {
-      await post(x.id, x.read);
+      await post(x.id, x.read, !!x.manual);
       list = list.filter((y) => y.id !== x.id);
       writePending(list);
     } catch (err) {

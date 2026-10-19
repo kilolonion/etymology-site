@@ -71,7 +71,7 @@
 
 /* ---------- 基础 ---------- */
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; /* 下拉刷新由 pull.js 接管 */ }
 body {
   margin: 0; min-height: 100dvh;
   background: var(--bg); color: var(--ink);
@@ -305,7 +305,7 @@ a.day:hover { background: var(--bg-2); }
 .hero .teaser { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid rgb(255 255 255 / .25); font: 16px/1.7 var(--serif-zh); opacity: .88; }
 
 .article-body { padding: 4px 4px 0; }
-.prose p { margin: 0 0 18px; font: 18px/2.05 var(--serif-zh); color: var(--ink); }
+.prose p { margin: 0 0 18px; font: calc(18px * var(--fs, 1))/2.05 var(--serif-zh); color: var(--ink); }
 .prose em { color: var(--t-ink); font-weight: 500; font-size: 1.04em; }
 .prose.dropcap p:first-child::first-letter {
   float: left; margin: 10px 10px 0 0; font: 700 62px/.92 var(--serif-zh); color: var(--t-ink);
@@ -326,7 +326,7 @@ a.day:hover { background: var(--bg-2); }
 .route li:last-child .txt { color: var(--ink); font-weight: 700; }
 
 /* 一句话记住 */
-.pull { position: relative; margin: 48px 0 8px; padding: 30px 8px 0; font: 700 21px/1.75 var(--serif-zh); color: var(--ink); text-align: center; text-wrap: balance; }
+.pull { position: relative; margin: 48px 0 8px; padding: 30px 8px 0; font: 700 calc(21px * var(--fs, 1))/1.75 var(--serif-zh); color: var(--ink); text-align: center; text-wrap: balance; }
 .pull::before { content: "“"; position: absolute; left: 50%; top: -22px; transform: translateX(-50%); font: 700 84px/1 var(--display); color: var(--t-ink); opacity: .4; }
 .pull small { display: block; margin-top: 10px; font: italic 400 14px var(--display); color: var(--muted); letter-spacing: .04em; }
 .pull small::before { content: "— "; }
@@ -1753,3 +1753,88 @@ a.w-era:hover .era-big b { color: var(--accent); }
 .board-mine .cols span.now b { color: var(--accent); }
 .board-mine .cols em { font: 11px var(--serif-zh); font-style: normal; color: var(--muted); }
 .board-mine .cols span.now em { color: var(--accent); font-weight: 700; }
+
+
+/* =========================================================
+   阅读流程：顶部进度、字号、读前先猜、读完收尾
+   ========================================================= */
+.read-progress { position: fixed; inset: 0 0 auto; z-index: 50; height: 3px; pointer-events: none; }
+.read-progress span { display: block; height: 100%; background: var(--t-fill, var(--accent)); transform-origin: left; transform: scaleX(0); transition: transform .12s linear; }
+.hero-acts { display: inline-flex; align-items: center; gap: 2px; }
+.hero-acts .mins { margin-right: 6px; font-size: 12.5px; letter-spacing: .08em; opacity: .8; }
+.hero .fs-btn { font: italic 700 15px var(--display); color: var(--cream); }
+
+/* 读前先猜：在封面色块里，按钮是半透明的白 */
+.guess { margin-top: 16px; padding: 14px 14px 12px; border-radius: 16px; background: rgb(255 255 255 / .1); border: 1px solid rgb(255 255 255 / .2); }
+.guess .g-q { margin: 0 0 10px; font: 600 14.5px/1.6 var(--serif-zh); }
+.guess .g-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.guess button { padding: 6px 14px; border-radius: 999px; border: 1px solid rgb(255 255 255 / .35); background: none; cursor: pointer; font: 14px var(--serif-zh); color: var(--cream); transition: background .15s; }
+.guess button:hover { background: rgb(255 255 255 / .12); }
+.guess button[aria-pressed="true"] { background: var(--cream); color: var(--t-ink); border-color: var(--cream); font-weight: 700; }
+.guess .g-note { margin: 10px 0 0; font-size: 12.5px; opacity: .75; }
+.guess-reveal { margin: 4px 0 22px; padding: 14px 16px; border-radius: 16px; background: var(--t-soft); border: 1px solid var(--t-line); }
+.gr-head { display: flex; align-items: center; gap: 6px; margin: 0 0 8px; font: 700 15px var(--serif-zh); }
+.gr-head .i { width: 17px; height: 17px; }
+.gr-head.ok { color: #4f7a4a; }
+.gr-head.no { color: var(--accent); }
+.gr-path { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.gr-path .i { width: 13px; height: 13px; color: var(--muted); }
+.gr-path .hit { padding: 0 6px; border-radius: 6px; background: var(--t-fill); color: var(--cream); font-weight: 600; }
+
+/* 读完的收尾 */
+.finish { margin: 26px 0 30px; padding: 20px 20px 18px; border-radius: 22px; background: var(--surface); border: 1px solid var(--t-line); box-shadow: var(--shadow); }
+.fin-top { display: flex; align-items: center; gap: 16px; }
+.finish .stamp { width: 54px; height: 54px; font-size: 17px; border-color: var(--t-fill); color: var(--t-fill); }
+.fin-title { margin: 0; font: 700 18px var(--serif-zh); }
+.fin-note { margin: 4px 0 0; font-size: 13px; color: var(--ink-2); }
+.fin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); margin: 16px 0 0; padding: 12px 0; list-style: none; border-block: 1px solid var(--line); }
+.fin-stats li { display: grid; justify-items: center; gap: 2px; }
+.fin-stats li + li { border-left: 1px solid var(--line); }
+.fin-stats b { font: 700 26px/1.1 var(--display); color: var(--t-ink); }
+.fin-stats b small { font-size: 14px; color: var(--muted); }
+.fin-stats span { font-size: 12px; color: var(--muted); }
+.fin-letter { display: grid; gap: 4px; margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--accent) 7%, var(--surface)); border: 1px dashed color-mix(in srgb, var(--accent) 35%, transparent); text-decoration: none; color: var(--ink); }
+.fin-letter small { font: 600 11.5px var(--sans); letter-spacing: .14em; color: var(--accent); }
+.fin-letter span { font: 700 15px/1.6 var(--serif-zh); }
+.fin-acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.fin-acts .btn.primary { flex: 1; justify-content: center; }
+.fin-acts .btn em { margin: 0 4px; font: italic 700 16px var(--display); }
+.fin-acts .btn .i { width: 16px; height: 16px; }
+
+/* 首页“本周”：今日目标、补签 */
+.wk-foot .goal { display: inline-flex; align-items: center; gap: 3px; }
+.wk-foot .goal.met { color: #4f7a4a; }
+.wk-foot .goal.met b { color: inherit; }
+.wk-foot .fix { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--accent); }
+.day.patched .mark { border: 1.5px solid var(--gold); color: var(--gold); font: 700 12px var(--serif-zh); }
+.w-week .day.patched { background: color-mix(in srgb, var(--gold) 9%, transparent); }
+
+/* 旧词重逢背面：记得 / 忘了 */
+.rc-acts { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.rc-acts button { display: inline-flex; align-items: center; gap: 3px; padding: 5px 12px; border-radius: 999px; border: 1px solid rgb(255 255 255 / .4); background: rgb(255 255 255 / .12); cursor: pointer; font: 600 13px var(--sans); color: var(--cream); }
+.rc-acts button:first-child { background: var(--cream); color: var(--t-ink); border-color: var(--cream); }
+.rc-acts .i { width: 14px; height: 14px; }
+.rc-acts a { margin-left: auto; }
+.rc-done { display: flex; align-items: center; gap: 4px; margin-top: auto; font-size: 13px; opacity: .9; }
+.rc-done .i { width: 14px; height: 14px; }
+.rc-done a { margin-left: auto; }
+@container w (max-width: 200px) { .rc-acts { gap: 6px; } .rc-acts button { padding: 4px 9px; font-size: 12px; } .rc-acts a { display: none; } }
+
+/* ---------- 下拉刷新指示器（pull.js）：跟着手指往下走，箭头随拉动转圈，拉够了变强调色，松手后转起来 ---------- */
+.ptr {
+  --d: 0px; --p: 0;
+  position: fixed; left: 50%; top: calc(env(safe-area-inset-top) - 44px); z-index: 60;
+  display: grid; place-items: center; width: 38px; height: 38px; margin-left: -19px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-lg); color: var(--muted);
+  transform: translateY(calc(var(--d) + 8px)) scale(calc(.6 + var(--p) * .4)); opacity: 0; pointer-events: none;
+}
+.ptr.on { opacity: calc(.4 + var(--p) * .6); }
+.ptr.back { transition: transform .25s ease, opacity .25s ease; }
+.ptr-ic { display: grid; transform: rotate(calc(var(--p) * 270deg)); }
+.ptr .i { width: 20px; height: 20px; }
+.ptr.ready { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.ptr.spin, .ptr.done { opacity: 1; color: var(--accent); transition: transform .2s ease; }
+.ptr.spin .ptr-ic { animation: ptr-spin .7s linear infinite; }
+.ptr.done .ptr-ic { transform: none; }
+@keyframes ptr-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ptr.spin .ptr-ic { animation-duration: 2s; } }
