@@ -281,9 +281,10 @@ function revalidate(path) {
 
 /**
  * 请求后端 /api。GET 走内存短缓存（25 秒内直接返回，过期先给旧数据再后台拉新）；
+ * detached: true 表示请求不跟随当前这趟导航（页面画好后用户操作触发的）。
  * 改动数据的请求一律发 JSON（后端据此防跨站伪造），写完清空缓存。
  */
-export async function api(path, { method = "GET", body, fresh = false } = {}) {
+export async function api(path, { method = "GET", body, fresh = false, detached = false } = {}) {
   if (method !== "GET") {
     const data = await request(path, { method, body });
     invalidate(); // 收藏、读完、改设置都可能影响别的页面
@@ -299,7 +300,8 @@ export async function api(path, { method = "GET", body, fresh = false } = {}) {
   }
 
   const startEpoch = epoch;
-  const data = await getData(path, nav.ctrl?.signal);
+  // detached：页面画好之后由用户操作触发的请求（联想、刷新页签），不该被“切页”取消，也不该并进别人的请求
+  const data = detached ? await request(path, {}) : await getData(path, nav.ctrl?.signal);
   if (startEpoch === epoch) fill(path, data);
   return data;
 }

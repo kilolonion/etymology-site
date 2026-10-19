@@ -1,7 +1,8 @@
 // 后端：只提供 /api。前端是独立的静态站点，生产环境由 nginx 托管并把 /api 转发到这里。
 // 本地开发时设置 FRONTEND_DIR，后端顺便托管前端文件，一个进程就能跑起来。
 
-import { dirname, relative, resolve } from "node:path";
+import { readdirSync, statSync, statfsSync, unlinkSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono, type Context } from "hono";
@@ -374,34 +375,231 @@ api.post("/push/test", async (c) => {
 const admin = new Hono<AppEnv>();
 admin.use(requireAdmin);
 
+const adminLog = (c: Context<AppEnv>, action: string, detail = "") => db.logAudit(uidOf(c), c.get("user").username, action, detail);
+const idParam = (c: Context<AppEnv>) => Number(c.req.param("id"));
+const headOf = (id: string) => getEntry(id)?.headword ?? id;
+const backupDir = () => join(dirname(db.dbPath()), "backups");
+
+// ----- 总览：数字、趋势、热门词、今天分发、系统状态 -----
+admin.get("/overview", (c) => {
+  const day = localDay();
+  const users = db.listUsersAdmin(day);
+  const weekAgo = shiftDay(day, -6);
+  const trend = new Map(db.readTrend(shiftDay(day, -13)).map((t) => [t.day, t]));
+  const days = Array.from({ length: 14 }, (_, i) => shiftDay(day, i - 13)).map((d) => ({
+    day: d, reads: trend.get(d)?.reads ?? 0, readers: trend.get(d)?.readers ?? 0,
+  }));
+  const seenSince = (ms: number) => users.filter((u) => u.lastSeen && Date.parse(u.lastSeen) > Date.now() - ms).length;
+  const totals = db.readTotals();
+  let disk: { free: number; total: number } | null = null;
+  try {
+    const f = statfsSync(dirname(db.dbPath()));
+    disk = { free: f.bavail * f.bsize, total: f.blocks * f.bsize };
+  } catch {}
+  return c.json({
+    day,
+    users: {
+      total: users.length,
+      admins: users.filter((u) => u.isAdmin).length,
+      disabled: users.filter((u) => u.disabled).length,
+      online24h: seenSince(86_400_000),
+      online7d: seenSince(7 * 86_400_000),
+      readToday: users.filter((u) => u.todayDone).length,
+      readers7d: db.readersSince(weekAgo),
+      withPush: users.filter((u) => u.devices > 0).length,
+    },
+    reads: { ...totals, entries: totalCount() },
+    trend: days,
+    topRead: db.topEntries("read").map((t) => ({ ...t, headword: headOf(t.id) })),
+    topStarred: db.topEntries("starred").map((t) => ({ ...t, headword: headOf(t.id) })),
+    today: db.dailyDistribution(day).map((t) => ({ ...t, headword: headOf(t.id), meaning: getEntry(t.id)?.meaning ?? "" })),
+    invites: db.inviteCounts(),
+    settings: { regPaused: db.getSetting("regPaused") === "1" },
+    system: {
+      uptime: Math.round(process.uptime()),
+      rss: process.memoryUsage().rss,
+      node: process.version,
+      // WAL 模式下新写入的数据先在 -wal 里，只看主文件会严重低估
+      dbSize: [".", "-wal"].reduce((n, ext) => { try { return n + statSync(db.dbPath() + (ext === "." ? "" : ext)).size; } catch { return n; } }, 0),
+      disk,
+      backups: (() => {
+        try {
+          return readdirSync(backupDir()).filter((f) => f.endsWith(".db")).sort().reverse().slice(0, 6)
+            .map((f) => ({ name: f, size: statSync(join(backupDir(), f)).size }));
+        } catch { return []; }
+      })(),
+    },
+  });
+});
+
+// ----- 邀请码 -----
 admin.get("/invites", (c) => c.json(db.listInvites().filter((i) => !i.isAdmin || i.usedAt)));
 
 admin.post("/invites", async (c) => {
-  const { note = "" } = await body<{ note?: string }>(c);
-  const code = newInvite(uidOf(c), String(note).trim());
-  return c.json(db.getInvite(code));
+  const { note = "", count = 1, days = 7 } = await body<{ note?: string; count?: number; days?: number }>(c);
+  const n = Math.min(Math.max(Math.floor(Number(count)) || 1, 1), 20);
+  const d = Math.min(Math.max(Math.floor(Number(days)) || 7, 1), 90);
+  const codes = Array.from({ length: n }, () => newInvite(uidOf(c), String(note).trim(), d));
+  adminLog(c, "生成邀请码", `${n} 个，${d} 天有效${note ? `，备注“${String(note).trim().slice(0, 20)}”` : ""}`);
+  const list = codes.map((code) => db.getInvite(code));
+  return c.json(n === 1 ? list[0] : { invites: list });
+});
+
+admin.delete("/invites/expired", (c) => {
+  const n = db.deleteExpiredInvites();
+  if (n) adminLog(c, "清理过期邀请码", `${n} 个`);
+  return c.json({ deleted: n });
 });
 
 admin.delete("/invites/:code", (c) => {
-  db.deleteInvite(normalizeCode(c.req.param("code")));
+  const code = normalizeCode(c.req.param("code"));
+  db.deleteInvite(code);
+  adminLog(c, "撤销邀请码", code);
   return c.json({ ok: true });
 });
 
-admin.get("/users", (c) => c.json(db.listUsers()));
+// ----- 成员 -----
+admin.get("/users", (c) => c.json(db.listUsersAdmin(localDay())));
+
+/** 某个成员的详情：最近读过的词、收藏、近 14 天足迹 */
+admin.get("/users/:id", (c) => {
+  const id = idParam(c);
+  const day = localDay();
+  const [u] = db.listUsersAdmin(day, id);
+  if (!u) return c.json({ error: "没有这个用户" }, 404);
+  const recent = db.readLog(id).slice(0, 12).map((r) => ({ id: r.id, headword: headOf(r.id), day: r.read_day }));
+  const dailyMap = new Map(db.allDaily(id).map((d) => [d.day, d.ids[0] ?? ""]));
+  const doneDays = new Set(db.readDays(id));
+  const week = Array.from({ length: 14 }, (_, i) => shiftDay(day, i - 13)).map((d) => ({
+    day: d, assigned: dailyMap.has(d) ? headOf(dailyMap.get(d)!) : null, read: doneDays.has(d),
+  }));
+  return c.json({
+    ...u,
+    streak: streak(id),
+    best: bestStreak(id),
+    todayWord: u.todayId ? { id: u.todayId, headword: headOf(u.todayId) } : null,
+    recent,
+    week,
+  });
+});
 
 admin.post("/users/:id/reset-password", async (c) => {
-  const id = Number(c.req.param("id"));
-  if (!db.getUser(id)) return c.json({ error: "没有这个用户" }, 404);
+  const id = idParam(c);
+  const u = db.getUser(id);
+  if (!u) return c.json({ error: "没有这个用户" }, 404);
   if (id === uidOf(c)) return c.json({ error: "修改自己的密码请到“账号与安全”" }, 400);
-  return c.json({ password: await resetPassword(id) });
+  const password = await resetPassword(id);
+  adminLog(c, "重置密码", u.username);
+  return c.json({ password });
+});
+
+/** 停用 / 恢复：停用后立即下线，并且不能再登录；数据保留 */
+admin.post("/users/:id/disable", async (c) => {
+  const id = idParam(c);
+  const { disabled = true } = await body<{ disabled?: boolean }>(c);
+  const u = db.getUser(id);
+  if (!u) return c.json({ error: "没有这个用户" }, 404);
+  if (id === uidOf(c)) return c.json({ error: "不能停用自己" }, 400);
+  db.setDisabled(id, !!disabled);
+  if (disabled) db.deleteUserSessions(id);
+  adminLog(c, disabled ? "停用账号" : "恢复账号", u.username);
+  return c.json({ ok: true });
+});
+
+/** 设为 / 取消管理员；至少留一个管理员，也不能动自己 */
+admin.post("/users/:id/admin", async (c) => {
+  const id = idParam(c);
+  const { admin: makeAdmin = false } = await body<{ admin?: boolean }>(c);
+  const u = db.getUser(id);
+  if (!u) return c.json({ error: "没有这个用户" }, 404);
+  if (id === uidOf(c)) return c.json({ error: "不能改自己的身份" }, 400);
+  db.setAdmin(id, !!makeAdmin);
+  adminLog(c, makeAdmin ? "设为管理员" : "取消管理员", u.username);
+  return c.json({ ok: true });
+});
+
+/** 让对方所有设备退出登录（不改密码） */
+admin.post("/users/:id/kick", (c) => {
+  const id = idParam(c);
+  const u = db.getUser(id);
+  if (!u) return c.json({ error: "没有这个用户" }, 404);
+  if (id === uidOf(c)) return c.json({ error: "想退出自己请用“账号与安全”" }, 400);
+  db.deleteUserSessions(id);
+  adminLog(c, "强制下线", u.username);
+  return c.json({ ok: true });
 });
 
 admin.delete("/users/:id", (c) => {
-  const id = Number(c.req.param("id"));
+  const id = idParam(c);
   if (id === uidOf(c)) return c.json({ error: "不能删除自己" }, 400);
+  const u = db.getUser(id);
   db.deleteUser(id);
+  adminLog(c, "删除成员", u?.username ?? String(id));
   return c.json({ ok: true });
 });
+
+// ----- 换今日词：给一个人，或给“今天还没读”的所有人 -----
+admin.post("/today-word", async (c) => {
+  const { id = "", userId, scope = "unread" } = await body<{ id?: string; userId?: number; scope?: "unread" | "all" }>(c);
+  const e = getEntry(String(id));
+  if (!e) return c.json({ error: "没有这个词条" }, 404);
+  const day = localDay();
+  const targets = db.listUsersAdmin(day).filter((u) => (userId === undefined ? !u.disabled && (scope === "all" || !u.todayDone) : u.id === Number(userId)));
+  let changed = 0;
+  let skipped = 0;
+  db.tx(() => {
+    for (const u of targets) {
+      if (u.todayId === e.id) continue;
+      const readNew = db.getState(u.id, e.id).read;
+      const future = futureAssigned(u.id, day).has(e.id);
+      if (readNew || future) { skipped++; continue; } // 读过的、已排到以后的，换了会重复
+      db.setDaily(u.id, day, [e.id], { [e.id]: null });
+      changed++;
+    }
+  });
+  adminLog(c, "换今日词", `${e.headword}：${userId === undefined ? (scope === "all" ? "所有人" : "未读者") : targets[0]?.username ?? userId}，改 ${changed} 人，跳过 ${skipped} 人`);
+  return c.json({ changed, skipped, headword: e.headword });
+});
+
+/** 联想补全：输入几个字母，列出匹配的词条（换今日词时用） */
+admin.get("/words", (c) => c.json(search(c.req.query("q") ?? "", 8).map((h) => ({ id: h.id, headword: h.headword, meaning: h.meaning }))));
+
+// ----- 推送 -----
+admin.post("/push", async (c) => {
+  const { title = "", text = "", userId } = await body<{ title?: string; text?: string; userId?: number }>(c);
+  const t = String(title).trim().slice(0, 40);
+  const b = String(text).trim().slice(0, 120);
+  if (!t || !b) return c.json({ error: "标题和内容都要写" }, 400);
+  const ids = userId === undefined
+    ? db.listUsersAdmin(localDay()).filter((u) => u.devices > 0 && !u.disabled).map((u) => u.id)
+    : [Number(userId)];
+  let sent = 0;
+  for (const id of ids) sent += await sendToUser(id, { title: t, body: b, url: "/#/" });
+  adminLog(c, "发送推送", `${userId === undefined ? "所有订阅者" : db.getUser(Number(userId))?.username ?? userId}：${t}（成功 ${sent} 台设备）`);
+  return c.json({ users: ids.length, sent });
+});
+
+// ----- 全站设置 -----
+admin.put("/settings", async (c) => {
+  const { regPaused } = await body<{ regPaused?: boolean }>(c);
+  if (typeof regPaused === "boolean") {
+    db.setSetting("regPaused", regPaused ? "1" : "0");
+    adminLog(c, regPaused ? "暂停注册" : "恢复注册");
+  }
+  return c.json({ regPaused: db.getSetting("regPaused") === "1" });
+});
+
+// ----- 备份：VACUUM INTO，在线做，不锁写；手动备份只留最近 10 份 -----
+admin.post("/backup", (c) => {
+  const name = `manual-${new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14)}.db`;
+  db.backupTo(join(backupDir(), name));
+  const old = readdirSync(backupDir()).filter((f) => f.startsWith("manual-")).sort().reverse().slice(10);
+  for (const f of old) try { unlinkSync(join(backupDir(), f)); } catch {}
+  adminLog(c, "手动备份", name);
+  return c.json({ name, size: statSync(join(backupDir(), name)).size });
+});
+
+admin.get("/audit", (c) => c.json(db.listAudit(40)));
 
 api.route("/admin", admin);
 app.route("/api", api);

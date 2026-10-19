@@ -4,7 +4,8 @@ import { actions, api, beginNav, empty, esc, hooks, nav, prefetch, render, skele
 import { clearOfflineData, flushReads, precacheLoaded, setOffline, warmForOffline } from "./offline.js";
 import { disablePush, registerSW } from "./push.js";
 import "./wordcard.js";
-import { viewAccount, viewAdmin } from "./views/account.js";
+import { viewAccount } from "./views/account.js";
+import { viewAdmin } from "./views/admin.js";
 import { renderJoin, renderJoinWhileLoggedIn, renderLogin } from "./views/auth.js";
 import { viewEntry } from "./views/entry.js";
 import { invalidateSummaries, viewAZ, viewExplore, viewRoutes, viewTheme, viewTimeline } from "./views/explore.js";
@@ -29,7 +30,7 @@ const ROUTES = [
   [/^me\/history$/, "me", () => viewHistory()],
   [/^me\/reminder$/, "me", () => viewReminder()],
   [/^me\/account$/, "me", () => viewAccount()],
-  [/^me\/admin$/, "me", () => viewAdmin()],
+  [/^me\/admin$/, "me", (_, q) => viewAdmin(q)],
 ];
 
 let navCount = 0;
@@ -48,7 +49,7 @@ const titles = new Map();
 
 const STATIC_LABELS = {
   "": "今日", explore: "探索", "explore/az": "按字母", "explore/routes": "语源之路", "explore/timeline": "时间长廊",
-  me: "我的", "me/starred": "我的收藏", "me/history": "阅读记录", "me/reminder": "每日提醒", "me/account": "账号与安全", "me/admin": "邀请与成员",
+  me: "我的", "me/starred": "我的收藏", "me/history": "阅读记录", "me/reminder": "每日提醒", "me/account": "账号与安全", "me/admin": "管理后台",
 };
 
 function labelOf(hash) {

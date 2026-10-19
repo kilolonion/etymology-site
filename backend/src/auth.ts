@@ -116,9 +116,19 @@ export function currentUser(c: Context): { user: db.User; hash: string } | undef
   return { user: s.user, hash };
 }
 
+/** 记“最近活跃”：同一个人 5 分钟内只写一次库 */
+const lastTouch = new Map<number, number>();
+function touchSeen(uid: number): void {
+  const t = Date.now();
+  if (t - (lastTouch.get(uid) ?? 0) < 5 * 60_000) return;
+  lastTouch.set(uid, t);
+  db.touchSeen(uid);
+}
+
 export const requireAuth: MiddlewareHandler<AppEnv> = async (c, next) => {
   const cur = currentUser(c);
   if (!cur) return c.json({ error: "unauthorized" }, 401);
+  touchSeen(cur.user.id);
   c.set("user", cur.user);
   c.set("sessionHash", cur.hash);
   await next();
@@ -139,6 +149,7 @@ export async function login(c: Context, username: string, password: string): Pro
   const u = db.findLogin(name);
   const ok = await verifyPassword(password, u?.passHash ?? DUMMY_HASH);
   if (!u || !ok) return "用户名或密码不对";
+  if (u.disabled) return "这个账号已被停用，请联系管理员";
   startSession(c, u.id);
   return null;
 }
@@ -216,6 +227,7 @@ export function inviteStatus(code: string):
   | { ok: false; error: string } {
   const inv = db.getInvite(normalizeCode(code));
   if (!inv) return { ok: false, error: "邀请码不对" };
+  if (!inv.isAdmin && db.getSetting("regPaused") === "1") return { ok: false, error: "暂时不开放注册，请稍后再来" };
   if (inv.usedAt) return { ok: false, error: "邀请码已经被用过了" };
   if (inv.expiresAt && inv.expiresAt <= new Date().toISOString()) return { ok: false, error: "邀请码已过期，请找管理员要一个新的" };
   return { ok: true, code: inv.code, isAdmin: inv.isAdmin };
@@ -228,9 +240,9 @@ export function checkInvite(c: Context, code: string): { ok: boolean; error?: st
   return s.ok ? { ok: true } : { ok: false, error: s.error };
 }
 
-export function newInvite(createdBy: number | undefined, note = ""): string {
+export function newInvite(createdBy: number | undefined, note = "", days = INVITE_DAYS): string {
   const code = inviteCode();
-  db.createInvite(code, { createdBy, expiresAt: daysFromNow(INVITE_DAYS), note: note.slice(0, 40) || undefined });
+  db.createInvite(code, { createdBy, expiresAt: daysFromNow(days), note: note.slice(0, 40) || undefined });
   return code;
 }
 

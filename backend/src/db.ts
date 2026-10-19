@@ -69,8 +69,24 @@ export function openDb(path: string): void {
       key   TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS audit (
+      id         INTEGER PRIMARY KEY,
+      at         TEXT NOT NULL,
+      admin_id   INTEGER,
+      admin_name TEXT NOT NULL,
+      action     TEXT NOT NULL,
+      detail     TEXT
+    );
   `);
+  // 旧库补字段（加列很快，不锁表太久；回滚到旧代码也不受影响）
+  const cols = new Set((db.prepare("PRAGMA table_info(users)").all() as { name: string }[]).map((c) => c.name));
+  if (!cols.has("disabled")) db.exec("ALTER TABLE users ADD COLUMN disabled INTEGER NOT NULL DEFAULT 0");
+  if (!cols.has("last_seen")) db.exec("ALTER TABLE users ADD COLUMN last_seen TEXT");
+  dbFile = path;
 }
+
+let dbFile = "";
+export const dbPath = () => dbFile;
 
 const now = () => new Date().toISOString();
 
@@ -116,11 +132,11 @@ export function getUser(id: number): User | undefined {
 }
 
 /** 按用户名找（不区分大小写），附带密码散列用于校验 */
-export function findLogin(username: string): (User & { passHash: string }) | undefined {
+export function findLogin(username: string): (User & { passHash: string; disabled: boolean }) | undefined {
   const r = db
-    .prepare("SELECT id, username, is_admin, created_at, pass_hash FROM users WHERE username = ?")
-    .get(username) as (UserRow & { pass_hash: string }) | undefined;
-  return r && { ...toUser(r), passHash: r.pass_hash };
+    .prepare("SELECT id, username, is_admin, created_at, pass_hash, disabled FROM users WHERE username = ?")
+    .get(username) as (UserRow & { pass_hash: string; disabled: number }) | undefined;
+  return r && { ...toUser(r), passHash: r.pass_hash, disabled: !!r.disabled };
 }
 
 export function getPassHash(id: number): string | undefined {
@@ -184,7 +200,7 @@ export function getSession(tokenHash: string): { user: User; expiresAt: string }
     .prepare(
       `SELECT u.id, u.username, u.is_admin, u.created_at, s.expires_at
          FROM sessions s JOIN users u ON u.id = s.user_id
-        WHERE s.token_hash = ? AND s.expires_at > ?`,
+        WHERE s.token_hash = ? AND s.expires_at > ? AND u.disabled = 0`,
     )
     .get(tokenHash, now()) as (UserRow & { expires_at: string }) | undefined;
   return r && { user: toUser(r), expiresAt: r.expires_at };
@@ -410,4 +426,140 @@ export function removePushSub(endpoint: string, uid?: number): void {
 export function userPushSubs(uid: number): PushSub[] {
   const rows = db.prepare("SELECT sub FROM push_subs WHERE user_id = ?").all(uid) as { sub: string }[];
   return rows.map((r) => JSON.parse(r.sub) as PushSub);
+}
+
+
+// ---------- 管理后台：停用、活跃、统计、审计 ----------
+
+export function setDisabled(id: number, v: boolean): void {
+  db.prepare("UPDATE users SET disabled = ? WHERE id = ?").run(v ? 1 : 0, id);
+}
+
+export function setAdmin(id: number, v: boolean): void {
+  db.prepare("UPDATE users SET is_admin = ? WHERE id = ?").run(v ? 1 : 0, id);
+}
+
+export function touchSeen(id: number): void {
+  db.prepare("UPDATE users SET last_seen = ? WHERE id = ?").run(now(), id);
+}
+
+export type AdminUser = User & {
+  disabled: boolean;
+  lastSeen: string | null;
+  reminderTime: string;
+  read: number;
+  starred: number;
+  lastRead: string | null;
+  sessions: number;
+  devices: number;
+  todayId: string | null;
+  todayDone: boolean;
+};
+
+/** 成员总览：一次查出管理页要的全部数字；day 是“今天”，onlyId 只查一个人 */
+export function listUsersAdmin(day: string, onlyId?: number): AdminUser[] {
+  const rows = db
+    .prepare(
+      `SELECT u.id, u.username, u.is_admin, u.created_at, u.disabled, u.last_seen, u.reminder_time,
+        (SELECT COUNT(*) FROM progress p WHERE p.user_id = u.id AND p.read_at IS NOT NULL) AS read,
+        (SELECT COUNT(*) FROM progress p WHERE p.user_id = u.id AND p.starred_at IS NOT NULL) AS starred,
+        (SELECT MAX(p.read_day) FROM progress p WHERE p.user_id = u.id) AS last_read,
+        (SELECT COUNT(*) FROM sessions s WHERE s.user_id = u.id AND s.expires_at > ?) AS sessions,
+        (SELECT COUNT(*) FROM push_subs ps WHERE ps.user_id = u.id) AS devices,
+        (SELECT json_extract(d.ids, '$[0]') FROM daily d WHERE d.user_id = u.id AND d.day = ?) AS today_id,
+        (SELECT COUNT(*) FROM daily d JOIN progress p ON p.user_id = d.user_id AND p.id = json_extract(d.ids, '$[0]') AND p.read_at IS NOT NULL
+          WHERE d.user_id = u.id AND d.day = ?) AS today_done
+       FROM users u ${onlyId === undefined ? "" : "WHERE u.id = ?"} ORDER BY u.id`,
+    )
+    .all(...([now(), day, day, ...(onlyId === undefined ? [] : [onlyId])] as (string | number)[])) as (UserRow & {
+    disabled: number; last_seen: string | null; reminder_time: string; read: number; starred: number; last_read: string | null;
+    sessions: number; devices: number; today_id: string | null; today_done: number;
+  })[];
+  return rows.map((r) => ({
+    ...toUser(r),
+    disabled: !!r.disabled,
+    lastSeen: r.last_seen,
+    reminderTime: r.reminder_time,
+    read: r.read,
+    starred: r.starred,
+    lastRead: r.last_read,
+    sessions: r.sessions,
+    devices: r.devices,
+    todayId: r.today_id,
+    todayDone: r.today_done > 0,
+  }));
+}
+
+/** 每天读了多少次、多少人读（从 sinceDay 起） */
+export function readTrend(sinceDay: string): { day: string; reads: number; readers: number }[] {
+  return db
+    .prepare(
+      `SELECT read_day AS day, COUNT(*) AS reads, COUNT(DISTINCT user_id) AS readers
+         FROM progress WHERE read_day >= ? GROUP BY read_day ORDER BY read_day`,
+    )
+    .all(sinceDay) as { day: string; reads: number; readers: number }[];
+}
+
+/** 从 sinceDay 起读过东西的人数 */
+export function readersSince(sinceDay: string): number {
+  return (db.prepare("SELECT COUNT(DISTINCT user_id) AS n FROM progress WHERE read_day >= ?").get(sinceDay) as { n: number }).n;
+}
+
+/** 被读得最多 / 被收藏最多的词 */
+export function topEntries(kind: "read" | "starred", limit = 8): { id: string; n: number }[] {
+  const col = kind === "read" ? "read_at" : "starred_at";
+  return db
+    .prepare(`SELECT id, COUNT(*) AS n FROM progress WHERE ${col} IS NOT NULL GROUP BY id ORDER BY n DESC, id LIMIT ?`)
+    .all(limit) as { id: string; n: number }[];
+}
+
+export function readTotals(): { reads: number; words: number; starred: number } {
+  return db
+    .prepare(
+      `SELECT SUM(read_at IS NOT NULL) AS reads, COUNT(DISTINCT CASE WHEN read_at IS NOT NULL THEN id END) AS words,
+              SUM(starred_at IS NOT NULL) AS starred FROM progress`,
+    )
+    .get() as { reads: number; words: number; starred: number };
+}
+
+/** 某天每个词被分给了多少人、其中多少人读完了 */
+export function dailyDistribution(day: string): { id: string; users: number; done: number }[] {
+  return db
+    .prepare(
+      `SELECT json_extract(d.ids, '$[0]') AS id, COUNT(*) AS users, SUM(p.read_at IS NOT NULL) AS done
+         FROM daily d LEFT JOIN progress p ON p.user_id = d.user_id AND p.id = json_extract(d.ids, '$[0]')
+        WHERE d.day = ? GROUP BY id ORDER BY users DESC, id`,
+    )
+    .all(day) as { id: string; users: number; done: number }[];
+}
+
+export function inviteCounts(): { open: number; used: number; expired: number } {
+  const t = now();
+  return db
+    .prepare(
+      `SELECT SUM(used_at IS NULL AND (expires_at IS NULL OR expires_at > ?) AND is_admin = 0) AS open,
+              SUM(used_at IS NOT NULL AND is_admin = 0) AS used,
+              SUM(used_at IS NULL AND expires_at <= ? AND is_admin = 0) AS expired
+         FROM invites`,
+    )
+    .get(t, t) as { open: number; used: number; expired: number };
+}
+
+/** 删掉已过期没用的邀请码 */
+export function deleteExpiredInvites(): number {
+  return Number(db.prepare("DELETE FROM invites WHERE used_at IS NULL AND expires_at IS NOT NULL AND expires_at <= ?").run(now()).changes);
+}
+
+export function logAudit(adminId: number, adminName: string, action: string, detail = ""): void {
+  db.prepare("INSERT INTO audit (at, admin_id, admin_name, action, detail) VALUES (?, ?, ?, ?, ?)").run(
+    now(), adminId, adminName, action, detail.slice(0, 300),
+  );
+  db.prepare("DELETE FROM audit WHERE id <= (SELECT MAX(id) FROM audit) - 500").run(); // 只留最近 500 条
+}
+
+export function listAudit(limit = 40): { id: number; at: string; admin: string; action: string; detail: string }[] {
+  const rows = db.prepare("SELECT id, at, admin_name, action, detail FROM audit ORDER BY id DESC LIMIT ?").all(limit) as {
+    id: number; at: string; admin_name: string; action: string; detail: string | null;
+  }[];
+  return rows.map((r) => ({ id: r.id, at: r.at, admin: r.admin_name, action: r.action, detail: r.detail ?? "" }));
 }

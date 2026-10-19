@@ -47,7 +47,7 @@ export async function viewMe() {
     </nav>
     <nav class="menu">
       <a href="#/me/account">${icon("key")}<span class="grow">账号与安全</span><span class="val">${esc(me.username)}</span>${icon("right", "i chev")}</a>
-      ${me.isAdmin ? `<a href="#/me/admin">${icon("users")}<span class="grow">邀请与成员</span>${icon("right", "i chev")}</a>` : ""}
+      ${me.isAdmin ? `<a href="#/me/admin">${icon("users")}<span class="grow">管理后台</span>${icon("right", "i chev")}</a>` : ""}
     </nav>
     </div>
     </div>`);
