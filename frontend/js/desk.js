@@ -24,6 +24,26 @@ export function loadLayout(widgets, fallback) {
 }
 
 const saveLayout = (layout) => local.set(KEY, layout);
+
+/**
+ * 列表按格子实际大小取舍：组件里标了 .fit 的容器，放不下的整行连同后面的都藏起来，不会出现被切掉半截的行。
+ * 组件画的时候尽量多给几行，剩下的交给这里。.fit-sep 是小标题，它后面一行都没露出来时也一起藏掉。
+ * 用 offsetTop 量（不受编辑模式晃动的 transform 影响），.fit 自己要是定位元素。
+ */
+export function fitRows(root) {
+  for (const box of root.querySelectorAll(".fit")) {
+    const items = [...box.children];
+    for (const n of items) n.classList.remove("cut");
+    const h = box.clientHeight;
+    if (!h) continue;
+    let cut = items.findIndex((n) => n.offsetTop + n.offsetHeight > h + 1);
+    if (cut < 0) continue;
+    // 第一行总是留着（一行都放不下时由它自己的行数限制收住），免得组件整个空掉
+    cut = Math.max(cut, 1);
+    while (cut > 1 && items[cut - 1].classList.contains("fit-sep")) cut--;
+    for (const n of items.slice(cut)) n.classList.add("cut");
+  }
+}
 export const resetLayout = () => local.set(KEY, null);
 
 /** 一个小组件的外壳：内容 + 编辑时才出现的“移除”“换大小”按钮 */
@@ -58,6 +78,24 @@ export function mountDesk(root, opts) {
     root.classList.toggle("empty", !layout.length);
   };
   root.classList.toggle("empty", !layout.length);
+
+  // 组件换了大小、重画了、窗口宽度变了、字体到了，都重新量一遍哪些行放得下
+  let fitting = 0;
+  const refit = () => {
+    cancelAnimationFrame(fitting);
+    fitting = requestAnimationFrame(() => fitRows(grid));
+  };
+  const ro = new ResizeObserver(refit);
+  ro.observe(grid);
+  const mo = new MutationObserver(refit);
+  mo.observe(grid, { childList: true });
+  ctl.signal.addEventListener("abort", () => {
+    ro.disconnect();
+    mo.disconnect();
+    cancelAnimationFrame(fitting);
+  });
+  document.fonts?.ready.then(() => !ctl.signal.aborted && refit());
+  fitRows(grid);
 
   // ---------- 编辑模式 ----------
 

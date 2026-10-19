@@ -291,6 +291,28 @@ api.get("/lookup", async (c) => {
 
 api.get("/stats", (c) => c.json(stats(uidOf(c))));
 
+/** 排行榜：今天（range=week 时是这周一到今天）每人读完几个词；一样多的并列，同名次按连续天数排 */
+api.get("/board", (c) => {
+  const uid = uidOf(c);
+  const day = localDay();
+  const range = c.req.query("range") === "week" ? "week" : "day";
+  const since = range === "week" ? weekDays(day)[0]! : day;
+  const by = new Map<number, { name: string; n: number }>();
+  for (const r of db.boardRows(since, day)) {
+    let u = by.get(r.id);
+    if (!u) by.set(r.id, (u = { name: r.username, n: 0 }));
+    if (r.entry && getEntry(r.entry)) u.n++;
+  }
+  const rows = [...by]
+    .map(([id, u]) => ({ ...u, streak: streak(id), me: id === uid, rank: 0 }))
+    .sort((a, b) => b.n - a.n || b.streak - a.streak || a.name.localeCompare(b.name));
+  rows.forEach((r, i) => (r.rank = i && r.n === rows[i - 1]!.n ? rows[i - 1]!.rank : i + 1));
+  // 自己近 7 天每天读了几个，大号排行榜底下画成小柱子
+  const counts = new Map(db.dailyCounts(uid, shiftDay(day, -6)).map((x) => [x.day, x.n]));
+  const mine = Array.from({ length: 7 }, (_, i) => shiftDay(day, i - 6)).map((d) => ({ day: d, n: counts.get(d) ?? 0 }));
+  return c.json({ range, day, rows, mine });
+});
+
 /** “我的”页：书架（最近读过的）、阅读足迹（近 26 周，窄屏只显示后 16 周）、专题收集、语源分布 */
 api.get("/shelf", (c) => {
   const uid = uidOf(c);

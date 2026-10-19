@@ -313,6 +313,24 @@ export function markRead(uid: number, id: string, day: string): void {
   ).run(uid, id, now(), day);
 }
 
+/** 排行榜用：每个没停用的成员，以及他在 [since, day] 这几天读完的词条（一行一个；一个没读的也有一行，entry 为 null） */
+export function boardRows(since: string, day: string): { id: number; username: string; entry: string | null }[] {
+  return db
+    .prepare(
+      `SELECT u.id, u.username, p.id AS entry FROM users u
+       LEFT JOIN progress p ON p.user_id = u.id AND p.read_at IS NOT NULL AND p.read_day >= ? AND p.read_day <= ?
+       WHERE u.disabled = 0`,
+    )
+    .all(since, day) as { id: number; username: string; entry: string | null }[];
+}
+
+/** 某人从 since 起每天读完几个（只列有读的那几天） */
+export function dailyCounts(uid: number, since: string): { day: string; n: number }[] {
+  return db
+    .prepare("SELECT read_day AS day, COUNT(*) AS n FROM progress WHERE user_id = ? AND read_at IS NOT NULL AND read_day >= ? GROUP BY read_day")
+    .all(uid, since) as { day: string; n: number }[];
+}
+
 export function markUnread(uid: number, id: string): void {
   db.prepare("UPDATE progress SET read_at = NULL, read_day = NULL WHERE user_id = ? AND id = ?").run(uid, id);
 }
