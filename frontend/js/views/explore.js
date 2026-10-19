@@ -39,8 +39,10 @@ export async function viewExplore(query) {
       body.innerHTML = home;
       return;
     }
+    if (!body.isConnected) return; // 页面已经换走了
+    body.innerHTML = `<p class="eyebrow hits">搜索中…</p>`;
     const hits = await api(`/search?q=${encodeURIComponent(text)}`);
-    if (document.getElementById("q")?.value.trim() !== text) return; // 已经输入了新的内容
+    if (!body.isConnected || input.value.trim() !== text) return; // 页面换走了，或者已经输入了新的内容
     body.innerHTML = hits.length
       ? `<p class="eyebrow hits">找到 ${hits.length} 个</p><div class="list">${hits.map((h) => row(h, { query: text })).join("")}</div>`
       : empty(`没有找到“${esc(text)}”`, suggest(all));

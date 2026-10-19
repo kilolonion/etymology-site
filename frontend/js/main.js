@@ -194,7 +194,7 @@ async function route() {
 
   // 接口慢的时候先出骨架，别让人对着空白页（快的话不闪）
   const slow = setTimeout(() => {
-    if (!signal.aborted) skeleton(skeletonFor(path));
+    if (!signal.aborted && !nav.rendered) skeleton(skeletonFor(path)); // 视图已经画出来的，别再拿骨架屏盖掉
   }, 120);
 
   const st = arrive(path);

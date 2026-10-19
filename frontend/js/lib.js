@@ -187,12 +187,13 @@ export const hooks = { onUnauthorized: () => {}, onRevalidate: () => {} };
 // ---------- 导航作用域：切页时可以中止上一趟请求 ----------
 
 /** 每次 hashchange 开一趟导航：取消上一趟的 GET，记下这趟用到了哪些接口 */
-export const nav = { id: 0, ctrl: null, used: new Set() };
+export const nav = { id: 0, ctrl: null, used: new Set(), rendered: false };
 
 export function beginNav() {
   nav.ctrl?.abort();
   nav.ctrl = new AbortController();
   nav.used = new Set();
+  nav.rendered = false; // 这一趟导航里页面是否已经画过了（画过就不能再用骨架屏盖掉）
   nav.id++;
   return nav.ctrl.signal;
 }
@@ -323,6 +324,7 @@ export function prefetch(paths = []) {
 const $app = document.getElementById("app");
 
 export function render(html) {
+  nav.rendered = true;
   $app.removeAttribute("aria-busy");
   $app.innerHTML = `<div class="view">${html}</div>`;
 }
