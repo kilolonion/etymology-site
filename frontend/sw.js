@@ -5,7 +5,10 @@
 // - 页面本身、没带哈希的静态文件（本地开发时）：先走网络，失败才用缓存；
 // - 字体、图标：先读缓存；
 // - 发音 /api/say：同一段话的发音不会变，先读缓存（单独一个缓存，不随退出登录清掉，太多了删最早的）；
-// - GET /api：先走网络（4 秒等不到就用缓存），成功的回包顺手存一份；没网又没存过，回 503。
+// - GET /api：先走网络，成功的回包顺手存一份。网络慢但没断时，手里有旧数据才在 4 秒后改用旧数据；
+//   手里什么都没有就一直等网络（慢总比报“离线”强）。真的没网又没存过，回 503；
+// - 页面导航：缓存里有旧页面才限时（4 秒），没有就交给浏览器自己去取，不替它判死刑；
+// - 登录态（/api/auth、/api/me）永不走缓存：旧的“已登录”会把过期会话的人带进一个全是 401 的空壳页。
 // 退出登录时页面会清掉接口缓存，换人登录看不到上一个人的数据。
 
 const STATIC = "ety-static";
@@ -14,8 +17,8 @@ const AUDIO = "ety-audio";
 const AUDIO_MAX = 400;
 const NET_TIMEOUT = 4000;
 const HASHED = /[?&]v=[0-9a-f]{10}$/;
-// 管理、推送、邀请这些接口不缓存
-const NO_CACHE_API = /^\/api\/(admin|push|invites|login|logout|register)/;
+// 管理、推送、邀请、登录态这些接口不缓存（auth / me 决定“是不是已登录”，不能拿旧的顶上）
+const NO_CACHE_API = /^\/api\/(admin|push|invites|login|logout|register|auth|me)(\/|\?|$)/;
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
@@ -34,8 +37,15 @@ self.addEventListener("fetch", (event) => {
   else event.respondWith(networkFirst(req, STATIC));
 });
 
-/** 等网络最多 ms 毫秒；超时或失败都返回 undefined */
+/** 等网络最多 ms 毫秒；超时或失败都返回 undefined。ms 为 0 表示不设上限（只有真的失败才放弃） */
 async function tryNetwork(req, ms) {
+  if (!ms) {
+    try {
+      return await fetch(req);
+    } catch {
+      return undefined;
+    }
+  }
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), ms);
   try {
@@ -56,17 +66,23 @@ async function cacheFirst(req) {
 }
 
 async function networkFirst(req, name) {
-  const res = await tryNetwork(req, NET_TIMEOUT);
+  const old = await caches.match(req);
+  const res = await tryNetwork(req, old ? NET_TIMEOUT : 0); // 手里没有旧的，就别催网络
   if (res?.ok) {
     (await caches.open(name)).put(req, res.clone());
     return res;
   }
-  return res ?? (await caches.match(req)) ?? Response.error();
+  return res ?? old ?? Response.error();
 }
 
-/** 页面：所有路由都是同一个 index.html，按 "/" 存一份；顺带清掉旧版本的静态文件 */
+/**
+ * 页面：所有路由都是同一个 index.html，按 "/" 存一份；顺带清掉旧版本的静态文件。
+ * 第一次来（还没存过页面）：不设超时，网络多慢都等，别在 4 秒时替浏览器判“打不开”；
+ * 以前存过：最多等 4 秒，等不到就先给旧页面，让离线 / 慢网也能进。
+ */
 async function page(req) {
-  const res = await tryNetwork(req, NET_TIMEOUT);
+  const old = await caches.match("/");
+  const res = await tryNetwork(req, old ? NET_TIMEOUT : 0);
   if (res?.ok) {
     const html = await res.clone().text();
     (await caches.open(STATIC)).put("/", res.clone());
@@ -74,7 +90,7 @@ async function page(req) {
     if (ver) pruneStatic(ver);
     return res;
   }
-  return res ?? (await caches.match("/")) ?? Response.error();
+  return res ?? old ?? Response.error();
 }
 
 async function audioGet(req) {
@@ -99,13 +115,14 @@ async function pruneStatic(ver) {
 }
 
 async function apiGet(req) {
-  const res = await tryNetwork(req, NET_TIMEOUT);
+  const hit = await caches.match(req);
+  // 有旧数据可退才限时；一份存货都没有（比如第一次来）就一直等，慢总比报“离线”强
+  const res = await tryNetwork(req, hit ? NET_TIMEOUT : 0);
   if (res?.ok) {
     (await caches.open(API)).put(req, res.clone());
     return res;
   }
   if (res && res.status !== 0 && res.status < 500) return res; // 401、404 之类照实返回
-  const hit = await caches.match(req);
   if (hit) {
     // 标一下“这是离线时的旧数据”，页面据此显示离线提示
     const headers = new Headers(hit.headers);

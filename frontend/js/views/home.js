@@ -15,8 +15,12 @@ const eraLabel = (c) => (c < 0 ? `公元前 ${-c} 世纪` : `${c} 世纪`);
 let ctx = null;
 
 export async function viewHome() {
-  const t = await api("/today");
-  const [discover, prompt] = await Promise.all([api("/next"), t.done ? reminderPrompt() : ""]);
+  // /today 和 /next 互相不依赖，一起发（原来串行，首次打开白白多一个往返）；提醒询问要看 today 的 done，等 today 回来再算
+  const todayReq = api("/today");
+  const nextReq = api("/next");
+  nextReq.catch(() => {}); // today 先失败（比如 401）时，next 的失败没人接，别变成“未处理的拒绝”
+  const t = await todayReq;
+  const [discover, prompt] = await Promise.all([nextReq, t.done ? reminderPrompt() : ""]);
   // 下面几个组件要用词条目录、专题、收藏；平时早就预取好了，第一次打开时最多等一小会儿，等不到就先画别的
   const extra = Promise.all([api("/entries"), api("/themes"), api("/starred")]);
   const quick = await Promise.race([extra, new Promise((r) => setTimeout(r, 500))]);

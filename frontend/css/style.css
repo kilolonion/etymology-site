@@ -571,6 +571,10 @@ a.fp:hover { transform: scale(1.25); }
 .switch-auth a { color: var(--accent); text-underline-offset: 3px; }
 .hint-auth { margin: 6px 0 0; font-size: 13px; color: var(--muted); }
 
+/* 页面刚打开、脚本还没把内容画出来时的占位（index.html 里写死的；脚本一渲染就被替换掉） */
+.boot { display: grid; place-items: center; align-content: center; gap: 14px; min-height: 55vh; color: var(--muted); font-size: 14px; letter-spacing: .08em; }
+.boot .seal { width: 52px; height: 52px; border-radius: 8px; animation: pulse 1.2s ease-in-out infinite; opacity: .4; }
+.boot p { margin: 0; }
 .loading { display: grid; place-items: center; min-height: 50vh; }
 .loading .seal { animation: pulse 1.2s ease-in-out infinite; opacity: .4; }
 @keyframes pulse { 50% { opacity: .15; } }
