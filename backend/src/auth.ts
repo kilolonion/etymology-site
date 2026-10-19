@@ -60,7 +60,7 @@ export function checkPassword(pw: string): string | null {
 const buckets = new Map<string, { count: number; resetAt: number }>();
 
 /** 每个 key 每分钟最多 limit 次；超过返回 false */
-function allow(key: string, limit: number): boolean {
+export function allow(key: string, limit: number): boolean {
   const t = Date.now();
   const b = buckets.get(key);
   if (!b || b.resetAt <= t) {

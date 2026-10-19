@@ -9,10 +9,11 @@
 //   − 和昨天、今天同一个主专题（避免单调）
 //   − 和最近几次推送首字母相同（避免 A、A、A……）
 //   + 一点按种子固定的随机扰动（同一天结果稳定，不同天有变化）
+// 后台新增、还没核对的词不参与推荐（见 entries.ts 的 inRotation）。
 
 import { createHash } from "node:crypto";
 import { allDaily, readLog, stateMap } from "./db.ts";
-import { allFull, getEntry, kinOf } from "./entries.ts";
+import { allFull, getEntry, inRotation, kinOf } from "./entries.ts";
 import { SUBTHEMES, type FullEntry } from "./types.ts";
 
 export type Reason =
@@ -85,7 +86,8 @@ export function recommend(opts: {
   const scored: Pick[] = [];
 
   for (const e of all) {
-    if (exclude.has(e.id) || state.get(e.id)?.read) continue;
+    // 待核对的新词（以及没打开开关时核对过的新词）只在探索、搜索里出现，不主动推荐
+    if (exclude.has(e.id) || state.get(e.id)?.read || !inRotation(e.id)) continue;
     let score = jitter(seed, e.id) * 1.2;
     let reason: Reason = null;
     const p = primary(e);

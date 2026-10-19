@@ -20,7 +20,7 @@ const ROUTES = [
   [/^$/, "today", () => viewHome()],
   // 旧的故事模式链接直接转到文章页
   [/^read\/([^/?]+)/, "explore", (m) => location.replace(`#/w/${m[1]}`)],
-  [/^w\/(.+)$/, "explore", (m) => viewEntry(dec(m[1]))],
+  [/^w\/(.+)$/, "explore", (m, q) => viewEntry(dec(m[1]), q)],
   [/^explore$/, "explore", (_, q) => viewExplore(q)],
   [/^explore\/t\/(.+)$/, "explore", (m, q) => viewTheme(dec(m[1]), q)],
   [/^explore\/az$/, "explore", () => viewAZ()],

@@ -1,8 +1,8 @@
-// 读取 data/entries.json，建立索引；文件变化时自动重新加载。
+// 读取 data/entries.json（原书词条），叠加后台发布的新词和补写，建立索引；文件变化、后台发布时自动重建。
 
 import { createHash } from "node:crypto";
 import { readFileSync, watchFile } from "node:fs";
-import { isRedirect, THEMES, type FullEntry, type Link, type RawEntry, type RedirectEntry } from "./types.ts";
+import { isRedirect, THEMES, type FullEntry, type Link, type Origin, type RawEntry, type RedirectEntry } from "./types.ts";
 
 export type Summary = {
   id: string;
@@ -21,16 +21,31 @@ export type Summary = {
   /** 词源涉及的语言，按大致的先后排好（数据里的顺序不一定是路线） */
   langs?: string[];
   letter: string;
-  page: number;
+  page?: number;
   redirect?: string;
+  /** 不在书里的词：ai = AI 整理待核对，ai-ok = AI 整理已核对，edit = 编辑撰写；原书词条没有这个字段 */
+  src?: Src;
+};
+
+export type Src = "ai" | "ai-ok" | "edit";
+export const srcOf = (o?: Origin | null): Src | undefined =>
+  !o ? undefined : o.kind === "manual" ? "edit" : o.checked ? "ai-ok" : "ai";
+
+/** 叠加层：后台发布的新词、给原书词条补写的字段，以及核对过的 AI 词条进不进每日推送 */
+export type Overlay = {
+  added: FullEntry[];
+  patches: Map<string, { fields: Partial<FullEntry>; origin: Origin }>;
+  aiInDaily: boolean;
 };
 
 type Index = {
   all: RawEntry[];
   full: Map<string, FullEntry>;
   redirects: Map<string, RedirectEntry>;
-  /** 每日推送顺序：按 hash(id) 排序，数据扩充时已有词条的相对顺序不变 */
+  /** 每日推送顺序：按 hash(id) 排序，数据扩充时已有词条的相对顺序不变；只含能进推送的词 */
   dailyOrder: string[];
+  /** 能进每日推送、“接着读”、考考你的词：原书词条，以及（打开开关时）核对过的新词 */
+  rotation: Set<string>;
   /** 词条关系，双向：A 记了 B，B 这边也能查到 A */
   kin: Map<string, Link[]>;
   /** 小写的词头和其他拼法 → 词条 id（参见条目指向它跳转到的词条） */
@@ -40,15 +55,26 @@ type Index = {
 const ORDER_SALT = process.env.ORDER_SALT ?? "etymology-daily";
 let index: Index;
 let dataPath: string;
+/** 原书数据（entries.json 原样） */
+let base: RawEntry[] = [];
+let baseIds = new Set<string>();
+let overlaySource: () => Overlay = () => ({ added: [], patches: new Map(), aiInDaily: false });
 
 const hashHex = (s: string) => createHash("sha1").update(s).digest("hex");
 
+/** 叠加层从哪里来（数据库打开以后由 main.ts 设好；校验脚本、命令行不设就只有原书） */
+export function setOverlay(fn: () => Overlay): void {
+  overlaySource = fn;
+}
+
 export function loadEntries(path: string): void {
   dataPath = path;
-  reload();
+  readBase();
+  rebuild();
   watchFile(path, { interval: 2000 }, () => {
     try {
-      reload();
+      readBase();
+      rebuild();
       console.log(`[entries] 已重新加载 ${index.full.size} 条`);
     } catch (err) {
       console.error(`[entries] 重新加载失败，继续使用旧数据: ${(err as Error).message}`);
@@ -56,16 +82,40 @@ export function loadEntries(path: string): void {
   });
 }
 
-function reload(): void {
-  const all = JSON.parse(readFileSync(dataPath, "utf8")) as RawEntry[];
+function readBase(): void {
+  base = JSON.parse(readFileSync(dataPath, "utf8")) as RawEntry[];
+  baseIds = new Set(base.map((e) => e.id));
+}
+
+const cmpHead = (a: string, b: string) => a.replace(/^the /i, "").localeCompare(b.replace(/^the /i, ""), "en", { sensitivity: "base" });
+
+/** 重建索引：原书 + 补写 + 新词。后台发布、撤下后调用 */
+export function rebuild(): void {
+  const ov = overlaySource();
+  const all: RawEntry[] = base.map((e) => {
+    const p = isRedirect(e) ? undefined : ov.patches.get(e.id);
+    if (!p || isRedirect(e)) return e;
+    const merged: FullEntry = { ...e, ...p.fields, patched: { fields: Object.keys(p.fields), origin: p.origin } };
+    // 关系是补充，不是替换：原有的留着，补的追加在后面
+    if (p.fields.links) merged.links = [...(e.links ?? []), ...p.fields.links.filter((l) => !(e.links ?? []).some((x) => x.id === l.id))];
+    return merged;
+  });
+  // 新词按字母插进原书顺序里（原书本身就是按字母排的）；已经并回 entries.json 的以文件为准
+  for (const e of ov.added) {
+    if (baseIds.has(e.id)) continue;
+    const at = all.findIndex((x) => cmpHead(x.headword, e.headword) > 0);
+    all.splice(at < 0 ? all.length : at, 0, e);
+  }
+
   const full = new Map<string, FullEntry>();
   const redirects = new Map<string, RedirectEntry>();
   for (const e of all) {
     if (isRedirect(e)) redirects.set(e.id, e);
     else full.set(e.id, e);
   }
+  const rotation = new Set([...full.values()].filter((e) => !e.origin || (!!e.origin.checked && ov.aiInDaily)).map((e) => e.id));
   const key = (id: string) => hashHex(ORDER_SALT + id);
-  const dailyOrder = [...full.keys()].sort((a, b) => (key(a) < key(b) ? -1 : 1));
+  const dailyOrder = [...rotation].sort((a, b) => (key(a) < key(b) ? -1 : 1));
   const kin = new Map<string, Link[]>();
   const push = (from: string, l: Link) => {
     if (!full.has(l.id)) return;
@@ -86,7 +136,7 @@ function reload(): void {
       if (!words.has(k) || !isRedirect(e)) words.set(k, target);
     }
   }
-  index = { all, full, redirects, dailyOrder, kin, words };
+  index = { all, full, redirects, dailyOrder, rotation, kin, words };
 }
 
 export const getEntry = (id: string) => index.full.get(id);
@@ -94,6 +144,17 @@ export const allFull = () => [...index.full.values()];
 export const getRedirect = (id: string) => index.redirects.get(id);
 export const dailyOrder = () => index.dailyOrder;
 export const totalCount = () => index.full.size;
+/** 能不能进每日推送、“接着读”、随手翻一页 */
+export const inRotation = (id: string) => index.rotation.has(id);
+/** 是不是原书里的词条（含跳转词条） */
+export const isBookId = (id: string) => baseIds.has(id);
+/** 原书里的样子（不含补写），补写编辑时对照用 */
+export const bookEntry = (id: string): FullEntry | undefined => {
+  const e = base.find((x) => x.id === id);
+  return e && !isRedirect(e) ? e : undefined;
+};
+/** 所有词条和跳转词条的 id（校验 links 指向用） */
+export const hasId = (id: string) => index.full.has(id) || index.redirects.has(id);
 /** 和这个词有关系的词（同根 / 同典故 / 衍生），双向 */
 export const kinOf = (id: string): Link[] => index.kin.get(id) ?? [];
 
@@ -139,6 +200,7 @@ export function summarize(e: RawEntry): Summary {
     langs: routeOf(e.langs),
     letter,
     page: e.page,
+    src: srcOf(e.origin),
   };
 }
 

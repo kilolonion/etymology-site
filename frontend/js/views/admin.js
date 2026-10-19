@@ -1,13 +1,15 @@
-// 管理后台（仅管理员）：总览 / 成员 / 邀请 / 工具 四个页签。
+// 管理后台（仅管理员）：总览 / 成员 / 邀请 / 词条 / 工具 五个页签（词条页签在 admin-entries.js）。
 // 数据都来自 /api/admin/*。操作后只重画当前页签，不整页刷新。
 
 import { actions, api, empty, esc, fmtDay, icon, render, toast } from "../lib.js";
+import { entriesTab } from "./admin-entries.js";
 
 const day = (iso) => (iso ? fmtDay(iso.slice(0, 10), { weekday: false }) : "—");
 const TABS = [
   ["overview", "总览"],
   ["members", "成员"],
   ["invites", "邀请"],
+  ["entries", "词条"],
   ["tools", "工具"],
 ];
 const inviteLink = (code) => `${location.origin}/#/join/${code}`;
@@ -27,6 +29,8 @@ const online = (iso) => !!iso && Date.now() - Date.parse(iso) < 10 * 60_000;
 
 let tab = "overview";
 let ctx = { me: null };
+/** 地址栏里的参数（词条页签用 d= 打开某份稿子） */
+let params = null;
 
 export async function viewAdmin(query) {
   const me = await api("/me");
@@ -35,6 +39,7 @@ export async function viewAdmin(query) {
     return;
   }
   ctx.me = me;
+  params = query;
   const t = query?.get("tab");
   if (TABS.some(([k]) => k === t)) tab = t;
 
@@ -51,7 +56,7 @@ async function draw() {
   if (!body) return;
   body.setAttribute("aria-busy", "true");
   try {
-    body.innerHTML = await ({ overview, members, invites, tools }[tab])();
+    body.innerHTML = await ({ overview, members, invites, entries: () => entriesTab(params), tools }[tab])();
   } catch (err) {
     if (err?.name === "AbortError" || err?.status === 401) return;
     body.innerHTML = empty(`加载失败：${esc(err.message)}`, `<button class="btn sm" data-action="adm-refresh">重试</button>`);
@@ -62,8 +67,12 @@ async function draw() {
 // 这些请求都是页面画好之后由点击触发的：不跟随导航信号（否则一次切页就会被取消）
 const fresh = (p) => api(p, { fresh: true, detached: true });
 
+/** 重画当前页签（别的模块操作完调用） */
+export const redraw = () => draw();
+
 actions["adm-tab"] = (el) => {
   tab = el.dataset.tab;
+  params = null;
   for (const b of document.querySelectorAll(".adm-tabs button")) b.setAttribute("aria-pressed", String(b === el));
   history.replaceState(history.state, "", `#/me/admin?tab=${tab}`);
   draw();
@@ -495,7 +504,7 @@ actions["adm-backup"] = async (el) => {
  * 复制文本。Safari 在 await 之后可能已经没有“用户手势”，Clipboard API 会被拒；
  * 这时退回 execCommand，再不行就把页面上的文本选中，让人自己按 ⌘C。
  */
-async function copy(text, done) {
+export async function copy(text, done) {
   try {
     await navigator.clipboard.writeText(text);
     return toast(done);

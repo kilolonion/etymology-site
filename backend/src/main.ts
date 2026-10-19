@@ -18,10 +18,14 @@ import {
 } from "./daily.ts";
 import { recommend } from "./recommend.ts";
 import * as db from "./db.ts";
+import { entriesAdmin } from "./admin-entries.ts";
+import { initAuthoring, previewEntry, publicOrigin } from "./authoring.ts";
+import { mcp, tokensAdmin } from "./mcp.ts";
 import {
   allSummaries, findWord, getEntry, getRedirect, gist, kinOf, loadEntries, related, search, summarize,
   themeGroups, totalCount, type Summary,
 } from "./entries.ts";
+import type { FullEntry } from "./types.ts";
 import { checkTime, initPush, isValidSub, sendToUser, vapidPublicKey } from "./push.ts";
 import { cleanSpeech, gloss, initSpeech, speech, type Accent } from "./speech.ts";
 
@@ -30,10 +34,12 @@ const PORT = Number(process.env.PORT ?? 8787);
 const HOST = process.env.HOST ?? "127.0.0.1";
 const FRONTEND_DIR = process.env.FRONTEND_DIR ? resolve(process.env.FRONTEND_DIR) : "";
 
-loadEntries(process.env.ENTRIES_PATH ?? resolve(ROOT, "data/entries.json"));
 const STATE_DB = process.env.STATE_DB ?? resolve(ROOT, "var/app.db");
 db.openDb(STATE_DB);
 db.purgeExpiredSessions();
+// 原书词条 + 后台发布的新词和补写（存在数据库里），所以要先开库
+initAuthoring();
+loadEntries(process.env.ENTRIES_PATH ?? resolve(ROOT, "data/entries.json"));
 initPush();
 // 发音缓存放在数据库旁边，部署时不会被覆盖
 initSpeech(process.env.AUDIO_CACHE ?? resolve(dirname(STATE_DB), "audio"));
@@ -78,6 +84,9 @@ app.post("/api/logout", (c) => {
   return c.json({ ok: true });
 });
 
+// MCP：给别的 AI 程序用，凭令牌（Authorization: Bearer）而不是登录 Cookie
+app.route("/api/mcp", mcp);
+
 // ---------- 以下接口需要登录，数据都属于当前用户 ----------
 const api = new Hono<AppEnv>();
 api.use(requireAuth);
@@ -104,13 +113,17 @@ function busy(uid: number, day: string, ...more: string[]): Set<string> {
   return set;
 }
 
-function detail(uid: number, id: string) {
-  const e = getEntry(id);
+/** 文章页的数据；preview 是后台预览的稿子（还没进索引） */
+function detail(uid: number, id: string, preview?: FullEntry) {
+  const e = preview ?? getEntry(id);
   if (!e) return undefined;
   const day = localDay();
   const seeAlso = withState(uid, summariesOf(e.seeAlso ?? []));
-  // 书外整理的关系：同根 / 同典故 / 衍生，附上一句理由
-  const kin = kinOf(id).filter((l) => !(e.seeAlso ?? []).includes(l.id));
+  // 书外整理的关系：同根 / 同典故 / 衍生，附上一句理由（预览时稿子里的关系还没进索引，自己补上）
+  const kinAll = preview
+    ? [...(preview.links ?? []), ...kinOf(id).filter((l) => !(preview.links ?? []).some((x) => x.id === l.id))]
+    : kinOf(id);
+  const kin = kinAll.filter((l) => !(e.seeAlso ?? []).includes(l.id) && getEntry(l.id));
   const kinSum = withState(uid, summariesOf(kin.map((l) => l.id))).map((s, i) => ({ ...s, rel: kin[i]!.type, why: kin[i]!.why }));
   // 接着读：和这篇相关、又没读过的词
   const upNext = recommend({ uid, day, seed: day + id, anchor: id, exclude: busy(uid, day, id), limit: 2 }).map((p) => ({
@@ -120,10 +133,15 @@ function detail(uid: number, id: string) {
   return {
     ...e,
     ...db.getState(uid, id),
+    // 来源：不在书里的词、补写过的原书词条才有（核对人的名字不给读者）
+    origin: publicOrigin(e.origin),
+    patched: e.patched ? { fields: e.patched.fields, origin: publicOrigin(e.patched.origin) } : null,
+    src: summarize(e).src ?? null,
+    preview: !!preview,
     seeAlso,
     kin: kinSum,
     related: withState(uid, related(id)),
-    upNext,
+    upNext: preview ? [] : upNext,
   };
 }
 
@@ -185,10 +203,28 @@ api.get("/entries", (c) => c.json(withState(uidOf(c), allSummaries())));
 
 api.get("/entries/:id", (c) => {
   const id = c.req.param("id");
+  // 管理员预览稿子：?draft=1
+  if (c.req.query("draft") && c.get("user").isAdmin) {
+    const p = previewEntry(id);
+    return p ? c.json(detail(uidOf(c), id, p)) : c.json({ error: "没有这份稿子" }, 404);
+  }
   const r = getRedirect(id);
   if (r) return c.json({ redirect: r.redirect });
   const d = detail(uidOf(c), id);
   return d ? c.json(d) : c.json({ error: "not found" }, 404);
+});
+
+/** 读者报错：每人每天最多 10 条 */
+api.post("/entries/:id/report", async (c) => {
+  const uid = uidOf(c);
+  const id = c.req.param("id");
+  if (!getEntry(id)) return c.json({ error: "not found" }, 404);
+  const { text = "" } = await body<{ text?: string }>(c);
+  const t = String(text).trim().slice(0, 500);
+  if (t.length < 4) return c.json({ error: "多写几个字，说说哪里不对" }, 400);
+  if (db.reportsToday(uid, new Date(Date.now() - 86_400_000).toISOString()) >= 10) return c.json({ error: "今天报得太多了，明天再来" }, 429);
+  db.addReport(id, uid, t);
+  return c.json({ ok: true });
 });
 
 api.post("/entries/:id/read", async (c) => {
@@ -505,7 +541,7 @@ admin.get("/overview", (c) => {
     topStarred: db.topEntries("starred").map((t) => ({ ...t, headword: headOf(t.id) })),
     today: db.dailyDistribution(day).map((t) => ({ ...t, headword: headOf(t.id), meaning: getEntry(t.id)?.meaning ?? "" })),
     invites: db.inviteCounts(),
-    settings: { regPaused: db.getSetting("regPaused") === "1" },
+    settings: { regPaused: db.getSetting("regPaused") === "1", aiInDaily: db.getSetting("aiInDaily") === "1" },
     system: {
       uptime: Math.round(process.uptime()),
       rss: process.memoryUsage().rss,
@@ -692,6 +728,8 @@ admin.post("/backup", (c) => {
 
 admin.get("/audit", (c) => c.json(db.listAudit(40)));
 
+admin.route("/entries", entriesAdmin);
+admin.route("/tokens", tokensAdmin);
 api.route("/admin", admin);
 app.route("/api", api);
 app.all("/api/*", (c) => c.json({ error: "not found" }, 404));

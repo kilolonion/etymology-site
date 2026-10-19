@@ -28,6 +28,7 @@
 | `subtheme` | string | | 子专题。目前只有“风俗与生活”分了子专题（见下方列表），属于它的词条都要填一个 |
 | `era` | number | | 故事起点所在的世纪：正文里提到的最早年代，`16` 即 16 世纪，公元前为负数（`-5` 即公元前 5 世纪）。“时间长廊”按它排列；正文没提年代就不填 |
 | `page` | number | ✅ | 书中页码（正文页码，不是 PDF 页码；PDF 页码 = 书页码 + 7） |
+| `origin` | object | | **只有书外新增的词才有**（后台加词、并回仓库的）：`{ "kind": "ai" \| "manual", "model": "生成它的模型", "via": "import" \| "mcp" \| "manual", "sources": [{ "title": "...", "url": "..." }], "doubts": ["存疑之处"], "checked": { "by": "核对人", "at": "ISO 时间" } \| null }`。有 `origin` 的词条可以没有 `page`；`kind` 为 `ai` 时至少一条 `sources`。见下方“书外新增的词” |
 | `redirect` | string | | 只用于“见 xxx”式的跳转词条（如 `also-runner 见 also-ran`），值为目标 `id`。有 `redirect` 时，带 * 的字段都可以省略 |
 
 🖊 = 书里没有、需要根据词条内容另写的字段（编辑字段）。校验时缺少编辑字段只报警告，但正式数据应当补齐——它们决定了每日阅读的体验。
@@ -92,10 +93,30 @@
 古英语  意大利语  西班牙语  荷兰语  德语  美国英语  其他
 ```
 
+## 书外新增的词
+
+后台“词条”页签（或 MCP）加的词不在书里，存在数据库 `var/app.db`，发布后叠加到本文件的数据上。导入格式就是本文件的词条对象，外加一个 `_meta`（即 `origin`，不用写 `kind`、`via`、`checked`）：
+
+```json
+{ "format": "ety-entry/1", "entries": [
+  { "headword": "serendipity", "ipa": "ˌserənˈdɪpəti", "pos": "n", "meaning": "…", "teaser": "…", "keyline": "…",
+    "evolution": ["…"], "etymology": ["…"], "examples": [{ "en": "…", "zh": "…" }], "themes": ["…"], "langs": ["…"], "era": 18,
+    "links": [{ "id": "已有词条 id", "type": "同根", "why": "…" }],
+    "_meta": { "model": "…", "sources": [{ "title": "…", "url": "…" }], "doubts": ["…"] } },
+  { "patchOf": "alcohol", "links": [{ "id": "…", "type": "衍生", "why": "…" }], "_meta": { "model": "…", "sources": ["…"], "doubts": [] } }
+] }
+```
+
+- `id` 可省略，按词头生成；`page` 不用写。和原书词条同 id 的会被拒绝。
+- `patchOf` 是给原书词条**补写**：只能写 `teaser`、`keyline`、`evolution`、`links`、`era`、`subtheme`、`langs`，正文、释义、例句照原书不能改；`links` 是追加。
+- 粘贴时容错：会自动去掉 \`\`\` 代码块和前后的说明文字，修好字符串里没转义的引号、多余的逗号，去掉音标两侧的斜杠，把中文里的 ASCII 引号换成“”。
+- 发布前要 0 个错误；“已核对”由管理员在后台勾，内容一改就自动清掉。没核对的词不进每日推送、推荐和出题；核对过的要在后台打开“进入每日推送”才进。
+- 用 `npm run admin -- merge-added <导出的文件>` 并进本文件后，这些词条带着 `origin`、没有 `page`，校验照常通过。
+
 ## 校验
 
 ```bash
 npm run validate
 ```
 
-会检查：JSON 能否解析、必填字段、编辑字段是否齐全与格式、`id` 格式与唯一性、`themes` 是否在列表内、`subtheme` 是否属于词条所在的专题、`links` 指向是否存在、类型是否合法、一对关系是否重复记录、`era` 是否在合理范围、`seeAlso`/`redirect` 指向的词条是否存在（不存在只给警告，因为可能还没录入）、`*` 是否成对。
+规则写在 `backend/src/validate.ts`，后台导入、MCP 提交用的是同一套。会检查：JSON 能否解析、必填字段、编辑字段是否齐全与格式、`id` 格式与唯一性、`themes` 是否在列表内、`subtheme` 是否属于词条所在的专题、`links` 指向是否存在、类型是否合法、一对关系是否重复记录、`era` 是否在合理范围、`seeAlso`/`redirect` 指向的词条是否存在（不存在只给警告，因为可能还没录入）、`*` 是否成对。

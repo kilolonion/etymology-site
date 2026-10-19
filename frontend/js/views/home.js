@@ -3,7 +3,7 @@
 // 同一个组件在不同尺寸下取舍内容：大的多给几行，小的只留最要紧的。
 
 import { reasonText, reminderPrompt, sayBtn } from "../components.js";
-import { actions, api, cnDate, esc, icon, local, rich, render, weekday } from "../lib.js";
+import { actions, api, cnDate, esc, icon, local, render, rich, srcMark, weekday } from "../lib.js";
 import { emblem, primaryTheme, THEMES, themeOf, themeTag, tint } from "../themes.js";
 import { loadLayout, mountDesk, shell } from "../desk.js";
 import { readMinutes } from "./entry.js";
@@ -142,11 +142,11 @@ const loading = (title) => `<div class="w-body w-card w-wait-load"><div class="w
 /** 一行小词条：单词 + 一句（没读过给问题，读过给“一句话记住”） */
 const blurb = (x) => rich(x.read ? x.keyline || x.meaning : x.teaser);
 const miniRow = (x, text) => `<a class="mini" href="#/w/${esc(x.id)}" style="${tint(x)}">
-  <b>${esc(x.headword)}</b><span>${text ?? blurb(x)}</span>${x.read ? `<i class="seen">已读</i>` : ""}
+  <b>${esc(x.headword)}${srcMark(x)}</b><span>${text ?? blurb(x)}</span>${x.read ? `<i class="seen">已读</i>` : ""}
 </a>`;
 /** 大号组件的头条：单词放大，下面是完整的一句 */
 const featureRow = (x, text) => `<a class="feature" href="#/w/${esc(x.id)}" style="${tint(x)}">
-  ${emblem(primaryTheme(x))}<b>${esc(x.headword)}</b><span class="m">${esc(x.meaning)}</span><p>${text ?? blurb(x)}</p>
+  ${emblem(primaryTheme(x))}<b>${esc(x.headword)}${srcMark(x)}</b><span class="m">${esc(x.meaning)}</span><p>${text ?? blurb(x)}</p>
 </a>`;
 
 /** 没读过的排前面，同类里按日期散列打乱（每天看到的不一样） */
@@ -332,7 +332,7 @@ function wDiscover(size) {
       ${size === "l" ? `<span class="quote" aria-hidden="true">“</span>` : ""}
       <p class="q">${rich(x.teaser)}</p>
       ${why ? `<p class="why">${why}</p>` : ""}
-      <span class="w-wordline"><b>${esc(x.headword)}</b>${size === "l" ? `<span class="m">${esc(x.meaning)}</span>` : ""}${icon("arrow")}</span>
+      <span class="w-wordline"><b>${esc(x.headword)}${srcMark(x)}</b>${size === "l" ? `<span class="m">${esc(x.meaning)}</span>` : ""}${icon("arrow")}</span>
     </a>
   </div>`;
 }
@@ -515,7 +515,8 @@ const masked = (x) => x.keyline.replace(new RegExp(escRe(x.headword), "gi"), "�
 
 /** 出一道题：从读过的词里按日期 + 题号挑一个当答案，再挑几个读过的词当干扰项 */
 function quizItem(n) {
-  const pool = ctx.all.filter((x) => x.read && x.keyline && !x.redirect);
+  // 待核对的新词不出题（答案本身可能不对）
+  const pool = ctx.all.filter((x) => x.read && x.keyline && !x.redirect && x.src !== "ai");
   if (pool.length < 3) return null;
   // FNV-1a：题号只差一位，排出来的顺序也要完全不同（乘 31 累加的那种散列，前缀变了顺序几乎不变）
   const seed = `${ctx.t.day}#${quiz.n}`;

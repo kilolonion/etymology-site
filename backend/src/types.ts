@@ -50,8 +50,34 @@ export type FullEntry = {
   subtheme?: string;
   /** 故事起点所在的世纪：正文提到的最早年代，16 即 16 世纪，公元前为负数 */
   era?: number;
-  page: number;
+  /** 书中页码；不在书里的词（后台新增的）没有 */
+  page?: number;
+  /** 不在书里的词才有：谁写的、参考了什么、哪里拿不准、有没有人核对过 */
+  origin?: Origin;
+  /** 原书词条被后台补过编辑字段时才有：补了哪些字段、来源 */
+  patched?: { fields: string[]; origin: Origin };
 };
+
+/** 后台新增 / 补写内容的来源 */
+export const ORIGIN_KINDS = ["ai", "manual"] as const;
+export type Source = { title: string; url?: string };
+export type Origin = {
+  /** ai：AI 生成；manual：管理员自己写的 */
+  kind: (typeof ORIGIN_KINDS)[number];
+  /** 生成它的模型，人写的不填 */
+  model?: string;
+  /** 怎么进来的：后台粘贴导入、MCP 提交、后台手写 */
+  via?: "import" | "mcp" | "manual";
+  /** 参考来源，AI 生成的至少一条 */
+  sources: Source[];
+  /** AI 自己拿不准的地方，原样给读者看 */
+  doubts: string[];
+  /** 管理员核对过才有；内容一改就清掉 */
+  checked?: { by: string; at: string } | null;
+};
+
+/** 原书词条可以补写的字段（正文、释义、例句这些照原书，不许改） */
+export const PATCH_FIELDS = ["teaser", "keyline", "evolution", "links", "era", "subtheme", "langs"] as const;
 
 export type RedirectEntry = {
   id: string;

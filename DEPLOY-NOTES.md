@@ -49,6 +49,12 @@ npm run deploy -- status        # 服务器上现在是哪个版本
 - 页面和接口都是先走网络（4 秒等不到才用缓存），有网时看到的永远是新的。
 - 本地开发时 index.html 里的版本号不是哈希，静态文件也走网络优先，改了代码刷新就能看到。
 
+## 后台加词与 MCP
+
+- 后台“词条”页签加的新词、给原书词条补写的内容、版本历史、读者报错、MCP 令牌，都在 `backend/var/app.db` 里，部署不会覆盖，跟着数据库一起备份。
+- MCP 地址是 `https://words.kilolonion.com/api/mcp`，走现有的 nginx `/api` 转发，不用另外配置。令牌在后台“词条 → MCP 令牌”里生成（只显示一次，库里只存散列），能读和交草稿，不能发布；停用或取消管理员身份后，这个人的令牌一并失效。
+- 想把新词写进仓库：后台下载，或在服务器上 `cd /opt/etymology-site/backend && sudo -u ety /opt/node24/bin/npm run admin -- export-added /tmp/added.json`，拿回本机 `npm run admin -- merge-added /tmp/added.json`，提交后部署。
+
 ## 注意
 
 - 发音和查词需要服务器能访问外网：`en.wiktionary.org`、`upload.wikimedia.org`（真人录音）、`dict.youdao.com`（词典发音、简明释义）、`translate.google.com`（整句朗读）。取到的音频存在 `backend/var/audio/`，不用备份，删了会重新取；都访问不了时页面退回浏览器自带的语音。

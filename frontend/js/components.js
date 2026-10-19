@@ -1,6 +1,6 @@
 // 多个页面共用的片段
 
-import { actions, api, esc, icon, local, rich, toast } from "./lib.js";
+import { actions, api, esc, icon, local, rich, srcMark, toast } from "./lib.js";
 import { enablePush, pushStatus } from "./push.js";
 import { emblem, primaryTheme, tint } from "./themes.js";
 
@@ -82,7 +82,7 @@ export const linkCards = (items) =>
   `<div class="links">${items
     .map(
       (s) => `<a class="link-card" href="#/w/${esc(s.id)}" style="${tint(s)}">
-        ${emblem(primaryTheme(s))}<b>${esc(s.headword)}</b><span>${esc(s.meaning)}</span>
+        ${emblem(primaryTheme(s))}<b>${esc(s.headword)}${srcMark(s)}</b><span>${esc(s.meaning)}</span>
         ${s.read ? `<i class="seen">已读</i>` : ""}
       </a>`,
     )
@@ -185,7 +185,7 @@ export function family(e) {
   const list = nodes
     .map((n) => `<a class="kin-row" href="#/w/${esc(n.id)}" style="${tint(n)}">
       <span class="rel r-${REL_ORDER.indexOf(n.rel)}">${n.rel}</span>
-      <b>${esc(n.headword)}</b>
+      <b>${esc(n.headword)}${srcMark(n)}</b>
       <span class="why">${rich(n.why)}</span>
       ${n.read ? `<i class="seen">已读</i>` : ""}
     </a>`)

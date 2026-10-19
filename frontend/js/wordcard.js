@@ -1,7 +1,7 @@
 // 词卡：点正文里带下划线的词，就地弹出一张小卡片——单词、发音、释义、故事的开头，想看全文再点进去。
 // 电脑上贴着那个词弹出，手机上从底部升起。卡片里的词也能接着点，卡片换成新词。
 
-import { actions, api, esc, icon, rich } from "./lib.js";
+import { actions, api, esc, icon, rich, srcMark } from "./lib.js";
 import { primaryTheme, themeTag, tint } from "./themes.js";
 
 let box = null;
@@ -65,7 +65,7 @@ function entryCard(c) {
   const theme = primaryTheme(c);
   return `<div class="wc-in" style="${tint(c)}">
     <div class="wc-top">${themeTag(theme)}${c.read ? `<i class="seen">已读</i>` : ""}${closeBtn}</div>
-    <div class="wc-head"><b>${esc(c.headword)}</b>${say(c.headword)}</div>
+    <div class="wc-head"><b>${esc(c.headword)}${srcMark(c)}</b>${say(c.headword)}</div>
     <p class="wc-phon">/${esc(c.ipa)}/${c.pos ? ` · ${esc(c.pos)}` : ""}</p>
     <p class="wc-mean">${esc(c.meaning)}</p>
     <p class="wc-gist">${rich(c.gist, { link: true, used: new Set([c.id]) })}</p>

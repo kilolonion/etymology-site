@@ -78,6 +78,52 @@ export function openDb(path: string): void {
       key   TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
+    -- 后台新增的词（mode=new）和给原书词条补写的编辑字段（mode=patch）。
+    -- data 是正在改的稿，live 是已经发布、读者看得到的那一版（没发布过就是 NULL）；两者都是 {"entry":…,"meta":…}
+    CREATE TABLE IF NOT EXISTS entry_drafts (
+      id           TEXT PRIMARY KEY,
+      mode         TEXT NOT NULL,
+      data         TEXT NOT NULL,
+      live         TEXT,
+      archived     INTEGER NOT NULL DEFAULT 0,
+      created_by   TEXT NOT NULL,
+      created_at   TEXT NOT NULL,
+      updated_by   TEXT NOT NULL,
+      updated_at   TEXT NOT NULL,
+      published_at TEXT
+    );
+    -- 每存一次留一版，用来对比和回滚
+    CREATE TABLE IF NOT EXISTS entry_revisions (
+      id   TEXT NOT NULL,
+      ver  INTEGER NOT NULL,
+      data TEXT NOT NULL,
+      note TEXT,
+      by   TEXT NOT NULL,
+      at   TEXT NOT NULL,
+      PRIMARY KEY (id, ver)
+    );
+    -- 读者报错
+    CREATE TABLE IF NOT EXISTS entry_reports (
+      id          INTEGER PRIMARY KEY,
+      entry_id    TEXT NOT NULL,
+      user_id     INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      text        TEXT NOT NULL,
+      at          TEXT NOT NULL,
+      resolved_by TEXT,
+      resolved_at TEXT
+    );
+    -- 给 MCP 等程序用的令牌（只存散列）；scopes 是逗号分隔的 read / draft
+    CREATE TABLE IF NOT EXISTS api_tokens (
+      id           INTEGER PRIMARY KEY,
+      name         TEXT NOT NULL,
+      token_hash   TEXT NOT NULL UNIQUE,
+      user_id      INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      scopes       TEXT NOT NULL,
+      created_at   TEXT NOT NULL,
+      expires_at   TEXT,
+      last_used_at TEXT,
+      revoked_at   TEXT
+    );
     CREATE TABLE IF NOT EXISTS audit (
       id         INTEGER PRIMARY KEY,
       at         TEXT NOT NULL,
@@ -653,4 +699,176 @@ export function listAudit(limit = 40): { id: number; at: string; admin: string; 
     id: number; at: string; admin_name: string; action: string; detail: string | null;
   }[];
   return rows.map((r) => ({ id: r.id, at: r.at, admin: r.admin_name, action: r.action, detail: r.detail ?? "" }));
+}
+
+// ---------- 后台新增 / 补写的词条 ----------
+
+export type DraftRow = {
+  id: string;
+  mode: "new" | "patch";
+  data: string;
+  live: string | null;
+  archived: number;
+  created_by: string;
+  created_at: string;
+  updated_by: string;
+  updated_at: string;
+  published_at: string | null;
+};
+
+export function listDrafts(): DraftRow[] {
+  return db.prepare("SELECT * FROM entry_drafts ORDER BY updated_at DESC").all() as DraftRow[];
+}
+
+export function getDraft(id: string): DraftRow | undefined {
+  return db.prepare("SELECT * FROM entry_drafts WHERE id = ?").get(id) as DraftRow | undefined;
+}
+
+/** 已发布、没撤下的：加载词条时叠加到原书数据上 */
+export function liveDrafts(): { id: string; mode: "new" | "patch"; live: string }[] {
+  return db.prepare("SELECT id, mode, live FROM entry_drafts WHERE live IS NOT NULL AND archived = 0").all() as {
+    id: string; mode: "new" | "patch"; live: string;
+  }[];
+}
+
+/** 存稿：新建或覆盖 data，并留一版历史；返回版本号 */
+export function saveDraft(id: string, mode: "new" | "patch", data: string, by: string, note = ""): number {
+  return tx(() => {
+    const t = now();
+    db.prepare(
+      `INSERT INTO entry_drafts (id, mode, data, created_by, created_at, updated_by, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT (id) DO UPDATE SET data = excluded.data, updated_by = excluded.updated_by, updated_at = excluded.updated_at`,
+    ).run(id, mode, data, by, t, by, t);
+    return addRevision(id, data, by, note);
+  });
+}
+
+function addRevision(id: string, data: string, by: string, note: string): number {
+  const ver = ((db.prepare("SELECT MAX(ver) AS v FROM entry_revisions WHERE id = ?").get(id) as { v: number | null }).v ?? 0) + 1;
+  db.prepare("INSERT INTO entry_revisions (id, ver, data, note, by, at) VALUES (?, ?, ?, ?, ?, ?)").run(id, ver, data, note, by, now());
+  return ver;
+}
+
+/** 发布：把 data 原样拷到 live（data 里已经写好了核对信息） */
+export function publishDraft(id: string, data: string, by: string): void {
+  tx(() => {
+    db.prepare("UPDATE entry_drafts SET data = ?, live = ?, archived = 0, published_at = ?, updated_by = ?, updated_at = ? WHERE id = ?")
+      .run(data, data, now(), by, now(), id);
+    addRevision(id, data, by, "发布");
+  });
+}
+
+/** 撤下：读者看不到了，稿子还在 */
+export function unpublishDraft(id: string, by: string): void {
+  db.prepare("UPDATE entry_drafts SET live = NULL, archived = 1, updated_by = ?, updated_at = ? WHERE id = ?").run(by, now(), id);
+}
+
+export function deleteDraft(id: string): void {
+  tx(() => {
+    db.prepare("DELETE FROM entry_drafts WHERE id = ?").run(id);
+    db.prepare("DELETE FROM entry_revisions WHERE id = ?").run(id);
+  });
+}
+
+export type Revision = { ver: number; data: string; note: string; by: string; at: string };
+
+export function listRevisions(id: string): Revision[] {
+  return (db.prepare("SELECT ver, data, note, by, at FROM entry_revisions WHERE id = ? ORDER BY ver DESC").all(id) as
+    (Revision & { note: string | null })[]).map((r) => ({ ...r, note: r.note ?? "" }));
+}
+
+export function getRevision(id: string, ver: number): Revision | undefined {
+  const r = db.prepare("SELECT ver, data, note, by, at FROM entry_revisions WHERE id = ? AND ver = ?").get(id, ver) as
+    (Revision & { note: string | null }) | undefined;
+  return r && { ...r, note: r.note ?? "" };
+}
+
+// ---------- 读者报错 ----------
+
+export type Report = { id: number; entryId: string; user: string | null; text: string; at: string; resolvedBy: string | null; resolvedAt: string | null };
+
+export function addReport(entryId: string, uid: number, text: string): number {
+  const r = db.prepare("INSERT INTO entry_reports (entry_id, user_id, text, at) VALUES (?, ?, ?, ?)").run(entryId, uid, text, now());
+  return Number(r.lastInsertRowid);
+}
+
+/** 同一个人一天内对同一个词报过几次（防刷） */
+export function reportsToday(uid: number, sinceIso: string): number {
+  return (db.prepare("SELECT COUNT(*) AS n FROM entry_reports WHERE user_id = ? AND at >= ?").get(uid, sinceIso) as { n: number }).n;
+}
+
+export function listReports(opts: { open?: boolean; entryId?: string; limit?: number } = {}): Report[] {
+  const where: string[] = [];
+  const args: (string | number)[] = [];
+  if (opts.open) where.push("r.resolved_at IS NULL");
+  if (opts.entryId) where.push("r.entry_id = ?"), args.push(opts.entryId);
+  const rows = db.prepare(
+    `SELECT r.id, r.entry_id, u.username, r.text, r.at, r.resolved_by, r.resolved_at
+       FROM entry_reports r LEFT JOIN users u ON u.id = r.user_id
+       ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
+      ORDER BY r.resolved_at IS NOT NULL, r.id DESC LIMIT ?`,
+  ).all(...args, opts.limit ?? 100) as {
+    id: number; entry_id: string; username: string | null; text: string; at: string; resolved_by: string | null; resolved_at: string | null;
+  }[];
+  return rows.map((r) => ({ id: r.id, entryId: r.entry_id, user: r.username, text: r.text, at: r.at, resolvedBy: r.resolved_by, resolvedAt: r.resolved_at }));
+}
+
+export function resolveReport(id: number, by: string, reopen = false): boolean {
+  const r = reopen
+    ? db.prepare("UPDATE entry_reports SET resolved_by = NULL, resolved_at = NULL WHERE id = ?").run(id)
+    : db.prepare("UPDATE entry_reports SET resolved_by = ?, resolved_at = ? WHERE id = ? AND resolved_at IS NULL").run(by, now(), id);
+  return r.changes > 0;
+}
+
+export function openReportCounts(): Map<string, number> {
+  const rows = db.prepare("SELECT entry_id, COUNT(*) AS n FROM entry_reports WHERE resolved_at IS NULL GROUP BY entry_id").all() as {
+    entry_id: string; n: number;
+  }[];
+  return new Map(rows.map((r) => [r.entry_id, r.n]));
+}
+
+// ---------- 程序令牌（MCP） ----------
+
+export type ApiToken = {
+  id: number; name: string; userId: number; username: string; isAdmin: boolean; disabled: boolean; scopes: string[];
+  createdAt: string; expiresAt: string | null; lastUsedAt: string | null; revokedAt: string | null;
+};
+type TokenRow = {
+  id: number; name: string; user_id: number; username: string; is_admin: number; disabled: number; scopes: string;
+  created_at: string; expires_at: string | null; last_used_at: string | null; revoked_at: string | null;
+};
+const toToken = (r: TokenRow): ApiToken => ({
+  id: r.id, name: r.name, userId: r.user_id, username: r.username, isAdmin: !!r.is_admin, disabled: !!r.disabled,
+  scopes: r.scopes.split(",").filter(Boolean), createdAt: r.created_at, expiresAt: r.expires_at, lastUsedAt: r.last_used_at, revokedAt: r.revoked_at,
+});
+const TOKEN_SELECT = `SELECT t.id, t.name, t.user_id, u.username, u.is_admin, u.disabled, t.scopes, t.created_at, t.expires_at, t.last_used_at, t.revoked_at
+  FROM api_tokens t JOIN users u ON u.id = t.user_id`;
+
+export function createToken(name: string, hash: string, uid: number, scopes: string[], expiresAt: string | null): number {
+  const r = db.prepare("INSERT INTO api_tokens (name, token_hash, user_id, scopes, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)")
+    .run(name, hash, uid, scopes.join(","), now(), expiresAt);
+  return Number(r.lastInsertRowid);
+}
+
+export function listTokens(): ApiToken[] {
+  return (db.prepare(`${TOKEN_SELECT} ORDER BY t.revoked_at IS NOT NULL, t.id DESC`).all() as TokenRow[]).map(toToken);
+}
+
+/** 按散列找一个能用的令牌：没吊销、没过期、主人没被停用、仍是管理员 */
+export function findToken(hash: string): ApiToken | undefined {
+  const r = db.prepare(`${TOKEN_SELECT} WHERE t.token_hash = ?`).get(hash) as TokenRow | undefined;
+  if (!r) return undefined;
+  const t = toToken(r);
+  if (t.revokedAt || t.disabled || !t.isAdmin || (t.expiresAt && Date.parse(t.expiresAt) < Date.now())) return undefined;
+  return t;
+}
+
+/** 记“最后使用”：一分钟内只写一次 */
+export function touchToken(id: number): void {
+  db.prepare("UPDATE api_tokens SET last_used_at = ? WHERE id = ? AND (last_used_at IS NULL OR last_used_at < ?)")
+    .run(now(), id, new Date(Date.now() - 60_000).toISOString());
+}
+
+export function revokeToken(id: number): boolean {
+  return db.prepare("UPDATE api_tokens SET revoked_at = ? WHERE id = ? AND revoked_at IS NULL").run(now(), id).changes > 0;
 }

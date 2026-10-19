@@ -1,9 +1,10 @@
 // 文章页：一个词的完整故事（电脑上右侧是相关词和出处卡）。读到“一句话记住”、且停留几秒后才算读完，随手点开不算。
 // 没读过的词，开头先猜一下它的来历里有哪种语言，读到“词源之路”揭晓；读完时就地展开收尾（连续天数、今日目标、名次、明日预告、再读一个）。
 // 顶部一条进度，读到“一句话记住”正好走满；字号可以调。
+// 不在书里的词（后台新增）词头下有来源标签，点开看参考来源和存疑之处；每篇都能报错。管理员可以用 ?draft=1 预览稿子。
 
 import { examples, family, fold, foldHead, isWide, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js";
-import { actions, api, esc, icon, local, render, rich, toast, warmSpeech } from "../lib.js";
+import { actions, api, esc, icon, local, render, rich, SRC_TEXT, toast, warmSpeech } from "../lib.js";
 import { emblem, primaryTheme, themeTag, tint } from "../themes.js";
 import { queueRead } from "../offline.js";
 import { invalidateSummaries } from "./explore.js";
@@ -24,13 +25,17 @@ const fontScale = () => FONT_SCALES[local.get("font-scale", 0)] ?? 1;
 /** 正文大约要读几分钟（中文按每分钟 400 字算） */
 export const readMinutes = (e) => Math.max(1, Math.round([...(e.etymology ?? []), ...(e.evolution ?? []), e.keyline ?? ""].join("").length / 400));
 
-export async function viewEntry(id) {
+export async function viewEntry(id, query) {
   unwatch?.();
   page?.abort();
   page = new AbortController();
   const sig = page.signal;
+  const draft = !!query?.get("draft");
   // 词条目录用来给正文里的词加词卡链接；拿不到也不耽误看文章
-  const [e, all] = await Promise.all([api(`/entries/${encodeURIComponent(id)}`), api("/entries").catch(() => null)]);
+  const [e, all] = await Promise.all([
+    api(`/entries/${encodeURIComponent(id)}${draft ? "?draft=1" : ""}`, draft ? { fresh: true } : undefined),
+    api("/entries").catch(() => null),
+  ]);
   if (all) indexWords(all);
   if (e.redirect) {
     location.replace(`#/w/${e.redirect}`);
@@ -46,21 +51,23 @@ export async function viewEntry(id) {
   const used = new Set([e.id]);
 
   render(`
+    ${e.preview ? `<div class="draft-bar"><span>草稿预览 · 读者还看不到这一版</span><a href="#/me/admin?tab=entries&d=${encodeURIComponent(e.id)}">回到稿子</a></div>` : ""}
     <article style="${tint(e)};--fs:${fontScale()}">
       <div class="read-progress" aria-hidden="true"><span></span></div>
       <header class="hero">
         ${emblem(theme)}
         <div class="hero-bar">
           <button class="back" data-action="back">${icon("left")}返回</button>
-          <span class="hero-acts"><span class="mins">约 ${readMinutes(e)} 分钟</span><button class="icon-btn fs-btn" data-action="font-size" aria-label="调整字号">Aa</button>${starBtn(e)}</span>
+          <span class="hero-acts"><span class="mins">约 ${readMinutes(e)} 分钟</span><button class="icon-btn fs-btn" data-action="font-size" aria-label="调整字号">Aa</button>${e.preview ? "" : starBtn(e)}</span>
         </div>
         ${themeTag(theme)}
         <h1>${esc(e.headword)}</h1>
+        ${e.src ? `<button class="src-badge ${e.src}" data-action="src-info">${SRC_TEXT[e.src]}</button>` : ""}
         ${e.variants?.length ? `<p class="variants">亦作 ${e.variants.map(esc).join(", ")}</p>` : ""}
         <div class="phon">${sayBtn(e.headword)}<span class="ipa">/${esc(e.ipa)}/</span><span class="pos">${esc(e.pos)}</span></div>
         <p class="meaning">${esc(e.meaning)}</p>
         <p class="teaser">${rich(e.teaser, { link: true, used })}</p>
-        ${guessBlock(e)}
+        ${e.preview ? "" : guessBlock(e)}
       </header>
 
       <div class="article-body">
@@ -79,11 +86,11 @@ export async function viewEntry(id) {
           ${more.length ? fold(foldHead("相关的词", "Related", `${more.length} 个`), linkCards(more), { key: "entry.related", open: isWide() }) : ""}
 
           <section class="catalog" aria-label="出处">
-            <div class="r"><span>出处</span><span>《英语词源典故词典》第 ${e.page} 页</span></div>
+            ${sourceRows(e)}
             <div class="r"><span>专题</span><span>${e.themes.map(esc).join("、")}</span></div>
             ${e.langs?.length ? `<div class="r"><span>语源</span><span>${e.langs.map(esc).join(" · ")}</span></div>` : ""}
-            <div class="r"><span>阅读</span><span class="read-state ${e.read ? "ok" : ""}">${e.read ? "已读" : "读到“一句话记住”就算读完"}</span></div>
-            <div class="acts"><button class="text-btn" data-action="toggle-read" data-id="${esc(e.id)}" data-read="${e.read}">${e.read ? "标为未读" : "标为已读"}</button></div>
+            ${e.preview ? "" : `<div class="r"><span>阅读</span><span class="read-state ${e.read ? "ok" : ""}">${e.read ? "已读" : "读到“一句话记住”就算读完"}</span></div>
+            <div class="acts"><button class="text-btn" data-action="report">${icon("flag")}报错</button><button class="text-btn" data-action="toggle-read" data-id="${esc(e.id)}" data-read="${e.read}">${e.read ? "标为未读" : "标为已读"}</button></div>`}
           </section>
         </aside>
 
@@ -102,11 +109,101 @@ export async function viewEntry(id) {
   document.title = `${e.headword} · 词源一日`;
 
   warmSpeech(e.headword);
-  if (!e.read) watchReading(e);
+  if (!e.read && !e.preview) watchReading(e);
   watchProgress(sig);
   watchReveal(e, sig);
   addEventListener("hashchange", () => page?.abort(), { signal: sig, once: true });
 }
+
+// ---------- 来源：原书 / AI 整理 / 编辑撰写，补写过的原书词条 ----------
+
+const FIELD_NAMES = { teaser: "钩子", keyline: "一句话记住", evolution: "词义演变", links: "词的关系", era: "年代", subtheme: "子专题", langs: "语源" };
+const BOOK = "《英语词源典故词典》";
+const patchLabel = (p) => `${p.origin?.kind === "manual" ? "编辑补写的" : "AI 补充的"}（${p.origin?.checked ? "已核对" : "待核对"}）`;
+
+/** 出处卡里的“出处”一行，加一句说明哪些是原书、哪些是另写的 */
+function sourceRows(e) {
+  if (e.origin) {
+    return `<div class="r"><span>出处</span><span>${e.origin.kind === "manual" ? "编辑撰写" : "AI 整理"}（不在原书中）</span></div>
+      <p class="src-note">${e.origin.sources.length} 条参考来源${e.origin.doubts.length ? `，${e.origin.doubts.length} 处存疑` : ""}。<button data-action="src-info">看来源</button></p>`;
+  }
+  const patched = e.patched?.fields?.length
+    ? `其中「${e.patched.fields.map((f) => FIELD_NAMES[f] ?? f).join("、")}」是${patchLabel(e.patched)}，<button data-action="src-info">看来源</button>。`
+    : "";
+  return `<div class="r"><span>出处</span><span>${BOOK}第 ${e.page} 页</span></div>
+    <p class="src-note">正文、释义、例句照原书；钩子、一句话记住、词义演变为编辑补写。${patched}</p>`;
+}
+
+/** 弹出一张卡片（来源说明、报错共用），关掉就移除 */
+function dialog(html) {
+  document.querySelector(".src-dialog")?.remove();
+  const d = document.createElement("dialog");
+  d.className = "src-dialog";
+  d.innerHTML = `<div class="sd-in">${html}</div>`;
+  document.body.append(d);
+  d.addEventListener("close", () => d.remove());
+  // 点到卡片外面（遮罩）也关
+  d.addEventListener("click", (ev) => ev.target === d && d.close());
+  d.showModal();
+  return d;
+}
+
+const sourceList = (o) => `
+  <h3>参考来源</h3>
+  <ul>${o.sources.map((s) => `<li>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a>` : esc(s.title)}</li>`).join("") || "<li>（没有列出）</li>"}</ul>
+  ${o.doubts.length ? `<h3>存疑之处</h3><ul class="doubts">${o.doubts.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}`;
+
+const cnDay = (iso) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
+};
+const checkedText = (o) => (o.checked ? `管理员于 ${cnDay(o.checked.at)}对照来源核对过。` : "还没有经过人工核对，请带着一点怀疑读。");
+
+actions["src-info"] = () => {
+  const e = current;
+  if (!e) return;
+  let body;
+  if (e.origin) {
+    const o = e.origin;
+    body = `<h2>这篇的来源<span class="src-badge ${e.src}">${SRC_TEXT[e.src]}</span></h2>
+      <p>${esc(e.headword)} 不在${BOOK}里。${o.kind === "manual" ? "这篇由本站编辑根据公开资料撰写。" : `内容由 AI${o.model ? `（${esc(o.model)}）` : ""}根据公开资料整理，`}${checkedText(o)}</p>
+      ${sourceList(o)}`;
+  } else if (e.patched) {
+    const o = e.patched.origin;
+    body = `<h2>补写的内容</h2>
+      <p>${esc(e.headword)} 的正文出自${BOOK}第 ${e.page} 页。「${e.patched.fields.map((f) => FIELD_NAMES[f] ?? f).join("、")}」是后来补充的${o.kind === "manual" ? "，由编辑撰写" : `，由 AI${o.model ? `（${esc(o.model)}）` : ""}整理`}。${checkedText(o)}</p>
+      ${sourceList(o)}`;
+  } else return;
+  const d = dialog(`${body}<div class="sd-acts"><button class="btn sm" data-action="report">${icon("flag")}我发现了错误</button><button class="btn sm primary" data-action="dlg-close">知道了</button></div>`);
+  d.querySelector("[data-action=dlg-close]").focus();
+};
+
+actions["dlg-close"] = (el) => el.closest("dialog")?.close();
+
+actions.report = () => {
+  const e = current;
+  if (!e) return;
+  const d = dialog(`<h2>报告错误</h2>
+    <p>${esc(e.headword)} 哪里不对？写清楚是哪一句、应该是什么，最好附上出处。管理员会看到。</p>
+    <textarea rows="4" maxlength="500" placeholder="比如：第二段的年份应该是 1754 年，见……"></textarea>
+    <div class="sd-acts"><button class="btn sm" data-action="dlg-close">取消</button><button class="btn sm primary" data-action="report-send">提交</button></div>`);
+  d.querySelector("textarea").focus();
+};
+
+actions["report-send"] = async (el) => {
+  const d = el.closest("dialog");
+  const text = d.querySelector("textarea").value.trim();
+  if (text.length < 4) return toast("多写几个字，说说哪里不对");
+  el.disabled = true;
+  try {
+    await api(`/entries/${encodeURIComponent(current.id)}/report`, { method: "POST", body: { text } });
+    d.close();
+    toast("收到了，谢谢");
+  } catch (err) {
+    toast(err.message);
+    el.disabled = false;
+  }
+};
 
 // ---------- 读前先猜：它的来历里有哪种语言 ----------
 

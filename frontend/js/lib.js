@@ -35,6 +35,10 @@ const PATHS = {
   refresh: '<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4h-4"/>',
   quiz: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v9a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4h0A2.5 2.5 0 0 1 4 14.5z"/><path d="M9.8 8.2a2.3 2.3 0 1 1 3.2 2.1c-.6.3-1 .8-1 1.4v.3M12 14.6v.1"/>',
   quote: '<path d="M10 7H6.5A1.5 1.5 0 0 0 5 8.5V12h4v.5C9 15 7.5 16.5 5.5 17M19 7h-3.5A1.5 1.5 0 0 0 14 8.5V12h4v.5c0 2.5-1.5 4-3.5 4.5"/>',
+  copy: '<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/>',
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+  down: '<path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19.5h14"/>',
+  flag: '<path d="M5.5 21V4.5m0 0h11l-2 4 2 4h-11"/>',
 };
 
 export const icon = (name, cls = "i") =>
@@ -396,6 +400,10 @@ export const local = {
 export const empty = (text, acts = "") =>
   `<div class="empty"><span class="seal"></span><div>${text}</div>${acts ? `<div class="empty-acts">${acts}</div>` : ""}</div>`;
 
+/** 不在书里的词：列表、卡片上词头右上角的小角标（ai = AI 整理待核对，ai-ok = 已核对，edit = 编辑撰写） */
+export const SRC_TEXT = { ai: "AI 整理 · 待核对", "ai-ok": "AI 整理 · 已核对", edit: "编辑撰写" };
+export const srcMark = (s) => (s?.src ? `<sup class="ai-mark ${s.src}" title="${SRC_TEXT[s.src]}（不在原书中）">${s.src === "edit" ? "编" : "AI"}</sup>` : "");
+
 /** 列表行：左侧圆点是词条的专题色 */
 export function row(s, { sub = "meaning", query = "" } = {}) {
   let snippet = "";
@@ -411,7 +419,7 @@ export function row(s, { sub = "meaning", query = "" } = {}) {
   const text = s.redirect ? `见 ${esc(s.redirect)}` : sub === "teaser" && !s.read ? esc(s.teaser) : esc(s.meaning);
   return `<a class="row${s.read || s.redirect ? " read" : ""}" href="#/w/${esc(target)}" ${s.themes ? `style="${tint(s)}"` : ""}>
     <span class="dot"></span>
-    <span class="row-head">${esc(s.headword)}</span>
+    <span class="row-head">${esc(s.headword)}${srcMark(s)}</span>
     <span class="row-flag">${s.daily ? `<span class="pushed">当日推送</span>` : ""}${s.starred ? icon("star", "star-s") : ""}<span class="badge">未读</span></span>
     <span class="row-sub">${text}</span>
     ${snippet}
