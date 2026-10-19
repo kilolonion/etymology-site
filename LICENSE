@@ -1,22 +1,30 @@
-版权所有 (c) 2026 kilolonion。保留所有权利。 / All rights reserved.
+MIT License
 
-本仓库公开仅为方便个人学习与交流，**不构成任何开源许可**。
+Copyright (c) 2026 kilolonion
 
-1. 代码（frontend/、backend/src/、backend/scripts/、deploy/ 等）：
-   允许为个人学习目的阅读、克隆、本地运行与研究。
-   未经作者书面同意，不得用于商业目的，不得再分发或公开部署对外提供服务。
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-2. 词条数据（backend/data/ 下的全部内容）：
-   整理自《英语词源典故词典》，权利归原书作者、出版社及相应权利人所有。
-   本仓库不授予这些数据的任何许可。详见 backend/data/NOTICE.md。
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-免责声明：本项目及其中数据按「现状」提供，不附带任何明示或默示的担保，
-包括但不限于适销性、特定用途适用性和不侵权的担保。在任何情况下，作者均不对因使用、
-无法使用或误用本项目产生的任何索赔、损失、损害或其他责任负责，无论该责任基于合同、
-侵权或其他理由。
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-Copyright (c) 2026 kilolonion. All rights reserved.
-This repository is made public for personal study and discussion only and does
-NOT constitute an open-source license. The dictionary data under backend/data/
-belongs to the original rights holders and is NOT licensed by this repository.
-THE SOFTWARE AND DATA ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+---
+
+Exception / 例外说明：
+The word-entry data under `backend/data/` is NOT covered by this license.
+Its copyright belongs to the original book's authors, publisher and rights
+holders. See README.md.
+`backend/data/` 目录下的词条数据不适用本许可，权利归《英语词源典故词典》
+原书作者、出版社及相应权利人所有，详见 README.md。

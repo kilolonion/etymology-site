@@ -172,7 +172,7 @@ npm run deploy                                   # 部署当前提交；--dry-ru
 
 ## 许可
 
-- **代码**（`frontend/`、`backend/src/`、`backend/scripts/`、`deploy/` 等）：仅供学习与交流，**未附带任何开源许可证**；在取得作者书面同意之前，请不要将其用于商业目的或再分发。
+- **代码**（`frontend/`、`backend/src/`、`backend/scripts/`、`deploy/` 等）：采用 [MIT 许可证](LICENSE)。
 - **词条数据**（`backend/data/`）：见文首「声明与免责」，权利归原书权利人所有，**不随代码授予任何许可**。
 
 ## 致谢
