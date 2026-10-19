@@ -1,5 +1,7 @@
 # 词源一日
 
+[![LINUX DO](https://img.shields.io/badge/LINUX%20DO-%E7%A4%BE%E5%8C%BA-1c1c1e?logo=discourse&logoColor=ffb003)](https://linux.do)
+
 每天一个《英语词源典故词典》里的故事：首页抛出一个问题，有兴趣就点进去读完整篇。支持多个用户，每人的阅读进度、收藏、每日推荐和提醒各自独立，手机、电脑同步。
 
 > ## ⚠️ 声明与免责（请先读）
@@ -172,3 +174,9 @@ npm run deploy                                   # 部署当前提交；--dry-ru
 
 - **代码**（`frontend/`、`backend/src/`、`backend/scripts/`、`deploy/` 等）：仅供学习与交流，**未附带任何开源许可证**；在取得作者书面同意之前，请不要将其用于商业目的或再分发。
 - **词条数据**（`backend/data/`）：见文首「声明与免责」，权利归原书权利人所有，**不随代码授予任何许可**。
+
+## 致谢
+
+感谢 [LINUX DO](https://linux.do) 社区的佬友们。本项目在 LINUX DO 社区发布推广，欢迎在社区交流反馈。
+
+[![LINUX DO](https://img.shields.io/badge/LINUX%20DO-%E7%A4%BE%E5%8C%BA-1c1c1e?logo=discourse&logoColor=ffb003)](https://linux.do)
