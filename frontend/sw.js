@@ -21,7 +21,17 @@ const HASHED = /[?&]v=[0-9a-f]{10}$/;
 const NO_CACHE_API = /^\/api\/(admin|push|invites|login|logout|register|auth|me)(\/|\?|$)/;
 
 self.addEventListener("install", () => self.skipWaiting());
-self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
+self.addEventListener("activate", (event) =>
+  event.waitUntil(
+    self.clients.claim().then(() =>
+      // 换上新 SW 后，打开着的页面大概率还在跑旧版前端，提醒它们刷新
+      self.clients.matchAll({ type: "window" }).then((list) => {
+        const version = self.registration.active?.scriptURL.match(/v=([\w.-]+)/)?.[1] ?? "";
+        for (const client of list) client.postMessage({ type: "updated", version });
+      }),
+    ),
+  ),
+);
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
@@ -29,7 +39,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
-  if (req.mode === "navigate") event.respondWith(page(req));
+  if (req.mode === "navigate") event.respondWith(page(req, event));
   else if (url.pathname === "/api/say") event.respondWith(audioGet(req));
   else if (url.pathname.startsWith("/api/")) {
     if (!NO_CACHE_API.test(url.pathname)) event.respondWith(apiGet(req));
@@ -80,7 +90,7 @@ async function networkFirst(req, name) {
  * 第一次来（还没存过页面）：不设超时，网络多慢都等，别在 4 秒时替浏览器判“打不开”；
  * 以前存过：最多等 4 秒，等不到就先给旧页面，让离线 / 慢网也能进。
  */
-async function page(req) {
+async function page(req, event) {
   const old = await caches.match("/");
   const res = await tryNetwork(req, old ? NET_TIMEOUT : 0);
   if (res?.ok) {
@@ -89,6 +99,14 @@ async function page(req) {
     const ver = html.match(/main\.js\?v=([0-9a-f]{10})/)?.[1];
     if (ver) pruneStatic(ver);
     return res;
+  }
+  // 网络太慢先给了旧页面：后台接着把新页面拉下来存好，下一次打开就是新的，不会一直停在旧版
+  if (!res && old) {
+    const fresh = tryNetwork(req, 0).then((r) => {
+      if (r?.ok) caches.open(STATIC).then((c) => c.put("/", r.clone()));
+      return r?.ok;
+    });
+    event?.waitUntil(fresh);
   }
   return res ?? old ?? Response.error();
 }

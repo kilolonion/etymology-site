@@ -8,9 +8,40 @@ export const isStandalone = () =>
   matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 
 let regPromise;
-export function registerSW() {
+
+/**
+ * 注册 Service Worker。地址带上当前前端的内容版本号：Cloudflare 会给 .js 盖几小时缓存，
+ * 不带版本号的话，新部署的 sw.js 要等缓存过期才被手机发现，页面就一直停在旧版上。
+ * 版本号由 main.js 从自己的 import 地址里取出。
+ */
+export function registerSW(version = "") {
   if (!("serviceWorker" in navigator)) return;
-  regPromise = navigator.serviceWorker.register("/sw.js").catch(() => null);
+  regPromise = navigator.serviceWorker.register(version ? `/sw.js?v=${version}` : "/sw.js").catch(() => null);
+  // 回到前台时主动查一次更新，开着不动也能跟上新版本
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") regPromise?.then((r) => r?.update().catch(() => {}));
+  });
+  // 服务端换了新的 SW（跟着就是新版页面）：提示一声，让人自己决定什么时候刷新
+  navigator.serviceWorker.addEventListener("message", (ev) => {
+    if (ev.data?.type !== "updated") return;
+    if (!navigator.serviceWorker.controller) return; // 首次安装，页面本来就是新版，不用提示
+    if (sessionStorage.getItem("ety-updated") === ev.data.version) return; // 同一次更新只提醒一遍
+    sessionStorage.setItem("ety-updated", ev.data.version ?? "1");
+    showUpdateBar();
+  });
+}
+
+/** 顶部小条：有新版本，点一下刷新 */
+function showUpdateBar() {
+  let bar = document.querySelector(".update-bar");
+  if (bar) return;
+  bar = document.createElement("button");
+  bar.className = "update-bar";
+  bar.setAttribute("role", "status");
+  bar.textContent = "词源一日已更新，点这里刷新";
+  bar.addEventListener("click", () => location.reload());
+  document.body.append(bar);
+  setTimeout(() => bar?.remove(), 15000);
 }
 
 /**

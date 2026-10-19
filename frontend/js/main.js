@@ -343,5 +343,5 @@ addEventListener("offline", () => setOffline(true));
 
 // 滚动位置由我们自己按页面恢复（内容是异步画出来的，浏览器自己恢复会落空）
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-registerSW();
+registerSW(new URL(import.meta.url).searchParams.get("v") ?? "");
 boot();

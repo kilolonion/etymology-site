@@ -1101,6 +1101,13 @@ textarea.links { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1
   font-size: 13px; letter-spacing: .04em; white-space: nowrap; box-shadow: var(--shadow); pointer-events: none;
 }
 .offline-bar[hidden] { display: none; }
+.update-bar {
+  position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 10px); z-index: 61; transform: translateX(-50%);
+  padding: 8px 16px; border-radius: 999px; background: var(--accent); color: var(--accent-ink);
+  font-size: 13px; letter-spacing: .04em; white-space: nowrap; box-shadow: var(--shadow-lg); border: 0; cursor: pointer;
+  animation: update-bar-in .25s ease-out;
+}
+@keyframes update-bar-in { from { opacity: 0; transform: translate(-50%, -8px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
 /* ---------- 可折叠的区块 ---------- */
 .fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; -webkit-tap-highlight-color: transparent; }
