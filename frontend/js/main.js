@@ -11,6 +11,7 @@ import { renderJoin, renderJoinWhileLoggedIn, renderLogin } from "./views/auth.j
 import { viewEntry } from "./views/entry.js?v=212dd6fbae";
 import { invalidateSummaries, viewAZ, viewExplore, viewRoutes, viewTheme, viewTimeline } from "./views/explore.js?v=212dd6fbae";
 import { viewHome } from "./views/home.js?v=212dd6fbae";
+import { viewPaper } from "./views/paper.js?v=212dd6fbae";
 import { viewHistory, viewMe, viewReminder, viewStarred } from "./views/me.js?v=212dd6fbae";
 
 const dec = decodeURIComponent;
@@ -18,6 +19,7 @@ const dec = decodeURIComponent;
 /** [路径正则, 高亮的标签, 页面] */
 const ROUTES = [
   [/^$/, "today", () => viewHome()],
+  [/^paper$/, "today", (_, q) => viewPaper(_, q)],
   // 旧的故事模式链接直接转到文章页
   [/^read\/([^/?]+)/, "explore", (m) => location.replace(`#/w/${m[1]}`)],
   [/^w\/(.+)$/, "explore", (m, q) => viewEntry(dec(m[1]), q)],
@@ -49,7 +51,7 @@ let shown = null; // { hash, path, state }
 const titles = new Map();
 
 const STATIC_LABELS = {
-  "": "今日", explore: "探索", "explore/az": "按字母", "explore/routes": "语源之路", "explore/timeline": "时间长廊",
+  "": "今日", paper: "日报", explore: "探索", "explore/az": "按字母", "explore/routes": "语源之路", "explore/timeline": "时间长廊",
   me: "我的", "me/starred": "我的收藏", "me/history": "阅读记录", "me/reminder": "每日提醒", "me/account": "账号与安全", "me/admin": "管理后台",
 };
 
@@ -145,7 +147,7 @@ let warmed = false;
 function warmCache() {
   if (warmed) return;
   warmed = true;
-  prefetch(["/today", "/next", "/entries", "/themes", "/shelf", "/history", "/reminder", "/me", "/starred"]);
+  prefetch(["/today", "/paper", "/next", "/entries", "/themes", "/shelf", "/history", "/reminder", "/me", "/starred"]);
   // 离线阅读：补交离线时读完的词，把可能要读的词先存下来
   syncReads();
   setTimeout(() => {
@@ -286,7 +288,10 @@ actions["back-root"] = (el) => history.go(-Number(el.dataset.depth));
 
 actions.back = () => {
   if (navCount > 1) history.back();
-  else location.hash = parseHash().path.startsWith("me/") ? "#/me" : "#/explore";
+  else {
+    const p = parseHash().path;
+    location.hash = p.startsWith("me/") ? "#/me" : p === "paper" ? "#/" : "#/explore";
+  }
 };
 
 /** 退出：先取消这台设备的推送订阅（免得下一个登录的人收到你的提醒），清掉离线缓存，再整页刷新清掉内存里的数据 */

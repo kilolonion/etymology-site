@@ -19,6 +19,7 @@
   <!-- main.js 的依赖要等它下载解析完才知道，原本是“main → 一层模块 → 公共模块”两步串行；
        这里把公共模块直接并行预取。href 会被部署脚本统一打上同一个 ?v=，要和 import 里的地址一致 -->
   <link rel="modulepreload" href="/js/lib.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/paper.js?v=212dd6fbae">
   <link rel="modulepreload" href="/js/themes.js?v=212dd6fbae">
   <link rel="modulepreload" href="/js/words.js?v=212dd6fbae">
   <link rel="modulepreload" href="/js/offline.js?v=212dd6fbae">

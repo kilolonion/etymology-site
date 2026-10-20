@@ -17,6 +17,7 @@ import {
   weekDays,
 } from "./daily.ts";
 import { recommend } from "./recommend.ts";
+import { getOrBuildPaper } from "./paper.ts";
 import * as db from "./db.ts";
 import { entriesAdmin } from "./admin-entries.ts";
 import { initAuthoring, previewEntry, publicOrigin } from "./authoring.ts";
@@ -186,6 +187,42 @@ api.get("/today", (c) => {
       const reviewed = r?.review?.lastDay === day ? (r.review.lastOk ? "ok" : "no") : null;
       return r ? { ...withState(uid, summariesOf([r.id]))[0], ago: r.ago, stage: r.stage, reviewed, due: r.review?.dueDay ?? null } : null;
     })(),
+  });
+});
+
+/** 日报：?day=YYYY-MM-DD 看过去的（只有当时打开过、存下来的）；不带就是今天 */
+api.get("/paper", (c) => {
+  const uid = uidOf(c);
+  const today = localDay();
+  const day = /^\d{4}-\d{2}-\d{2}$/.test(c.req.query("day") ?? "") ? c.req.query("day")! : today;
+  if (day > today) return c.json({ error: "还没出版" }, 404);
+  // 今天的词要先锁定，日报才能避开它
+  if (day === today) todayId(uid, day);
+  const p = getOrBuildPaper(uid, day, today);
+  if (!p) return c.json({ error: "那天没有日报" }, 404);
+  const state = db.stateMap(uid);
+  const item = (id: string, reason: unknown) => {
+    const s = withState(uid, summariesOf([id]))[0];
+    return s ? { ...s, reason } : null;
+  };
+  const sections = p.sections
+    .map((s) => ({ ...s, items: s.items.map((it) => item(it.id, it.reason)).filter(Boolean) }))
+    .filter((s) => s.items.length);
+  const lead = p.lead ? item(p.lead, p.leadReason ?? null) : null;
+  const todayWordId = (db.getDaily(uid, day) ?? []).find((id) => getEntry(id));
+  const ids = [p.lead, ...p.sections.flatMap((s) => s.items.map((it) => it.id))].filter((x): x is string => !!x && !!getEntry(x));
+  return c.json({
+    day,
+    today: day === today,
+    issue: db.allDaily(uid).filter((d) => d.day <= day).length,
+    // 头版：主页上今天的那个词
+    front: todayWordId ? withState(uid, summariesOf([todayWordId]))[0] ?? null : null,
+    lead,
+    sections,
+    total: ids.length,
+    read: ids.filter((id) => state.get(id)?.read).length,
+    // 往期：最近七天存下的日报
+    days: db.paperDays(uid, 7),
   });
 });
 

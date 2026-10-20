@@ -3,6 +3,7 @@
 // 顶部一条进度，读到“一句话记住”正好走满；字号可以调。
 // 不在书里的词（后台新增）词头下有来源标签，点开看参考来源和存疑之处；每篇都能报错。管理员可以用 ?draft=1 预览稿子。
 
+import { nextFromPaper, notePaperRead } from "./paper.js?v=212dd6fbae";
 import { examples, family, fold, foldHead, isWide, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js?v=212dd6fbae";
 import { actions, api, esc, icon, local, render, rich, SRC_TEXT, toast, warmSpeech } from "../lib.js?v=212dd6fbae";
 import { emblem, primaryTheme, themeTag, tint } from "../themes.js?v=212dd6fbae";
@@ -348,6 +349,7 @@ async function setRead(id, read, { quiet = true, manual = false } = {}) {
     btn.dataset.read = String(read);
     btn.textContent = read ? "标为未读" : "标为已读";
   }
+  if (read) notePaperRead(id);
   if (offline) toast("离线中，已先记下，联网后自动同步");
   else if (res?.finish) showFinish(id, res.finish);
   else if (!quiet) toast("读完了，已记入本周");
@@ -367,7 +369,10 @@ actions["toggle-read"] = async (el) => {
 function showFinish(id, f) {
   const mark = document.querySelector(".read-mark");
   if (!mark || document.querySelector(".finish") || !location.hash.startsWith(`#/w/${id}`)) return;
-  const next = current?.upNext?.[0];
+  // 从日报点进来的：“再读一个”接着日报往下；否则用文章末尾“接着读”的第一个
+  const st = history.state ?? {};
+  const viaPaper = [st.from?.hash, st.root?.hash].some((h) => h?.startsWith("#/paper"));
+  const next = (viaPaper && nextFromPaper(id)) || current?.upNext?.[0];
   const note = f.repair
     ? f.repair.repaired
       ? "昨天漏的一天已经补上了，连续天数接上了"
@@ -391,7 +396,7 @@ function showFinish(id, f) {
     ${f.tomorrow ? `<a class="fin-letter" href="#/w/${esc(f.tomorrow.id)}"><small>明日预告 · 已拆封</small><span>${rich(f.tomorrow.teaser)}</span></a>` : ""}
     <div class="fin-acts">
       ${next ? `<a class="btn primary next" href="#/w/${esc(next.id)}"><small>再读一个</small><span class="w"><em>${esc(next.headword)}</em>${icon("arrow")}</span></a>` : `<button class="btn primary" data-action="read-another" data-id="${esc(id)}">再读一个${icon("arrow")}</button>`}
-      <a class="btn ghost" href="#/">回到今日</a>
+      ${viaPaper ? `<a class="btn ghost" href="#/paper">回到日报</a>` : `<a class="btn ghost" href="#/paper">翻日报</a><a class="btn ghost" href="#/">回到今日</a>`}
     </div>
   </section>`);
   const box = document.querySelector(".finish");

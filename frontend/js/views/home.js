@@ -18,6 +18,8 @@ let ctx = null;
 export async function viewHome() {
   // /today 和 /next 互相不依赖，一起发（原来串行，首次打开白白多一个往返）；提醒询问要看 today 的 done，等 today 回来再算
   const todayReq = api("/today");
+  // 日报入口卡上的篇数、已读：不挡首屏，回来了再填上
+  const paperReq = api("/paper").catch(() => null);
   const nextReq = api("/next");
   nextReq.catch(() => {}); // today 先失败（比如 401）时，next 的失败没人接，别变成“未处理的拒绝”
   const t = await todayReq;
@@ -30,6 +32,7 @@ export async function viewHome() {
 
   render(`
     ${masthead(t)}
+    ${paperCard()}
     ${prompt}
     <section class="desk" aria-label="桌面">
       <div class="desk-bar">
@@ -41,6 +44,11 @@ export async function viewHome() {
       <p class="desk-empty">桌面空了，点上面的“添加小组件”摆点东西吧</p>
       <div class="desk-foot"><button class="text-btn" data-desk="edit">${icon("grid")}编辑主屏幕</button><span>也可以长按任意卡片</span></div>
     </section>`);
+
+  paperReq.then((p) => {
+    if (ctx !== mine || !p) return;
+    fillPaperCard(p);
+  });
 
   const desk = mountDesk(document.querySelector(".desk"), { widgets: WIDGETS, defaults: DEFAULTS, render: widget });
   document.querySelector(".desk").addEventListener("submit", (ev) => {
@@ -55,6 +63,25 @@ export async function viewHome() {
     [ctx.all, ctx.themes, ctx.starred] = data;
     desk.refresh(Object.keys(WIDGETS).filter((id) => WIDGETS[id].late));
   }
+}
+
+/** 日报入口：报头下面一条，点进去是今天的一整版 */
+function paperCard() {
+  return `<a class="paper-entry" href="#/paper">
+    <span class="pe-icon">${icon("book")}</span>
+    <span class="pe-text"><b>今日日报</b><small class="pe-sub">为你排好的一整版，挑着读</small></span>
+    <span class="pe-count"></span>
+    ${icon("right")}
+  </a>`;
+}
+
+function fillPaperCard(p) {
+  const el = document.querySelector(".paper-entry");
+  if (!el) return;
+  const words = [p.lead, ...p.sections.flatMap((s) => s.items)].filter((x) => x && !x.read).slice(0, 3).map((x) => x.headword);
+  el.querySelector(".pe-sub").innerHTML = words.length ? `头条 <em>${esc(words[0])}</em>${words.length > 1 ? `、${words.slice(1).map((w) => `<em>${esc(w)}</em>`).join("、")} 等` : ""}` : "今天这一版都读完了";
+  el.querySelector(".pe-count").innerHTML = `<b>${p.read}</b>/${p.total}`;
+  el.classList.toggle("done", p.total > 0 && p.read >= p.total);
 }
 
 function masthead(t) {

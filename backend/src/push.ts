@@ -2,6 +2,7 @@
 // 每周日晚上另发一条本周小结（这周读了几个、多来自哪种语言、连续几天）；一个词没读的那周不发。
 // VAPID 密钥全站共用：优先读环境变量，没有就首次启动时自动生成并存进数据库。
 
+import { getOrBuildPaper } from "./paper.ts";
 import webpush from "web-push";
 import * as db from "./db.ts";
 import { isDone, localDay, localTime, streak, todayId, weekDays } from "./daily.ts";
@@ -52,7 +53,11 @@ async function tick(): Promise<void> {
     if (isDone(u.id, day)) continue;
     const e = getEntry(todayId(u.id, day) ?? "");
     if (!e) continue;
-    await sendToUser(u.id, { title: "今天的问题", body: e.teaser.replace(/\*/g, ""), url: "/#/", tag: `daily-${day}` });
+    // 提醒顺便说一声日报出了：今天的问题放在正文，点开进日报（头版就是今天的词）
+    const p = getOrBuildPaper(u.id, day, day);
+    const n = p ? p.sections.reduce((a, x) => a + x.items.length, 0) + (p.lead ? 1 : 0) : 0;
+    const title = n ? `今日日报 · ${n} 篇` : "今天的问题";
+    await sendToUser(u.id, { title, body: e.teaser.replace(/\*/g, ""), url: n ? "/#/paper" : "/#/", tag: `daily-${day}` });
   }
   // 周日晚上：本周小结
   const week = weekDays(day);

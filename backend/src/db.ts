@@ -53,6 +53,12 @@ export function openDb(path: string): void {
       reasons TEXT,
       PRIMARY KEY (user_id, day)
     );
+    CREATE TABLE IF NOT EXISTS paper (
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      day     TEXT NOT NULL,
+      data    TEXT NOT NULL,
+      PRIMARY KEY (user_id, day)
+    );
     CREATE TABLE IF NOT EXISTS resurface (
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       day     TEXT NOT NULL,
@@ -871,4 +877,23 @@ export function touchToken(id: number): void {
 
 export function revokeToken(id: number): boolean {
   return db.prepare("UPDATE api_tokens SET revoked_at = ? WHERE id = ? AND revoked_at IS NULL").run(now(), id).changes > 0;
+}
+
+// ---------- 日报：每人每天一份，排好就存下，当天不变 ----------
+
+export function getPaper(uid: number, day: string): unknown {
+  const row = db.prepare("SELECT data FROM paper WHERE user_id = ? AND day = ?").get(uid, day) as { data: string } | undefined;
+  return row ? JSON.parse(row.data) : undefined;
+}
+
+export function setPaper(uid: number, day: string, data: unknown): void {
+  db.prepare(
+    `INSERT INTO paper (user_id, day, data) VALUES (?, ?, ?)
+     ON CONFLICT(user_id, day) DO UPDATE SET data = excluded.data`,
+  ).run(uid, day, JSON.stringify(data));
+}
+
+/** 有日报的日子（新的在前） */
+export function paperDays(uid: number, limit = 7): string[] {
+  return (db.prepare("SELECT day FROM paper WHERE user_id = ? ORDER BY day DESC LIMIT ?").all(uid, limit) as { day: string }[]).map((r) => r.day);
 }
