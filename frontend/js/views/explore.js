@@ -3,6 +3,7 @@
 import { actions, api, empty, esc, icon, invalidate, render, rich, row } from "../lib.js?v=212dd6fbae";
 import { fold, foldHead } from "../components.js?v=212dd6fbae";
 import { emblem, primaryTheme, themeOf, tint } from "../themes.js?v=212dd6fbae";
+import { searchHistory } from "../search-pop.js?v=212dd6fbae";
 
 /** 词条目录：api 自己有短缓存，这里不再另存一份 */
 const loadSummaries = () => api("/entries");
@@ -49,6 +50,9 @@ export async function viewExplore(query) {
   };
 
   const input = document.getElementById("q");
+  // 回车、点开某个结果：记进搜索历史（首页搜索组件的“最近”）
+  input.addEventListener("keydown", (ev) => ev.key === "Enter" && searchHistory.add(input.value));
+  body.addEventListener("click", (ev) => ev.target.closest(".list .row") && searchHistory.add(input.value));
   let timer;
   input.addEventListener("input", () => {
     clearTimeout(timer);

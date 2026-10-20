@@ -7,6 +7,7 @@ import { actions, api, cnDate, esc, icon, local, render, rich, srcMark, weekday 
 import { emblem, primaryTheme, THEMES, themeOf, themeTag, tint } from "../themes.js?v=212dd6fbae";
 import { loadLayout, mountDesk, shell } from "../desk.js?v=212dd6fbae";
 import { readMinutes } from "./entry.js?v=212dd6fbae";
+import { mountSearchPop, searchHistory } from "../search-pop.js?v=212dd6fbae";
 
 /** 单词越长，字号越小 */
 const sizeClass = (w) => (w.length <= 8 ? "xl" : w.length <= 13 ? "l" : "m");
@@ -45,18 +46,16 @@ export async function viewHome() {
       <div class="desk-foot"><button class="text-btn" data-desk="edit">${icon("grid")}编辑主屏幕</button><span>也可以长按任意卡片</span></div>
     </section>`);
 
-  const desk = mountDesk(document.querySelector(".desk"), { widgets: WIDGETS, defaults: DEFAULTS, render: widget });
+  const desk = mountDesk(document.querySelector(".desk"), { widgets: WIDGETS, defaults: defaults(), render: widget });
   // 日报组件的篇数、头条：不挡首屏，回来了再重画这一个组件
   paperReq.then((p) => {
     if (ctx !== mine) return;
     ctx.paper = p ?? false;
     desk.refresh(["paper"]);
   });
-  document.querySelector(".desk").addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    const q = new FormData(ev.target).get("q")?.toString().trim();
-    location.hash = q ? `#/explore?q=${encodeURIComponent(q)}` : "#/explore";
-  });
+  // 搜索组件：原地下拉、实时搜；历史变了就重画这一个组件（“最近”那一行）
+  const deskEl = document.querySelector(".desk");
+  mountSearchPop(deskEl, { isEditing: () => deskEl.classList.contains("editing"), onHistory: () => desk.refresh(["search"]) });
 
   if (!quick) {
     const data = await extra.catch(() => null);
@@ -133,6 +132,24 @@ const DEFAULTS = [
   ["app-starred", "icon"], ["app-history", "icon"], ["app-random", "icon"], ["app-me", "icon"], ["stats", "bar"],
 ];
 
+/**
+ * 电脑（宽屏 8 列）的默认桌面（用户 2026-10-20 定的样子）：
+ * 左边搜索条、四个图标、日报 2-4，右边今天的词 4×4；往下本周对旧词重逢 + 明日预告，后面同手机的顺序。
+ */
+const DEFAULTS_WIDE = [
+  ["search", "bar"], ["today", "l"],
+  ["app-explore", "icon"], ["app-routes", "icon"], ["app-timeline", "icon"], ["app-az", "icon"],
+  ["paper", "2-4"],
+  ["week", "m"], ["recall", "s"], ["tomorrow", "s"],
+  ["discover", "m"], ["kin", "m"], ["quiz", "m"],
+  ["example", "s"], ["collect", "s"], ["board", "m"],
+  ["road", "m"], ["era", "m"],
+  ["waiting", "m"],
+  ["app-starred", "icon"], ["app-history", "icon"], ["app-random", "icon"], ["app-me", "icon"], ["stats", "bar"],
+];
+/** 桌面网格在内容区宽 ≥ 620px 时是 8 列（见 CSS 的容器查询）；窗口 ≥ 700px 大致就是这种情况 */
+const defaults = () => (matchMedia("(min-width: 700px)").matches ? DEFAULTS_WIDE : DEFAULTS);
+
 /** 日报从报头下的固定条改成了桌面组件：以前存过布局的设备，第一次补一个放在最前面（之后删了就不再加回来） */
 function migratePaper() {
   if (local.get("desk-paper-added", false)) return;
@@ -141,7 +158,7 @@ function migratePaper() {
   if (Array.isArray(saved) && !saved.some(([id]) => id === "paper")) local.set("desk-layout", [["paper", "1-8"], ...saved]);
 }
 
-const layoutHtml = () => loadLayout(WIDGETS, DEFAULTS).map(([id, size]) => widget(id, size)).join("");
+const layoutHtml = () => loadLayout(WIDGETS, defaults()).map(([id, size]) => widget(id, size)).join("");
 
 function widget(id, size) {
   const w = WIDGETS[id];
@@ -197,14 +214,15 @@ function wToday() {
   </a>`;
 }
 
-/** 搜索：一条胶囊输入框，下面一行“试试”的词，点了直接搜 */
+/** 搜索：一条胶囊输入框，下面一行“最近”搜过的词（点了原地搜）；还没搜过时给几个“试试” */
 const TRY = ["神话", "拉丁语", "星期", "法语", "战争", "国王", "颜色", "海", "吃", "钱", "罗马", "圣经"];
 function wSearch() {
+  const hist = searchHistory.list().slice(0, 5);
   const day = Number(ctx.t.day.replace(/-/g, ""));
-  const tries = Array.from({ length: 3 }, (_, i) => TRY[(day + i * 5) % TRY.length]);
+  const words = hist.length ? hist : Array.from({ length: 3 }, (_, i) => TRY[(day + i * 5) % TRY.length]);
   return `<div class="w-body w-search">
-    <form class="pill" role="search">${icon("search")}<input name="q" type="search" placeholder="搜单词、释义，或故事里的内容" autocomplete="off" enterkeyhint="search" aria-label="搜索"></form>
-    <p class="tries"><span>试试</span>${tries.map((q) => `<a href="#/explore?q=${encodeURIComponent(q)}">${esc(q)}</a>`).join("")}</p>
+    <form class="pill" role="search">${icon("search")}<input name="q" type="search" placeholder="搜单词、释义，或故事里的内容" autocomplete="off" enterkeyhint="search" aria-label="搜索" role="combobox" aria-autocomplete="list" aria-expanded="false"></form>
+    <p class="tries"><span>${hist.length ? "最近" : "试试"}</span>${words.map((q) => `<button type="button" data-q="${esc(q)}">${esc(q)}</button>`).join("")}${hist.length ? `<button type="button" class="tries-clear" data-clear-history aria-label="清除搜索历史">清除</button>` : ""}</p>
   </div>`;
 }
 
