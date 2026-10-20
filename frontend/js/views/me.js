@@ -1,9 +1,9 @@
 // 我的：书架、阅读足迹、专题纹章、语源分布，以及收藏、阅读记录、每日提醒、账号、（管理员）邀请与成员的入口
 
-import { actions, api, empty, esc, fmtDay, getAccent, icon, local, render, rich, row, setAccent, speak, toast } from "../lib.js";
-import { fold, isWide } from "../components.js";
-import { emblem, primaryTheme, themeOf, themeTag, tint } from "../themes.js";
-import { disablePush, enablePush, isStandalone, pushStatus } from "../push.js";
+import { actions, api, empty, esc, fmtDay, getAccent, icon, local, render, rich, row, setAccent, speak, toast } from "../lib.js?v=212dd6fbae";
+import { fold, isWide } from "../components.js?v=212dd6fbae";
+import { emblem, primaryTheme, themeOf, themeTag, tint } from "../themes.js?v=212dd6fbae";
+import { disablePush, enablePush, isStandalone, pushStatus } from "../push.js?v=212dd6fbae";
 
 const STATUS_TEXT = {
   on: "已开启",

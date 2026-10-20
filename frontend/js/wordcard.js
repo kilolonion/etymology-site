@@ -1,8 +1,8 @@
 // 词卡：点正文里带下划线的词，就地弹出一张小卡片——单词、发音、释义、故事的开头，想看全文再点进去。
 // 电脑上贴着那个词弹出，手机上从底部升起。卡片里的词也能接着点，卡片换成新词。
 
-import { actions, api, esc, icon, rich, srcMark } from "./lib.js";
-import { primaryTheme, themeTag, tint } from "./themes.js";
+import { actions, api, esc, icon, rich, srcMark } from "./lib.js?v=212dd6fbae";
+import { primaryTheme, themeTag, tint } from "./themes.js?v=212dd6fbae";
 
 let box = null;
 let anchor = null;

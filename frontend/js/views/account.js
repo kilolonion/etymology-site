@@ -1,6 +1,6 @@
 // 账号与安全（改密码、退出）。管理员后台见 admin.js。
 
-import { api, esc, fmtDay, icon, render, toast } from "../lib.js";
+import { api, esc, fmtDay, icon, render, toast } from "../lib.js?v=212dd6fbae";
 
 const day = (iso) => fmtDay(iso.slice(0, 10), { weekday: false });
 

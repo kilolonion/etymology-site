@@ -5,7 +5,7 @@
 // 网格：手机 4 列、宽屏 8 列，格子是正方形。尺寸：图标 1×1、小 2×2、中 4×2、大 4×4、条 4×1。
 // 排列按顺序从左上往右下填（grid-auto-flow: dense，小的会补进空位），拖动改的是顺序。
 
-import { esc, icon, local } from "./lib.js";
+import { esc, icon, local } from "./lib.js?v=212dd6fbae";
 
 const KEY = "desk-layout";
 export const SIZE_NAME = { icon: "图标", s: "小", m: "中", l: "大", bar: "条" };

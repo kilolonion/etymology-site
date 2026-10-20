@@ -1,8 +1,8 @@
 // 管理后台 · 词条页签：快捷加词（查重 → 复制上下文给别的 AI → 粘回 JSON）、稿子列表、单份稿子（核对、编辑、发布、版本）、读者报错。
 // 稿子详情用 #/me/admin?tab=entries&d=<id> 打开；预览走真实的文章页 #/w/<id>?draft=1。
 
-import { actions, api, empty, esc, fmtDay, icon, local, toast } from "../lib.js";
-import { copy, redraw } from "./admin.js";
+import { actions, api, empty, esc, fmtDay, icon, local, toast } from "../lib.js?v=212dd6fbae";
+import { copy, redraw } from "./admin.js?v=212dd6fbae";
 
 const fresh = (p) => api(p, { fresh: true, detached: true });
 const when = (iso) => (iso ? `${fmtDay(iso.slice(0, 10), { weekday: false })} ${iso.slice(11, 16)}` : "—");

@@ -1,8 +1,8 @@
 // 多个页面共用的片段
 
-import { actions, api, esc, icon, local, rich, srcMark, toast } from "./lib.js";
-import { enablePush, pushStatus } from "./push.js";
-import { emblem, primaryTheme, tint } from "./themes.js";
+import { actions, api, esc, icon, local, rich, srcMark, toast } from "./lib.js?v=212dd6fbae";
+import { enablePush, pushStatus } from "./push.js?v=212dd6fbae";
+import { emblem, primaryTheme, tint } from "./themes.js?v=212dd6fbae";
 
 export const starBtn = (e) =>
   `<button class="icon-btn star" data-action="star" data-id="${esc(e.id)}" aria-pressed="${!!e.starred}" aria-label="收藏">${icon("star")}</button>`;

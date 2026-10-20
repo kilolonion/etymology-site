@@ -1,8 +1,8 @@
 // 公共工具：请求、转义、图标、朗读、提示
 
-import { setOffline } from "./offline.js";
-import { tint } from "./themes.js";
-import { linkItalic, linkText } from "./words.js";
+import { setOffline } from "./offline.js?v=212dd6fbae";
+import { tint } from "./themes.js?v=212dd6fbae";
+import { linkItalic, linkText } from "./words.js?v=212dd6fbae";
 
 const PATHS = {
   today: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>',

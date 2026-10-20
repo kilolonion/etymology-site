@@ -3,12 +3,12 @@
 // 顶部一条进度，读到“一句话记住”正好走满；字号可以调。
 // 不在书里的词（后台新增）词头下有来源标签，点开看参考来源和存疑之处；每篇都能报错。管理员可以用 ?draft=1 预览稿子。
 
-import { examples, family, fold, foldHead, isWide, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js";
-import { actions, api, esc, icon, local, render, rich, SRC_TEXT, toast, warmSpeech } from "../lib.js";
-import { emblem, primaryTheme, themeTag, tint } from "../themes.js";
-import { queueRead } from "../offline.js";
-import { invalidateSummaries } from "./explore.js";
-import { setWordIndex } from "../words.js";
+import { examples, family, fold, foldHead, isWide, linkCards, prose, pull, reasonText, route, sayBtn, starBtn } from "../components.js?v=212dd6fbae";
+import { actions, api, esc, icon, local, render, rich, SRC_TEXT, toast, warmSpeech } from "../lib.js?v=212dd6fbae";
+import { emblem, primaryTheme, themeTag, tint } from "../themes.js?v=212dd6fbae";
+import { queueRead } from "../offline.js?v=212dd6fbae";
+import { invalidateSummaries } from "./explore.js?v=212dd6fbae";
+import { setWordIndex } from "../words.js?v=212dd6fbae";
 
 /** 至少停留这么久，读到结尾才记为已读 */
 const MIN_DWELL = 8000;

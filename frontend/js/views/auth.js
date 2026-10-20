@@ -1,7 +1,7 @@
 // 登录与凭邀请码注册。登录 / 注册成功后整页刷新，清掉上一个账号留在内存里的数据。
 
-import { actions, api, esc, render } from "../lib.js";
-import { clearOfflineData } from "../offline.js";
+import { actions, api, esc, render } from "../lib.js?v=212dd6fbae";
+import { clearOfflineData } from "../offline.js?v=212dd6fbae";
 
 const brand = (sub) => `
   <span class="seal"></span>

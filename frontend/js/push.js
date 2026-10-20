@@ -1,7 +1,7 @@
 // 网页推送：注册 Service Worker、订阅 / 取消订阅
 
-import { api } from "./lib.js";
-import { isStale, versionOfHtml } from "./update.js";
+import { api } from "./lib.js?v=212dd6fbae";
+import { isStale, versionOfHtml } from "./update.js?v=212dd6fbae";
 
 const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);

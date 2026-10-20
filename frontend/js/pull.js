@@ -8,7 +8,7 @@
 // - 跟手的位移只用 transform / opacity，每帧最多写一次（requestAnimationFrame 合并）；
 // - 刷新最多转 MAX_SPIN 毫秒：网络再慢也要把指示器收起来（数据回来了照样会画上去）。
 
-import { icon } from "./lib.js";
+import { icon } from "./lib.js?v=212dd6fbae";
 
 /** 拉到这么远（指示器下移的像素）松手才刷新 */
 const TRIGGER = 64;

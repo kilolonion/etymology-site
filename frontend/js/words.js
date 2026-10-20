@@ -1,7 +1,7 @@
 // 正文里的词：书里有的词自动加上链接，点一下弹出词卡（看一眼它的来历，不用离开当前这篇）；
 // 例句里其余的英文词也能点，查个简明释义、听个发音。
 
-import { esc } from "./lib.js";
+import { esc } from "./lib.js?v=212dd6fbae";
 
 let matcher = null; // { re, ids: 小写写法 → 词条 id, caps: 只认大写写法的 }
 

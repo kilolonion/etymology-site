@@ -2,11 +2,11 @@
 // 桌面上的小组件可以自由添加、移除、换大小、拖动排列（见 desk.js）；这里只管每个组件画什么。
 // 同一个组件在不同尺寸下取舍内容：大的多给几行，小的只留最要紧的。
 
-import { reasonText, reminderPrompt, sayBtn } from "../components.js";
-import { actions, api, cnDate, esc, icon, local, render, rich, srcMark, weekday } from "../lib.js";
-import { emblem, primaryTheme, THEMES, themeOf, themeTag, tint } from "../themes.js";
-import { loadLayout, mountDesk, shell } from "../desk.js";
-import { readMinutes } from "./entry.js";
+import { reasonText, reminderPrompt, sayBtn } from "../components.js?v=212dd6fbae";
+import { actions, api, cnDate, esc, icon, local, render, rich, srcMark, weekday } from "../lib.js?v=212dd6fbae";
+import { emblem, primaryTheme, THEMES, themeOf, themeTag, tint } from "../themes.js?v=212dd6fbae";
+import { loadLayout, mountDesk, shell } from "../desk.js?v=212dd6fbae";
+import { readMinutes } from "./entry.js?v=212dd6fbae";
 
 /** 单词越长，字号越小 */
 const sizeClass = (w) => (w.length <= 8 ? "xl" : w.length <= 13 ? "l" : "m");

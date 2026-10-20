@@ -1,17 +1,17 @@
 // 入口：路由、全局动作、登录状态
 
-import { actions, api, beginNav, empty, esc, hooks, invalidate, nav, prefetch, render, skeleton, skeletonFor, speak, toast } from "./lib.js";
-import { clearOfflineData, flushReads, precacheLoaded, setOffline, warmForOffline } from "./offline.js";
-import { initPull } from "./pull.js";
-import { disablePush, registerSW } from "./push.js";
-import "./wordcard.js";
-import { viewAccount } from "./views/account.js";
-import { viewAdmin } from "./views/admin.js";
-import { renderJoin, renderJoinWhileLoggedIn, renderLogin } from "./views/auth.js";
-import { viewEntry } from "./views/entry.js";
-import { invalidateSummaries, viewAZ, viewExplore, viewRoutes, viewTheme, viewTimeline } from "./views/explore.js";
-import { viewHome } from "./views/home.js";
-import { viewHistory, viewMe, viewReminder, viewStarred } from "./views/me.js";
+import { actions, api, beginNav, empty, esc, hooks, invalidate, nav, prefetch, render, skeleton, skeletonFor, speak, toast } from "./lib.js?v=212dd6fbae";
+import { clearOfflineData, flushReads, precacheLoaded, setOffline, warmForOffline } from "./offline.js?v=212dd6fbae";
+import { initPull } from "./pull.js?v=212dd6fbae";
+import { disablePush, registerSW } from "./push.js?v=212dd6fbae";
+import "./wordcard.js?v=212dd6fbae";
+import { viewAccount } from "./views/account.js?v=212dd6fbae";
+import { viewAdmin } from "./views/admin.js?v=212dd6fbae";
+import { renderJoin, renderJoinWhileLoggedIn, renderLogin } from "./views/auth.js?v=212dd6fbae";
+import { viewEntry } from "./views/entry.js?v=212dd6fbae";
+import { invalidateSummaries, viewAZ, viewExplore, viewRoutes, viewTheme, viewTimeline } from "./views/explore.js?v=212dd6fbae";
+import { viewHome } from "./views/home.js?v=212dd6fbae";
+import { viewHistory, viewMe, viewReminder, viewStarred } from "./views/me.js?v=212dd6fbae";
 
 const dec = decodeURIComponent;
 

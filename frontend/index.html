@@ -14,17 +14,17 @@
   <link rel="apple-touch-icon" href="/icons/icon-180.png">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="preload" href="/fonts/playfair-display-latin-700-italic.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/fonts.css?v=20261018-7">
-  <link rel="stylesheet" href="/css/style.css?v=20261018-7">
+  <link rel="stylesheet" href="/fonts/fonts.css?v=212dd6fbae">
+  <link rel="stylesheet" href="/css/style.css?v=212dd6fbae">
   <!-- main.js 的依赖要等它下载解析完才知道，原本是“main → 一层模块 → 公共模块”两步串行；
        这里把公共模块直接并行预取。href 会被部署脚本统一打上同一个 ?v=，要和 import 里的地址一致 -->
-  <link rel="modulepreload" href="/js/lib.js">
-  <link rel="modulepreload" href="/js/themes.js">
-  <link rel="modulepreload" href="/js/words.js">
-  <link rel="modulepreload" href="/js/offline.js">
-  <link rel="modulepreload" href="/js/push.js">
-  <link rel="modulepreload" href="/js/components.js">
-  <link rel="modulepreload" href="/js/desk.js">
+  <link rel="modulepreload" href="/js/lib.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/themes.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/words.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/offline.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/push.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/components.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/desk.js?v=212dd6fbae">
 </head>
 <body>
   <div class="chrome">
@@ -51,6 +51,6 @@
   </div>
   <main id="app" tabindex="-1" aria-busy="true"><div class="boot" role="status"><span class="seal"></span><p>词源一日 · 正在打开…</p></div></main>
   <noscript><p style="padding:24px;text-align:center">需要开启 JavaScript 才能使用。</p></noscript>
-  <script type="module" src="/js/main.js?v=20261018-7"></script>
+  <script type="module" src="/js/main.js?v=212dd6fbae"></script>
 </body>
 </html>

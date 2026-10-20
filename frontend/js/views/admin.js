@@ -1,8 +1,8 @@
 // 管理后台（仅管理员）：总览 / 成员 / 邀请 / 词条 / 工具 五个页签（词条页签在 admin-entries.js）。
 // 数据都来自 /api/admin/*。操作后只重画当前页签，不整页刷新。
 
-import { actions, api, empty, esc, fmtDay, icon, render, toast } from "../lib.js";
-import { entriesTab } from "./admin-entries.js";
+import { actions, api, empty, esc, fmtDay, icon, render, toast } from "../lib.js?v=212dd6fbae";
+import { entriesTab } from "./admin-entries.js?v=212dd6fbae";
 
 const day = (iso) => (iso ? fmtDay(iso.slice(0, 10), { weekday: false }) : "—");
 const TABS = [
