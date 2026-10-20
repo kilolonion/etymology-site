@@ -25,6 +25,19 @@
   <link rel="modulepreload" href="/js/push.js?v=212dd6fbae">
   <link rel="modulepreload" href="/js/components.js?v=212dd6fbae">
   <link rel="modulepreload" href="/js/desk.js?v=212dd6fbae">
+  <!-- 其余模块也一起并行预取：海外/代理线路一个来回就要 1 秒多，按 import 层级一层层串行取要十几秒 -->
+  <link rel="modulepreload" href="/js/main.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/pull.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/update.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/wordcard.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/home.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/entry.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/explore.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/me.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/auth.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/account.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/admin.js?v=212dd6fbae">
+  <link rel="modulepreload" href="/js/views/admin-entries.js?v=212dd6fbae">
 </head>
 <body>
   <div class="chrome">
