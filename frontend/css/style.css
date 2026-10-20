@@ -2180,12 +2180,15 @@ button.ae-chip { cursor: pointer; }
 .w-paper-app.done .app-ic { --c: var(--ok) !important; }
 .pw-badge { position: absolute; top: -5px; right: -5px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 999px; background: #e0463a; color: #fff; font: 600 11px/19px var(--sans); font-style: normal; text-align: center; box-shadow: 0 0 0 2px var(--bg, #fff); }
 
-/* 报头：和首页同一套 .mast，只调间距；返回按钮压在报头左上，不把报头往下挤 */
-.pp-back { position: absolute; z-index: 6; top: calc(4px + env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left)); margin: 0; }
-.view:has(> .pp-back) { position: relative; }
-.pp-mast { margin-bottom: 14px; padding-top: 34px; }
-@media (min-width: 760px) { .pp-back { top: 14px; left: 0; } .pp-mast { padding-top: 48px; } }
-@media (min-width: 760px) and (max-width: 1059px) { .pp-mast { padding-top: 84px; } }
+/* 报头：和首页同一套 .mast，位置也完全一样（切页时报头不动）；返回按钮在双线下面，和往期日期同一行 */
+.pp-mast { margin-bottom: 14px; }
+.pp-back {
+  flex: none; display: inline-flex; align-items: center; gap: 1px; padding: 4px 11px 4px 6px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); font-size: 12.5px; cursor: pointer;
+}
+.pp-back .i { width: 15px; height: 15px; }
+.pp-back:hover { color: var(--ink); border-color: var(--ink-2); }
+.pp-issues .pp-back + a { margin-left: 4px; }
 .pp-head { margin-bottom: 22px; }
 .pp-progress { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--muted); text-align: left; }
 .pp-progress b { color: var(--accent); font: 700 15px var(--display); }

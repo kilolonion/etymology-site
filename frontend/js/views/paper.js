@@ -63,11 +63,13 @@ export async function viewPaper(_, q) {
   }
 
   const pct = p.total ? Math.round((p.read / p.total) * 100) : 0;
+  // 返回按钮放在双线下面，和往期日期排一行：报头位置和首页完全一致，切页时报头不跳
+  const back = `<button class="pp-back" data-action="back" aria-label="返回">${icon("left")}<span>今日</span></button>`;
   const issues = p.days.length > 1
-    ? `<nav class="pp-issues" aria-label="往期">${p.days
+    ? `<nav class="pp-issues" aria-label="往期">${back}${p.days
         .map((d) => `<a href="#/paper${d === p.days[0] && p.today ? "" : `?day=${d}`}"${d === p.day ? ` aria-current="page"` : ""}>${fmtDay(d, { weekday: false })}</a>`)
         .join("")}</nav>`
-    : "";
+    : `<nav class="pp-issues">${back}</nav>`;
   const front = p.front
     ? `<a class="pp-front${p.front.read ? " read" : ""}" href="#/w/${esc(p.front.id)}" style="${tint(p.front)}">
         <small>头版 · 今天的词</small><b>${esc(p.front.headword)}</b><span>${p.front.read ? esc(p.front.meaning) : rich(p.front.teaser ?? "")}</span>${stamp(p.front)}
@@ -75,7 +77,6 @@ export async function viewPaper(_, q) {
     : "";
 
   render(`
-    <button class="back pp-back" data-action="back">${icon("left")}返回</button>
     <header class="mast pp-mast">
       <div class="mast-meta"><span class="no">No. ${p.issue} · Etymon</span><span class="date">${cnDate(p.day)} · ${weekday(p.day)}</span></div>
       <h1 class="mast-title"><span class="seal"></span>词源日报</h1>
