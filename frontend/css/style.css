@@ -109,6 +109,11 @@ main { max-width: 660px; margin: 0 auto; padding: 0 16px; outline: none; }
   .chrome { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
   .chrome .topbar { padding-left: 0; padding-right: 0; margin: 0; flex: 1; }
   .chrome .tabs { margin: 0; }
+  /* 导航在每一页都落在同一个位置（以今日页为准：距顶 22px，固定 36px 高），切页只变颜色和底色，不跳位置。
+     以前今日页是 margin-top: 22px，其他页靠 align-items: center 居中在顶栏里，差了十几像素 */
+  .chrome { align-items: flex-start; }
+  .chrome .tabs, body.home .chrome .tabs { margin-top: 22px; }
+  .chrome .topbar { padding-top: 25px; } /* 品牌 30px 高，和 36px 高的导航中线对齐 */
 }
 @media (min-width: 760px) and (min-width: 1060px) {
   /* keep in sync with .topbar, main max-width bump later in file */
@@ -145,7 +150,7 @@ main { max-width: 660px; margin: 0 auto; padding: 0 16px; outline: none; }
 @media (min-width: 760px) {
   body { padding-bottom: 64px; }
   .tabs { position: static; height: auto; padding: 0; display: flex; gap: 2px; background: none; backdrop-filter: none; border: 0; }
-  .tabs a { flex-direction: row; gap: 6px; font-size: 14px; padding: 7px 14px; border-radius: 999px; }
+  .tabs a { flex-direction: row; gap: 6px; font-size: 14px; line-height: 1; height: 36px; box-sizing: border-box; padding: 0 14px; border-radius: 999px; }
   .tabs a:hover { background: var(--bg-2); color: var(--ink); }
   .tabs a[aria-current="page"] { background: color-mix(in srgb, var(--accent) 12%, transparent); }
   .tabs svg.i { width: 17px; height: 17px; }

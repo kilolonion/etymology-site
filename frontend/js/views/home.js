@@ -378,24 +378,70 @@ function wStats(size) {
 
 const REL = { 衍生: "衍生", 同根: "同根", 同典故: "同典故", 参见: "参见", 相关: "相关" };
 
-/** 小关系图：今天的词在中间，亲戚围一圈。tall：中号左边那块近乎方形，画布也跟着改成方一些 */
+/** 量一下单词在图里有多宽（和 CSS 里 .w-kinmap text 同一个字体）；字体还没加载好时按偏宽的估计兜底 */
+let measureCtx = null;
+function textWidth(text, px) {
+  const guess = text.length * px * 0.62;
+  try {
+    measureCtx ??= document.createElement("canvas").getContext("2d");
+    const family = getComputedStyle(document.documentElement).getPropertyValue("--display").trim() || "serif";
+    measureCtx.font = `italic 600 ${px}px ${family}`;
+    return Math.max(measureCtx.measureText(text).width, guess * 0.85);
+  } catch {
+    return guess;
+  }
+}
+
+/**
+ * 小关系图：今天的词单独占中间一行，亲戚分在上下两侧一行行排开，再用虚线连到中间。
+ * 以前是沿椭圆摆、胶囊宽度靠估算，长一点的词（左右两侧尤其）就会和中间那个叠在一起；
+ * 现在每个胶囊按实际字宽算，一行放不下就换行，中间一行只有今天的词，怎么都不会重叠。
+ * tall：中号左边那块近乎方形，画布窄一些。
+ */
 function kinMap(e, kin, tall = false) {
-  const [W, H, RX, RY] = tall ? [230, 190, 72, 66] : [300, 132, 108, 48];
-  const cx = W / 2, cy = H / 2;
-  // 一两个亲戚时斜着摆（左上、右下），多了沿椭圆均匀排开
-  const start = kin.length <= 2 ? (-5 * Math.PI) / 6 : -Math.PI / 2;
-  const pos = kin.map((_, i) => {
-    const a = start + (i * 2 * Math.PI) / kin.length;
-    return [cx + RX * Math.cos(a), cy + RY * Math.sin(a)];
-  });
-  const pill = (x, y, text, cls) => {
-    const w = Math.min(120, text.length * 8 + 20);
-    return `<rect x="${x - w / 2}" y="${y - 12}" width="${w}" height="24" rx="12" class="${cls}"/><text x="${x}" y="${y + 4.5}">${esc(text)}</text>`;
+  const W = tall ? 230 : 300;
+  const GAP = 10, ROW = 38, PAD = 8, PH = 24, MAXW = W - PAD * 2;
+  const cut = (t) => (t.length > 16 ? t.slice(0, 15) + "…" : t);
+  const pillW = (t, px) => Math.min(MAXW, Math.ceil(textWidth(t, px)) + 24);
+  const nodes = kin.map((k) => ({ k, text: cut(k.headword), w: pillW(cut(k.headword), 12.5) }));
+  // 先上下对半分，各自按宽度装行（一行装不下就另起一行）
+  const pack = (list) => {
+    const rows = [];
+    for (const n of list) {
+      const last = rows.at(-1);
+      if (last && last.w + GAP + n.w <= MAXW) {
+        last.items.push(n);
+        last.w += GAP + n.w;
+      } else rows.push({ items: [n], w: n.w });
+    }
+    return rows;
   };
+  const top = pack(nodes.filter((_, i) => i % 2 === 0));
+  const bottom = pack(nodes.filter((_, i) => i % 2 === 1));
+  const H = PAD * 2 + (top.length + bottom.length + 1) * ROW;
+  const cx = W / 2;
+  const cy = PAD + top.length * ROW + ROW / 2;
+  const placed = [];
+  const lay = (rows, y0, dir) =>
+    rows.forEach((r, ri) => {
+      const y = y0 + dir * (ri + 1) * ROW;
+      let x = cx - r.w / 2;
+      for (const n of r.items) {
+        placed.push({ ...n, x: x + n.w / 2, y });
+        x += n.w + GAP;
+      }
+    });
+  // 上面的行从中间往上数，第一行贴着中间
+  lay(top, cy, -1);
+  lay(bottom, cy, 1);
+  const pill = (x, y, w, text, cls) =>
+    `<rect x="${(x - w / 2).toFixed(1)}" y="${y - PH / 2}" width="${w}" height="${PH}" rx="${PH / 2}" class="${cls}"/><text x="${x.toFixed(1)}" y="${y + 4.5}">${esc(text)}</text>`;
+  const ctext = cut(e.headword);
+  const cw = pillW(ctext, 13.5);
   return `<svg class="w-kinmap" viewBox="0 0 ${W} ${H}" aria-hidden="true">
-    ${pos.map(([x, y]) => `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/>`).join("")}
-    ${pos.map(([x, y], i) => `<g class="node" style="${tint(kin[i])}">${pill(x, y, kin[i].headword, "p")}</g>`).join("")}
-    <g class="center">${pill(cx, cy, e.headword, "p")}</g>
+    ${placed.map((n) => `<line x1="${cx}" y1="${cy}" x2="${n.x.toFixed(1)}" y2="${n.y}"/>`).join("")}
+    ${placed.map((n) => `<g class="node" style="${tint(n.k)}">${pill(n.x, n.y, n.w, n.text, "p")}</g>`).join("")}
+    <g class="center">${pill(cx, cy, cw, ctext, "p")}</g>
   </svg>`;
 }
 
