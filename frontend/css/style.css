@@ -1223,6 +1223,7 @@ a.wl:hover, a.wl.on { color: var(--t-ink, var(--accent)); background: color-mix(
   --cell: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols));
   display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-auto-rows: var(--cell);
   gap: var(--gap); grid-auto-flow: dense;
+  position: relative; /* 拖动时的空位、组件的 offsetLeft/Top 都以它为基准 */
 }
 @container (min-width: 620px) { .desk-grid { --cols: 8; --gap: 16px; } }
 
@@ -1712,9 +1713,59 @@ a.w-era:hover .era-big b { color: var(--accent); }
 @keyframes jiggle { from { rotate: -.9deg; } to { rotate: .9deg; } }
 .desk.editing .w-body * { pointer-events: none; }
 .desk.editing .w-search input { pointer-events: none; }
-.w.dragging { z-index: 20; cursor: grabbing; animation: none !important; }
-.w.dragging .w-body { box-shadow: var(--shadow-lg); opacity: .94; }
-.desk.dragging-any .w:not(.dragging) { animation-play-state: paused; }
+.w-size { cursor: nwse-resize; touch-action: none; }
+.desk-grid a, .desk-grid img, .desk-grid svg { -webkit-user-drag: none; user-drag: none; }
+.w.lifting { animation: none !important; transform: scale(1.03); transition: transform .16s ease-out; }
+.w.dragging { z-index: 20; cursor: grabbing; animation: none !important; will-change: transform; }
+.w.dragging .w-body { box-shadow: var(--shadow-lg), 0 18px 40px -12px rgb(40 20 0 / .35); }
+.desk.dragging-any .w:not(.dragging), .desk.resizing-any .w { animation-play-state: paused; }
+.desk.dragging-any, .desk.resizing-any { user-select: none; -webkit-user-select: none; }
+.desk.resizing-any, .desk.resizing-any * { cursor: nwse-resize !important; }
+.w.resizing, .w.menu-open { animation: none !important; z-index: 5; }
+.w.resizing .w-body, .w.menu-open .w-body { outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+/* 拖动时卡片原位留下的空位 */
+.desk-slot {
+  position: absolute; z-index: 0; pointer-events: none;
+  border: 2px dashed color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+/* 改大小 / 菜单悬停时的虚线预览框 */
+.desk-ghost {
+  position: fixed; z-index: 60; pointer-events: none; border-radius: 22px;
+  border: 2px dashed var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent);
+  transition: width .12s ease-out, height .12s ease-out;
+}
+.desk-ghost span {
+  position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink); font: 600 12px var(--sans); letter-spacing: .04em;
+}
+.desk-ghost span:empty { display: none; }
+/* 尺寸菜单：仿 macOS 绿灯菜单 */
+.desk-menu {
+  position: fixed; z-index: 80; min-width: 220px; max-width: min(360px, calc(100vw - 16px)); padding: 10px 10px 8px; border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent); backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--line); box-shadow: var(--shadow-lg), 0 12px 32px -10px rgb(30 15 0 / .3);
+}
+.desk-menu .dm-title { margin: 2px 6px 6px; font: 600 11.5px var(--sans); letter-spacing: .12em; color: var(--muted); }
+.desk-menu hr { margin: 8px 4px; border: 0; border-top: 1px solid var(--line); }
+.dm-sizes { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 4px; }
+.dm-size {
+  display: grid; justify-items: center; gap: 4px; padding: 8px 8px 5px; border: 0; border-radius: 10px; background: none; cursor: pointer; color: var(--ink);
+}
+.dm-size svg { display: block; height: auto; }
+.dm-size .g-frame { fill: none; stroke: currentColor; stroke-width: 1.6; opacity: .55; }
+.dm-size .g-fill { fill: currentColor; }
+.dm-size small { font: 500 11px var(--sans); color: var(--muted); }
+.dm-size:hover, .dm-size:focus-visible { background: color-mix(in srgb, var(--accent) 12%, transparent); outline: none; }
+.dm-size.on { color: var(--accent); }
+.dm-size.on small { color: var(--accent); font-weight: 700; }
+.dm-acts { display: flex; flex-wrap: wrap; gap: 2px; }
+.dm-acts button {
+  display: inline-flex; align-items: center; gap: 4px; padding: 7px 10px; border: 0; border-radius: 9px; background: none; cursor: pointer;
+  font: 13px var(--sans); color: var(--ink);
+}
+.dm-acts button .i { width: 14px; height: 14px; }
+.dm-acts button:hover, .dm-acts button:focus-visible { background: color-mix(in srgb, var(--accent) 12%, transparent); outline: none; }
+.dm-acts .danger { margin-left: auto; color: #c0392b; }
 
 /* 组件库：底部升起的面板 */
 .desk-sheet { position: fixed; inset: 0; z-index: 70; display: flex; align-items: flex-end; justify-content: center; }
