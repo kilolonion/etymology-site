@@ -1825,6 +1825,12 @@ a.w-era:hover .era-big b { color: var(--accent); }
 .fin-acts .btn.primary { flex: 1; justify-content: center; }
 .fin-acts .btn em { margin: 0 4px; font: italic 700 16px var(--display); }
 .fin-acts .btn .i { width: 16px; height: 16px; }
+/* 再读一个：上一行小字“再读一个”，下一行单词 + 箭头；整块不再被挤成逐字竖排 */
+.fin-acts .btn.next { flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; min-width: 0; padding: 10px 18px; text-align: left; letter-spacing: 0; }
+.fin-acts .btn.next small { font: 600 12.5px var(--sans); letter-spacing: .12em; opacity: .85; white-space: nowrap; }
+.fin-acts .btn.next .w { display: flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0; }
+.fin-acts .btn.next em { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 18px; }
+.fin-acts .btn.next .i { flex: none; }
 
 /* 首页“本周”：今日目标、补签 */
 .wk-foot .goal { display: inline-flex; align-items: center; gap: 3px; }

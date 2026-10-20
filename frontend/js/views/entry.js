@@ -390,7 +390,7 @@ function showFinish(id, f) {
     </ul>
     ${f.tomorrow ? `<a class="fin-letter" href="#/w/${esc(f.tomorrow.id)}"><small>明日预告 · 已拆封</small><span>${rich(f.tomorrow.teaser)}</span></a>` : ""}
     <div class="fin-acts">
-      ${next ? `<a class="btn primary" href="#/w/${esc(next.id)}">再读一个：<em>${esc(next.headword)}</em>${icon("arrow")}</a>` : `<button class="btn primary" data-action="read-another" data-id="${esc(id)}">再读一个${icon("arrow")}</button>`}
+      ${next ? `<a class="btn primary next" href="#/w/${esc(next.id)}"><small>再读一个</small><span class="w"><em>${esc(next.headword)}</em>${icon("arrow")}</span></a>` : `<button class="btn primary" data-action="read-another" data-id="${esc(id)}">再读一个${icon("arrow")}</button>`}
       <a class="btn ghost" href="#/">回到今日</a>
     </div>
   </section>`);
