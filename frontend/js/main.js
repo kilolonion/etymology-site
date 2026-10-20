@@ -187,7 +187,7 @@ async function route() {
 
   // 文章页的题头在手机上铺满到顶部，隐藏顶栏。等新页面（或骨架）真的画出来时再换版式，
   // 否则旧页面还在屏幕上时顶栏就先消失 / 出现，看着像跳了一下
-  nav.chrome = { bleed: path.startsWith("w/"), home: path === "" };
+  nav.chrome = { bleed: path.startsWith("w/"), home: path === "" || path === "paper" }; // 日报和首页同一套报头：手机上也藏顶栏
   for (const a of document.querySelectorAll(".tabs a")) {
     if (a.dataset.tab === hit.tab) a.setAttribute("aria-current", "page");
     else a.removeAttribute("aria-current");

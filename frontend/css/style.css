@@ -228,6 +228,8 @@ body.home .brand { visibility: hidden; }
 @media (min-width: 760px) { .mast { margin: 4px 0 30px; } }
 .mast-meta { display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px; font: 12.5px var(--serif-zh); letter-spacing: .1em; color: var(--ink-2); }
 .mast-meta .no { font: italic 15px var(--display); letter-spacing: .02em; }
+.mast-meta span { white-space: nowrap; }
+.mast-meta .no { min-width: 0; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
 .mast-title {
   display: flex; justify-content: center; align-items: center; gap: 16px; margin: 22px 0 6px;
   font: 700 clamp(34px, 10vw, 58px)/1.1 var(--serif-zh); letter-spacing: .32em; text-indent: .32em;
@@ -2178,12 +2180,13 @@ button.ae-chip { cursor: pointer; }
 .w-paper-app.done .app-ic { --c: var(--ok) !important; }
 .pw-badge { position: absolute; top: -5px; right: -5px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 999px; background: #e0463a; color: #fff; font: 600 11px/19px var(--sans); font-style: normal; text-align: center; box-shadow: 0 0 0 2px var(--bg, #fff); }
 
-/* 报头 */
-.pp-mast { margin: 14px 0 22px; text-align: center; }
-.pp-meta { display: flex; justify-content: space-between; gap: 12px; font: italic 13px var(--display); color: var(--ink-2); letter-spacing: .02em; }
-.pp-meta span:last-child { font: 12.5px var(--serif-zh); font-style: normal; letter-spacing: .08em; }
-.pp-mast h1 { margin: 16px 0 10px; font: 700 clamp(30px, 8vw, 44px)/1.1 var(--serif-zh); letter-spacing: .3em; text-indent: .3em; }
-.pp-rule { border-top: 3px double var(--ink); opacity: .85; }
+/* 报头：和首页同一套 .mast，只调间距；返回按钮压在报头左上，不把报头往下挤 */
+.pp-back { position: absolute; z-index: 6; top: calc(4px + env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left)); margin: 0; }
+.view:has(> .pp-back) { position: relative; }
+.pp-mast { margin-bottom: 14px; padding-top: 34px; }
+@media (min-width: 760px) { .pp-back { top: 14px; left: 0; } .pp-mast { padding-top: 48px; } }
+@media (min-width: 760px) and (max-width: 1059px) { .pp-mast { padding-top: 84px; } }
+.pp-head { margin-bottom: 22px; }
 .pp-progress { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--muted); text-align: left; }
 .pp-progress b { color: var(--accent); font: 700 15px var(--display); }
 .pp-issues { display: flex; gap: 6px; margin-top: 12px; overflow-x: auto; scrollbar-width: none; }

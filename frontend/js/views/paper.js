@@ -75,17 +75,20 @@ export async function viewPaper(_, q) {
     : "";
 
   render(`
-    <button class="back" data-action="back">${icon("left")}返回</button>
-    <header class="pp-mast">
-      <div class="pp-meta"><span>No. ${p.issue} · The Etymon Daily</span><span>${cnDate(p.day)} · ${weekday(p.day)}</span></div>
-      <h1>词源日报</h1>
-      <div class="pp-rule"></div>
+    <button class="back pp-back" data-action="back">${icon("left")}返回</button>
+    <header class="mast pp-mast">
+      <div class="mast-meta"><span class="no">No. ${p.issue} · Etymon</span><span class="date">${cnDate(p.day)} · ${weekday(p.day)}</span></div>
+      <h1 class="mast-title"><span class="seal"></span>词源日报</h1>
+      <p class="mast-sub">The Etymon Daily, Twelve Stories a Day</p>
+      <div class="mast-rule"></div>
+    </header>
+    <div class="pp-head">
       <div class="pp-progress">
         <span>${p.today ? "今天" : "这一期"} ${p.total} 篇 · 已读 <b>${p.read}</b></span>
         <span class="progress"><span style="width:${pct}%"></span></span>
       </div>
       ${issues}
-    </header>
+    </div>
     ${front}
     ${p.lead ? `<section class="pp-sec"><h2 class="kicker">头条<span class="en">Headline</span></h2>${story(p.lead, { big: true })}</section>` : ""}
     ${p.sections
