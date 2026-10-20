@@ -418,45 +418,69 @@ export function mountDesk(root, opts) {
   }
 
   /**
-   * 指针在哪张卡片上：越过它的中线（同一行看左右，跨行看上下）就把被拖的卡片插到它后面 / 前面。
-   * 刚换过的那张，要等指针离开它才会再换，免得来回抖；指针在网格最后的空白处就放到最后。
+   * 换位规则（防“鬼畜”）：
+   * 1. 命中检测用卡片的最终位置（offsetLeft/Top），不看正在滑动中的位置——滑到一半的卡片经过指针下面不算数。
+   * 2. 一次换位只有在让“空位”离指针更近时才接受：先试着挪一下、量一量，不更近就原样放回（不动画）。
+   *    网格是 dense 流，大小不一的卡片换位后别的卡片会补位，这一步保证不会出现 A↔B 来回弹。
+   * 3. 换位后指针要再走开一段（或等滑动结束）才允许下一次，同时记住上一次的顺序，回到上一个顺序要求指针走得更远。
    */
+  const rectOf = (el) => {
+    const h = homeRect(el);
+    return { left: h.left, top: h.top, right: h.left + el.offsetWidth, bottom: h.top + el.offsetHeight, width: el.offsetWidth, height: el.offsetHeight };
+  };
+  const inside = (r, x, y) => x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+  /** 指针到被拖卡片空位的距离（指针在空位里抓着的那个点为准） */
+  const slotDist = () => {
+    const r = rectOf(drag.el);
+    return Math.hypot(r.left + drag.gx - drag.x, r.top + drag.gy - drag.y);
+  };
+  const orderKey = () => [...grid.querySelectorAll(":scope > .w")].map((n) => n.dataset.w).join("|");
+
   function hitTest() {
+    const now = performance.now();
+    if (drag.lockUntil && now < drag.lockUntil && Math.hypot(drag.x - drag.lx, drag.y - drag.ly) < 28) return;
     const items = [...grid.querySelectorAll(":scope > .w")];
-    const target = items.find((w) => {
-      if (w === drag.el) return false;
-      const r = w.getBoundingClientRect();
-      return drag.x >= r.left && drag.x <= r.right && drag.y >= r.top && drag.y <= r.bottom;
-    });
+    const others = items.filter((n) => n !== drag.el);
+    const target = others.find((w) => inside(rectOf(w), drag.x, drag.y));
     if (!target) {
-      drag.last = null;
       // 拖到所有卡片下面的空白处：放到最后
-      const g = grid.getBoundingClientRect();
       const lastEl = items[items.length - 1];
-      if (lastEl && lastEl !== drag.el && drag.y > Math.max(...items.filter((n) => n !== drag.el).map((n) => n.getBoundingClientRect().bottom)) && drag.y < g.bottom + 80) {
-        move(() => lastEl.after(drag.el));
+      const g = grid.getBoundingClientRect();
+      if (lastEl !== drag.el && others.length && drag.y > Math.max(...others.map((n) => rectOf(n).bottom)) && drag.y < g.bottom + 80) {
+        tryMove(() => lastEl.after(drag.el));
       }
       return;
     }
-    if (target === drag.last) return;
-    const r = target.getBoundingClientRect();
-    const me = items.indexOf(drag.el);
-    const it = items.indexOf(target);
-    const forward = it > me;
-    // 卡片很宽很扁时按左右判断，很高很窄时按上下判断；中线附近留 15% 死区
+    const r = rectOf(target);
+    const forward = items.indexOf(target) > items.indexOf(drag.el);
+    // 越过中线才换：往后拖看是否过了左/上 35%，往前拖看是否过了右/下 65%
     const fx = (drag.x - r.left) / r.width;
     const fy = (drag.y - r.top) / r.height;
     const past = forward ? Math.max(fx, fy) > 0.35 : Math.min(fx, fy) < 0.65;
     if (!past) return;
-    drag.last = target;
-    move(() => (forward ? target.after(drag.el) : target.before(drag.el)));
+    tryMove(() => (forward ? target.after(drag.el) : target.before(drag.el)));
   }
 
-  function move(mutate) {
-    const order = [...grid.children].indexOf(drag.el);
-    flip(mutate, drag.el);
-    if ([...grid.children].indexOf(drag.el) === order) return;
+  function tryMove(mutate) {
+    const el = drag.el;
+    const before = slotDist();
+    const keyBefore = orderKey();
+    const next = el.nextElementSibling;
+    // 试挪：同步改 DOM、量完立刻放回，浏览器不会画出中间状态
+    mutate();
+    const keyAfter = orderKey();
+    const after = slotDist();
+    next ? next.before(el) : grid.append(el);
+    if (keyAfter === keyBefore) return;
+    // 回到上一次的顺序：指针得离开上次换位的地方足够远，才认为是真想换回去
+    const undo = keyAfter === drag.prevKey && Math.hypot(drag.x - drag.lx, drag.y - drag.ly) < 60;
+    if (undo || after > before - 6) return;
+    flip(mutate, el);
     grid.append(slot); // 空位永远在最后，不占网格顺序
+    drag.prevKey = keyBefore;
+    drag.lx = drag.x;
+    drag.ly = drag.y;
+    drag.lockUntil = performance.now() + 220;
     placeSlot();
     follow();
   }
