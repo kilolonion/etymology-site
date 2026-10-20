@@ -1232,6 +1232,16 @@ a.wl:hover, a.wl.on { color: var(--t-ink, var(--accent)); background: color-mix(
 .w.size-m { grid-column: span 4; grid-row: span 2; }
 .w.size-l { grid-column: span 4; grid-row: span 4; }
 .w.size-bar { grid-column: span 4; grid-row: span 1; }
+/* 日报组件的“行-列”尺寸；8 列宽的在手机 4 列上收成 4 列 */
+.w.size-1-1 { grid-column: span 1; grid-row: span 1; }
+.w.size-1-2 { grid-column: span 2; grid-row: span 1; }
+.w.size-1-4 { grid-column: span 4; grid-row: span 1; }
+.w.size-1-8 { grid-column: span 4; grid-row: span 1; }
+.w.size-2-4 { grid-column: span 4; grid-row: span 2; }
+.w.size-2-8 { grid-column: span 4; grid-row: span 2; }
+.w.size-4-2 { grid-column: span 2; grid-row: span 4; }
+.w.size-4-4 { grid-column: span 4; grid-row: span 4; }
+@container (min-width: 620px) { .w.size-1-8, .w.size-2-8 { grid-column: span 8; } }
 /* 每个组件都是一个尺寸容器，里面的内容按实际大小取舍 */
 .w-body { container: w / size; display: flex; flex-direction: column; height: 100%; overflow: hidden; border-radius: inherit; text-decoration: none; color: var(--ink); }
 .w-card { padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
@@ -1725,7 +1735,7 @@ a.w-era:hover .era-big b { color: var(--accent); }
 .sheet li.have { opacity: .5; }
 .g-ic { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .g-ic .i { width: 19px; height: 19px; }
-.g-sizes { display: flex; gap: 4px; }
+.g-sizes { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 220px; }
 .g-sizes button { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: none; cursor: pointer; font-size: 12.5px; color: var(--ink); }
 .g-sizes button:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -2025,22 +2035,71 @@ button.ae-chip { cursor: pointer; }
 
 /* ---------- 日报 ---------- */
 /* 主页入口：报头下面一条 */
-.paper-entry {
-  display: flex; align-items: center; gap: 12px; margin: 0 0 22px; padding: 14px 16px;
-  border-radius: 18px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow);
-  text-decoration: none; color: var(--ink); transition: transform .12s, border-color .12s;
+/* ---------- 今日日报组件（home.js wPaper） ---------- */
+.w-paper .pw-ic { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--accent); color: var(--accent-ink); }
+.w-paper .pw-ic .i { width: 20px; height: 20px; }
+.w-paper.done .pw-ic { background: var(--ok); }
+.w-paper .pw-count { flex: none; font: 13px var(--display); color: var(--muted); white-space: nowrap; }
+.w-paper .pw-count b { font-size: 20px; color: var(--accent); }
+.w-paper > svg.i:last-child, .pw-head > svg.i:last-child { flex: none; width: 16px; height: 16px; color: var(--muted); }
+/* 细条：图标 + 标题/头条 + 篇数 + 箭头 */
+.pw-strip { flex-direction: row; align-items: center; gap: 14px; padding-block: 0; }
+.pw-strip:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.pw-strip:active { transform: scale(.99); }
+.pw-title { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.pw-title b { font: 700 16px var(--serif-zh); letter-spacing: .12em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pw-title small { font-size: 13px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pw-title em { font: italic 600 14px var(--display); color: var(--ink); }
+/* 格子矮（手机上一格不到 70px）时缩一点 */
+@container w (max-height: 76px) {
+  .pw-strip { gap: 10px; padding-inline: 12px; }
+  .pw-strip .pw-ic { width: 32px; height: 32px; border-radius: 10px; }
+  .pw-strip .pw-ic .i { width: 17px; height: 17px; }
+  .pw-title b { font-size: 14.5px; }
+  .pw-title small { font-size: 12px; }
+  .pw-title em { font-size: 13px; }
 }
-.paper-entry:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
-.paper-entry:active { transform: scale(.99); }
-.paper-entry .pe-icon { flex: none; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); }
-.paper-entry .pe-text { flex: 1; min-width: 0; display: grid; gap: 3px; }
-.paper-entry .pe-text b { font: 700 16px var(--serif-zh); letter-spacing: .12em; }
-.paper-entry .pe-sub { font-size: 13px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.paper-entry .pe-sub em { font: italic 600 14px var(--display); color: var(--ink); }
-.paper-entry .pe-count { flex: none; font: 13px var(--display); color: var(--muted); }
-.paper-entry .pe-count b { font-size: 20px; color: var(--accent); }
-.paper-entry > svg.i:last-child { flex: none; color: var(--muted); }
-.paper-entry.done .pe-icon { background: var(--ok); }
+/* 1-2：只要图标和“日报 · 还剩几篇” */
+.p-1-2 { gap: 10px; padding-inline: 10px; }
+@container w (max-width: 150px) { .p-1-2 .pw-ic { width: 30px; height: 30px; border-radius: 9px; } .p-1-2 .pw-ic .i { width: 16px; height: 16px; } .p-1-2 .pw-title b { font-size: 14px; letter-spacing: .06em; } .p-1-2 .pw-title small { font-size: 11.5px; } }
+/* 带标题栏的几种 */
+.pw-head { flex: none; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; text-decoration: none; color: var(--ink); }
+.pw-head .pw-ic { width: 30px; height: 30px; border-radius: 9px; }
+.pw-head .pw-ic .i { width: 16px; height: 16px; }
+.pw-head b { flex: 1; min-width: 0; font: 700 14.5px var(--serif-zh); letter-spacing: .12em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pw-head .pw-count b { font-size: 17px; }
+.pw-head:hover b { color: var(--accent); }
+.w-paper .meter { flex: none; display: block; height: 4px; margin: 0 0 12px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.w-paper .meter span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.w-paper.done .meter span { background: var(--ok); }
+.pw-two { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 18px; }
+.pw-two .feature { margin: 0; align-content: center; }
+.pw-two .minis { height: 100%; }
+.pw-lead-mini { display: none; }
+.pw-lead-mini + .mini { border-top: 0; padding-top: 0; }
+/* 手机上 2-8 只有 4 列宽：头条不单独占一栏，回到列表第一行 */
+@container w (max-width: 520px) {
+  .pw-two { grid-template-columns: minmax(0, 1fr); }
+  .pw-two > .feature { display: none; }
+  .pw-lead-mini { display: block; }
+  .pw-lead-mini .mini { padding-top: 0; border-top: 0; }
+  .pw-lead-mini + .mini { border-top: 1px solid var(--line); padding-top: 7px; }
+}
+/* 窄的（4-2 在手机上只有 2 列宽）：标题栏收掉箭头 */
+@container w (max-width: 190px) { .pw-head > svg.i:last-child { display: none; } .pw-head { gap: 8px; } }
+/* 4-2 竖条 */
+.pw-num { flex: none; display: flex; align-items: baseline; gap: 6px; margin: 2px 0 8px; }
+.pw-num b { font: 700 clamp(34px, 30cqw, 56px)/1 var(--display); color: var(--accent); }
+.pw-num span { font-size: 12.5px; color: var(--ink-2); }
+.pw-words { display: flex; flex-direction: column; gap: 0; }
+.pw-words a { flex: none; padding: 6px 0; border-top: 1px solid var(--line); font: 600 16px var(--display); color: var(--t-ink, var(--ink)); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pw-words a:first-child { border-top: 0; padding-top: 0; }
+.pw-words a.read { color: var(--muted); font-weight: 400; text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--muted) 50%, transparent); }
+.pw-words a:hover { text-decoration: underline; }
+/* 1-1 图标：右上角红点是还没读的篇数 */
+.w-paper-app .app-ic { position: relative; }
+.w-paper-app.done .app-ic { --c: var(--ok) !important; }
+.pw-badge { position: absolute; top: -5px; right: -5px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 999px; background: #e0463a; color: #fff; font: 600 11px/19px var(--sans); font-style: normal; text-align: center; box-shadow: 0 0 0 2px var(--bg, #fff); }
 
 /* 报头 */
 .pp-mast { margin: 14px 0 22px; text-align: center; }

@@ -2,13 +2,16 @@
 // 长按任意卡片（或点“编辑主屏幕”）进入编辑：卡片轻轻晃动，可以拖动换位置、点 − 移除、点右下角换大小、点 ＋ 从组件库添加。
 // 布局只存在这台设备上（手机和电脑屏幕不一样，各摆各的）。
 //
-// 网格：手机 4 列、宽屏 8 列，格子是正方形。尺寸：图标 1×1、小 2×2、中 4×2、大 4×4、条 4×1。
+// 网格：手机 4 列、宽屏 8 列，格子是正方形。尺寸：图标 1×1、小 2×2、中 4×2、大 4×4、条 4×1（宽×高）；
+// 日报组件另用“行-列”：1-8、1-4、2-4、4-4、2-8、4-2、1-1、1-2（8 列宽的在手机上收成 4 列）。
 // 排列按顺序从左上往右下填（grid-auto-flow: dense，小的会补进空位），拖动改的是顺序。
 
 import { esc, icon, local } from "./lib.js?v=212dd6fbae";
 
 const KEY = "desk-layout";
 export const SIZE_NAME = { icon: "图标", s: "小", m: "中", l: "大", bar: "条" };
+/** 尺寸名：日报这类用“行-列”标的，显示成 1×8 */
+const sizeName = (s) => SIZE_NAME[s] ?? s.replace("-", "×");
 
 /** 读出布局：认不得的组件、不支持的尺寸、重复的都丢掉；从没存过就用默认的 */
 export function loadLayout(widgets, fallback) {
@@ -371,7 +374,7 @@ export function mountDesk(root, opts) {
               <div><b>${esc(w.name)}</b><small>${have.has(id) ? "已在桌面上" : esc(w.desc ?? "")}</small></div>
               <span class="g-sizes">${have.has(id)
                 ? ""
-                : w.sizes.map((s) => `<button data-sheet="add" data-id="${esc(id)}" data-size="${s}">${w.sizes.length > 1 ? SIZE_NAME[s] : "添加"}</button>`).join("")}</span>
+                : w.sizes.map((s) => `<button data-sheet="add" data-id="${esc(id)}" data-size="${s}">${w.sizes.length > 1 ? sizeName(s) : "添加"}</button>`).join("")}</span>
             </li>`)
             .join("")}</ul>`)
           .join("")}

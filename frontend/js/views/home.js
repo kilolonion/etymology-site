@@ -30,9 +30,9 @@ export async function viewHome() {
   ctx = { t, discover: discover.entry, all: quick?.[0] ?? null, themes: quick?.[1] ?? null, starred: quick?.[2] ?? null };
   const mine = ctx;
 
+  migratePaper();
   render(`
     ${masthead(t)}
-    ${paperCard()}
     ${prompt}
     <section class="desk" aria-label="桌面">
       <div class="desk-bar">
@@ -45,12 +45,13 @@ export async function viewHome() {
       <div class="desk-foot"><button class="text-btn" data-desk="edit">${icon("grid")}编辑主屏幕</button><span>也可以长按任意卡片</span></div>
     </section>`);
 
-  paperReq.then((p) => {
-    if (ctx !== mine || !p) return;
-    fillPaperCard(p);
-  });
-
   const desk = mountDesk(document.querySelector(".desk"), { widgets: WIDGETS, defaults: DEFAULTS, render: widget });
+  // 日报组件的篇数、头条：不挡首屏，回来了再重画这一个组件
+  paperReq.then((p) => {
+    if (ctx !== mine) return;
+    ctx.paper = p ?? false;
+    desk.refresh(["paper"]);
+  });
   document.querySelector(".desk").addEventListener("submit", (ev) => {
     ev.preventDefault();
     const q = new FormData(ev.target).get("q")?.toString().trim();
@@ -63,25 +64,6 @@ export async function viewHome() {
     [ctx.all, ctx.themes, ctx.starred] = data;
     desk.refresh(Object.keys(WIDGETS).filter((id) => WIDGETS[id].late));
   }
-}
-
-/** 日报入口：报头下面一条，点进去是今天的一整版 */
-function paperCard() {
-  return `<a class="paper-entry" href="#/paper">
-    <span class="pe-icon">${icon("book")}</span>
-    <span class="pe-text"><b>今日日报</b><small class="pe-sub">为你排好的一整版，挑着读</small></span>
-    <span class="pe-count"></span>
-    ${icon("right")}
-  </a>`;
-}
-
-function fillPaperCard(p) {
-  const el = document.querySelector(".paper-entry");
-  if (!el) return;
-  const words = [p.lead, ...p.sections.flatMap((s) => s.items)].filter((x) => x && !x.read).slice(0, 3).map((x) => x.headword);
-  el.querySelector(".pe-sub").innerHTML = words.length ? `头条 <em>${esc(words[0])}</em>${words.length > 1 ? `、${words.slice(1).map((w) => `<em>${esc(w)}</em>`).join("、")} 等` : ""}` : "今天这一版都读完了";
-  el.querySelector(".pe-count").innerHTML = `<b>${p.read}</b>/${p.total}`;
-  el.classList.toggle("done", p.total > 0 && p.read >= p.total);
 }
 
 function masthead(t) {
@@ -109,8 +91,12 @@ const APPS = {
   "app-reminder": ["每日提醒", "bell", "#/me/reminder", 1],
 };
 
+/** 日报组件的尺寸：“行-列”，1-8 是宽屏一整行的细条（手机上 4 列，8 列宽的自动收成 4 列） */
+const PAPER_SIZES = ["1-8", "1-4", "2-4", "4-4", "2-8", "4-2", "1-1", "1-2"];
+
 /** group：组件库里的分组；late：要等词条目录 / 专题 / 收藏到了再画 */
 const WIDGETS = {
+  paper: { name: "今日日报", desc: "每天为你排好的一整版，挑着读", sizes: PAPER_SIZES, icon: "book", group: "widget", draw: wPaper },
   today: { name: "今天的词", desc: "今天推送的单词和它的问题", sizes: ["l", "m"], icon: "today", group: "widget", draw: wToday },
   search: { name: "搜索", desc: "搜单词、释义或故事里的内容", sizes: ["bar"], icon: "search", group: "widget", draw: wSearch },
   tomorrow: { name: "明日预告", desc: "读完今天的词，揭晓明天的问题", sizes: ["s", "m"], icon: "book", group: "widget", draw: wTomorrow },
@@ -136,6 +122,7 @@ const WIDGETS = {
  * 往下左右两半一块块配对（中号对中号、两个小号拼一块），最后一块中号旁边摞一行图标和一条统计，宽屏上不留空洞
  */
 const DEFAULTS = [
+  ["paper", "1-8"],
   ["search", "bar"], ["today", "l"],
   ["app-explore", "icon"], ["app-routes", "icon"], ["app-timeline", "icon"], ["app-az", "icon"],
   ["week", "m"], ["recall", "s"], ["tomorrow", "s"], ["discover", "m"],
@@ -145,6 +132,14 @@ const DEFAULTS = [
   ["waiting", "m"],
   ["app-starred", "icon"], ["app-history", "icon"], ["app-random", "icon"], ["app-me", "icon"], ["stats", "bar"],
 ];
+
+/** 日报从报头下的固定条改成了桌面组件：以前存过布局的设备，第一次补一个放在最前面（之后删了就不再加回来） */
+function migratePaper() {
+  if (local.get("desk-paper-added", false)) return;
+  local.set("desk-paper-added", true);
+  const saved = local.get("desk-layout", null);
+  if (Array.isArray(saved) && !saved.some(([id]) => id === "paper")) local.set("desk-layout", [["paper", "1-8"], ...saved]);
+}
 
 const layoutHtml = () => loadLayout(WIDGETS, DEFAULTS).map(([id, size]) => widget(id, size)).join("");
 
@@ -671,6 +666,93 @@ function wExample(size) {
     <div class="w-head"><h2>今日例句</h2><a href="#/w/${esc(e.id)}"><em>${esc(e.headword)}</em>${icon("right")}</a></div>
     <ol class="ex-list fit">${list.map(li).join("")}</ol>
   </div>`;
+}
+
+// ---------- 今日日报 ----------
+
+/** 日报里的篇目，按版面顺序（头条在前，温故放最后） */
+function paperItems(p) {
+  const main = [p.lead, ...p.sections.filter((x) => x.key !== "recall").flatMap((x) => x.items)].filter(Boolean);
+  const recall = p.sections.filter((x) => x.key === "recall").flatMap((x) => x.items);
+  return { main, recall };
+}
+
+function wPaper(size) {
+  const p = ctx.paper;
+  const done = !!p && p.total > 0 && p.read >= p.total;
+  const cls = `w-paper p-${size}${done ? " done" : ""}`;
+  const count = p ? `<span class="pw-count"><b>${p.read}</b>/${p.total}</span>` : "";
+  const ic = `<span class="pw-ic">${icon(done ? "check" : "book")}</span>`;
+
+  if (size === "1-1") {
+    const left = p ? p.total - p.read : 0;
+    return `<a class="w-body w-app w-paper-app${done ? " done" : ""}" href="#/paper">
+      <span class="app-ic" style="--c:var(--accent)">${icon("book")}${left > 0 ? `<i class="pw-badge">${left}</i>` : ""}</span><span class="app-name">日报</span>
+    </a>`;
+  }
+  if (size === "1-2") {
+    return `<a class="w-body w-card ${cls} pw-strip" href="#/paper">${ic}<span class="pw-title"><b>日报</b>${p ? `<small>${done ? "读完了" : `还剩 ${p.total - p.read} 篇`}</small>` : ""}</span></a>`;
+  }
+
+  if (p === undefined) {
+    // 数据还没到：先把壳子画出来
+    if (size.startsWith("1-")) return `<a class="w-body w-card ${cls} pw-strip" href="#/paper">${ic}<span class="pw-title"><b>今日日报</b><small>正在排版…</small></span>${icon("right")}</a>`;
+    return loading("今日日报");
+  }
+  if (!p) {
+    if (size.startsWith("1-")) return `<a class="w-body w-card ${cls} pw-strip" href="#/paper">${ic}<span class="pw-title"><b>今日日报</b><small>为你排好的一整版，挑着读</small></span>${icon("right")}</a>`;
+    return quiet("今日日报", "为你排好的一整版，挑着读", "book", ["#/paper", "打开日报"]);
+  }
+
+  const { main, recall } = paperItems(p);
+  const unread = main.filter((x) => !x.read);
+  const head = (n) => {
+    const words = unread.slice(0, n).map((x) => `<em>${esc(x.headword)}</em>`);
+    if (!words.length) return "今天这一版都读完了";
+    return `头条 ${words[0]}${words.length > 1 ? `、${words.slice(1).join("、")}` : ""}${unread.length > n ? " 等" : ""}`;
+  };
+
+  // 细条：和原来的入口条一样，宽的多列几个词
+  if (size === "1-4" || size === "1-8") {
+    return `<a class="w-body w-card ${cls} pw-strip" href="#/paper">${ic}
+      <span class="pw-title"><b>今日日报</b><small>${head(size === "1-8" ? 5 : 2)}</small></span>${count}${icon("right")}
+    </a>`;
+  }
+
+  const pct = p.total ? Math.round((p.read / p.total) * 100) : 0;
+  const meter = `<span class="meter"><span style="width:${Math.max(pct, 2)}%"></span></span>`;
+  const top = `<a class="pw-head" href="#/paper">${ic}<b>今日日报</b>${count}${icon("right")}</a>`;
+  const lead = unread[0] ?? main[0];
+  const rest = main.filter((x) => x !== lead);
+  // 没读的排前面，读过的跟在后面；还放得下就接着放温故
+  const ordered = [...rest.filter((x) => !x.read), ...rest.filter((x) => x.read)];
+  const rows = ordered.slice(0, 12).map((x) => miniRow(x)).join("");
+  const recallRows = recall.length ? `<p class="fit-sep">温故</p>${recall.map((x) => miniRow(x, rich(x.keyline || x.meaning))).join("")}` : "";
+
+  // 竖条：大数字 + 进度，下面一列单词
+  if (size === "4-2") {
+    return `<div class="w-body w-card ${cls}">${top}
+      <p class="pw-num"><b>${p.read}</b><span>/ ${p.total} 篇已读</span></p>${meter}
+      <div class="pw-words fit">${[...unread, ...main.filter((x) => x.read)].map((x) => `<a href="#/w/${esc(x.id)}" class="${x.read ? "read" : ""}" style="${tint(x)}">${esc(x.headword)}</a>`).join("")}</div>
+    </div>`;
+  }
+  if (size === "2-4") {
+    return `<div class="w-body w-card ${cls}">${top}<div class="minis fit">${miniRow(lead)}${rows}</div></div>`;
+  }
+  if (size === "2-8") {
+    return `<div class="w-body w-card ${cls}">${top}
+      <div class="pw-two">${featureRow(lead)}<div class="minis fit"><span class="pw-lead-mini">${miniRow(lead)}</span>${rows}</div></div>
+    </div>`;
+  }
+  // 4-4：头条放大，下面按版块列
+  const sections = p.sections
+    .filter((sec) => sec.key !== "recall")
+    .map((sec) => {
+      const items = sec.items.filter((x) => x !== lead && x.id !== lead?.id);
+      return items.length ? `<p class="fit-sep">${esc(sec.title)}</p>${items.map((x) => miniRow(x)).join("")}` : "";
+    })
+    .join("");
+  return `<div class="w-body w-card ${cls} big">${top}${meter}${featureRow(lead)}<div class="minis fit">${sections}${recallRows}</div></div>`;
 }
 
 function wApp(size, id) {
