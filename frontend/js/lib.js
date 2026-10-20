@@ -195,9 +195,19 @@ export const hooks = { onUnauthorized: () => {}, onRevalidate: () => {} };
 // ---------- 导航作用域：切页时可以中止上一趟请求 ----------
 
 /** 每次 hashchange 开一趟导航：取消上一趟的 GET，记下这趟用到了哪些接口 */
-export const nav = { id: 0, ctrl: null, used: new Set(), rendered: false };
+export const nav = { id: 0, ctrl: null, used: new Set(), rendered: false, quiet: false, chrome: null };
+
+/** 路由定好的页面版式（bleed：文章页隐藏顶栏；home：首页），在新页面或骨架真正上屏时才换 */
+function applyChrome() {
+  if (!nav.chrome) return;
+  document.body.classList.toggle("bleed", nav.chrome.bleed);
+  document.body.classList.toggle("home", nav.chrome.home);
+  nav.chrome = null;
+}
 
 export function beginNav() {
+  nav.quiet = false;
+  nav.chrome = null;
   nav.ctrl?.abort();
   nav.ctrl = new AbortController();
   nav.used = new Set();
@@ -243,9 +253,30 @@ function retryStale(path) {
   setTimeout(() => revalidate(path), 3000 * (n + 1));
 }
 
-async function request(path, { method = "GET", body } = {}, signal) {
+/** 本机最近一次写操作（读完、收藏、改设置）的时间：比它早存的接口缓存不能“先给缓存”，免得显示写之前的状态 */
+const WRITE_KEY = "ety-write-at";
+const lastWriteAt = () => {
+  try {
+    return Number(localStorage.getItem(WRITE_KEY) || 0);
+  } catch {
+    return 0;
+  }
+};
+
+/**
+ * swr：允许 Service Worker 先给缓存（今天存的、晚于最近一次写操作的），拿到后再在后台要一次新数据；
+ * 下拉刷新后的几秒、后台换新本身都不带。
+ */
+async function request(path, { method = "GET", body, swr = false } = {}, signal) {
   const write = method !== "GET";
-  const headers = write ? { "content-type": "application/json" } : Date.now() < netPriority.until ? { "x-ety-fresh": "1" } : undefined;
+  const fresh = Date.now() < netPriority.until;
+  const headers = write
+    ? { "content-type": "application/json" }
+    : fresh
+      ? { "x-ety-fresh": "1" }
+      : swr
+        ? { "x-ety-swr": String(lastWriteAt()) }
+        : undefined;
   let res;
   try {
     res = await fetch("/api" + path, {
@@ -266,6 +297,12 @@ async function request(path, { method = "GET", body } = {}, signal) {
   if (!write) {
     if (res.headers.get("x-stale") === "1" || res.headers.get("x-offline") === "1") retryStale(path);
     else staleRetries.delete(path);
+    // 先给的缓存：马上在后台要一次新的（SW 那边正在取，会合并成一个请求），变了就悄悄重画
+    if (res.headers.get("x-swr") === "1") setTimeout(() => revalidate(path, true), 0);
+  } else if (res.ok) {
+    try {
+      localStorage.setItem(WRITE_KEY, String(Date.now()));
+    } catch {}
   }
   const data = await res.json().catch(() => ({}));
   if (res.status === 401) {
@@ -280,10 +317,10 @@ async function request(path, { method = "GET", body } = {}, signal) {
 }
 
 /** 同一个地址同时只发一次请求；带 signal 的显式请求不跟别的请求合流 */
-function getData(path, signal) {
+function getData(path, signal, swr = false) {
   const cur = inflight.get(path);
   if (cur && (cur.signal === signal || !cur.signal)) return cur.promise;
-  const promise = request(path, {}, signal).finally(() => {
+  const promise = request(path, { swr }, signal).finally(() => {
     if (inflight.get(path)?.promise === promise) inflight.delete(path);
   });
   inflight.set(path, { promise, signal });
@@ -291,9 +328,10 @@ function getData(path, signal) {
 }
 
 /** 旧数据已经画在屏幕上了，后台把这页的数据悄悄换新；变了自己再画一遍 */
-function revalidate(path) {
+function revalidate(path, direct = false) {
   const startEpoch = epoch;
-  getData(path)
+  // direct：刚拿到的是 SW 先给的缓存，那趟请求可能还挂在 inflight 上，不能并进去（并进去拿到的还是缓存）
+  (direct ? request(path, {}) : getData(path))
     .then((data) => {
       if (startEpoch !== epoch) return; // 中途写过东西，这批数据作废
       const hit = cache.get(path);
@@ -326,7 +364,7 @@ export async function api(path, { method = "GET", body, fresh = false, detached 
 
   const startEpoch = epoch;
   // detached：页面画好之后由用户操作触发的请求（联想、刷新页签），不该被“切页”取消，也不该并进别人的请求
-  const data = detached ? await request(path, {}) : await getData(path, nav.ctrl?.signal);
+  const data = detached ? await request(path, { swr: !fresh }) : await getData(path, nav.ctrl?.signal, !fresh);
   if (startEpoch === epoch) fill(path, data);
   return data;
 }
@@ -350,10 +388,12 @@ export function prefetch(paths = []) {
 
 const $app = document.getElementById("app");
 
+/** 画一页。nav.quiet（后台换新、下拉刷新时的重画）不再播放淡入、盖章这些“第一次出现”的动画，免得整页闪一下 */
 export function render(html) {
   nav.rendered = true;
+  applyChrome();
   $app.removeAttribute("aria-busy");
-  $app.innerHTML = `<div class="view">${html}</div>`;
+  $app.innerHTML = `<div class="view${nav.quiet ? " quiet" : ""}">${html}</div>`;
 }
 
 // ---------- 骨架屏：接口慢的时候先占住版面，别让人对着白屏 ----------
@@ -373,6 +413,7 @@ export function skeleton(kind = "page") {
     entry: `<div class="sk-hero"></div>${lines(7)}`,
     page: `<div class="sk-head">${bar(11, "90px")}${bar(28, "180px")}</div>${lines(6)}`,
   };
+  applyChrome();
   $app.setAttribute("aria-busy", "true");
   $app.innerHTML = `<div class="view sk-view" aria-hidden="true">${heads[kind] ?? heads.page}</div>`;
 }

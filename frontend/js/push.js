@@ -23,11 +23,12 @@ export function registerSW(version = "") {
   pageVersion = version;
   regPromise = navigator.serviceWorker.register(version ? `/sw.js?v=${version}` : "/sw.js").catch(() => null);
 
-  // SW 换新时会告诉页面它自己的版本；只有和页面版本不一样才提示（页面本来就是新版就别吵）
+  // SW 后台发现新版本、并且把新版本的文件都存好了（ready），才提示刷新：这时点刷新是瞬间的，不会对着白屏等
   navigator.serviceWorker.addEventListener("message", (ev) => {
-    if (ev.data?.type !== "updated") return;
+    const { type, version } = ev.data ?? {};
+    if (type !== "ready" && type !== "updated") return;
     if (!navigator.serviceWorker.controller) return; // 首次安装，页面本来就是新版
-    if (isStale(pageVersion, ev.data.version)) promptUpdate(ev.data.version);
+    if (isStale(pageVersion, version)) promptUpdate(version);
   });
 
   // 打开几秒后、以及每次回到前台，去看一眼线上是不是已经有新版本了
@@ -38,10 +39,18 @@ export function registerSW(version = "") {
 }
 
 let lastCheck = 0;
-/** 拉一份线上首页，版本号和自己不一样就提示刷新（一分钟内最多查一次） */
+/**
+ * 看线上有没有新版本（一分钟内最多查一次）。有 Service Worker 时交给它：它取线上页面、把新文件预取好再发 ready；
+ * 没有 SW（或还没接管）才自己拉首页比版本号。
+ */
 export async function checkForUpdate(force = false) {
   if (!pageVersion || (!force && Date.now() - lastCheck < 60_000)) return;
   lastCheck = Date.now();
+  const sw = navigator.serviceWorker?.controller;
+  if (sw) {
+    sw.postMessage({ type: "check" });
+    return;
+  }
   try {
     const res = await fetch("/", { cache: "no-store" });
     if (!res.ok) return;

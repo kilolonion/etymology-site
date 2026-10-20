@@ -40,7 +40,7 @@ npm run deploy -- status        # 服务器上现在是哪个版本
 
 服务器地址等配置默认就是本页的值；要改就复制 `deploy/deploy.env.example` 为 `deploy/deploy.env`。前提：本机能 `ssh overseas`，两边都有 `rsync`。
 
-前端版本号**不用再手动推**：`version-assets.py` 按前端文件内容算哈希，给 index.html 里的 css/js 和所有模块的 `import` 打上同一个 `?v=`，前端没改版本号就不变。这一步不能省：站点在 Cloudflare 后面，CF 会给 js/css 盖 4 小时浏览器缓存 TTL（源站的 no-cache 被覆盖），只有 index.html 带版本号的话，用户可能拿到旧模块 + 新入口，直接白屏（页面只剩顶栏和底部 tab）。
+前端版本号**不用再手动推**：`version-assets.py` 按**每个文件**的内容算哈希（模块的版本号还包含它 import 的文件的版本号，成环的一组合算一个），给 index.html 里的 css/js 和所有模块的 `import` 打上各自的 `?v=`，没改的文件地址不变、缓存继续有效；整体版本号写进 index.html 的 `<meta name="ety-version">`（页面判断新版本、sw.js 的地址都用它）。所有模块都必须在 index.html 里 modulepreload（脚本会检查），Service Worker 靠这份清单预取新版本、清理旧文件。这一步不能省：站点在 Cloudflare 后面，js/css 是一年 immutable 长缓存，不带版本号就会新旧混搭白屏。
 
 ## 离线缓存（sw.js）
 

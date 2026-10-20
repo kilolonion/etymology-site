@@ -5,6 +5,7 @@ import { clearOfflineData, flushReads, precacheLoaded, setOffline, warmForOfflin
 import { initPull } from "./pull.js?v=212dd6fbae";
 import { checkForUpdate, disablePush, registerSW } from "./push.js?v=212dd6fbae";
 import "./wordcard.js?v=212dd6fbae";
+import { pageVersionOf } from "./update.js?v=212dd6fbae";
 import { viewAccount } from "./views/account.js?v=212dd6fbae";
 import { viewAdmin } from "./views/admin.js?v=212dd6fbae";
 import { renderJoin, renderJoinWhileLoggedIn, renderLogin } from "./views/auth.js?v=212dd6fbae";
@@ -184,9 +185,9 @@ async function route() {
     return;
   }
 
-  // 文章页的题头在手机上铺满到顶部，隐藏顶栏
-  document.body.classList.toggle("bleed", path.startsWith("w/"));
-  document.body.classList.toggle("home", path === "");
+  // 文章页的题头在手机上铺满到顶部，隐藏顶栏。等新页面（或骨架）真的画出来时再换版式，
+  // 否则旧页面还在屏幕上时顶栏就先消失 / 出现，看着像跳了一下
+  nav.chrome = { bleed: path.startsWith("w/"), home: path === "" };
   for (const a of document.querySelectorAll(".tabs a")) {
     if (a.dataset.tab === hit.tab) a.setAttribute("aria-current", "page");
     else a.removeAttribute("aria-current");
@@ -196,10 +197,11 @@ async function route() {
   // 重画时重新读地址栏，搜索页换了关键词也对得上
   current = { path, run: () => hit.view(hit.m, parseHash().query), used: new Set(), live: isTab(path) };
 
-  // 接口慢的时候先出骨架，别让人对着空白页（快的话不闪）
+  // 接口慢的时候先出骨架，别让人对着空白页。有缓存时页面几十毫秒内就画好了，
+  // 骨架等 180ms 才出，免得“骨架闪一下又变内容”
   const slow = setTimeout(() => {
     if (!signal.aborted && !nav.rendered) skeleton(skeletonFor(path)); // 视图已经画出来的，别再拿骨架屏盖掉
-  }, 120);
+  }, 180);
 
   const st = arrive(path);
   try {
@@ -215,7 +217,7 @@ async function route() {
     warmCache();
   } catch (err) {
     if (signal.aborted || err?.name === "AbortError" || err.status === 401) return;
-    document.body.classList.remove("bleed");
+    nav.chrome = { bleed: false, home: false };
     render(
       err.status === 404
         ? empty("找不到这个词条，可能是链接写错了", `<a class="btn sm" href="#/">回到今日</a><a class="btn sm ghost" href="#/explore">去探索</a>`)
@@ -238,12 +240,17 @@ hooks.onRevalidate = (path) => {
     if (!page?.live || !page.used.has(path) || isTyping() || document.body.classList.contains("desk-editing")) return;
     const y = scrollY;
     const open = openIndexes();
+    nav.quiet = true; // 悄悄重画：不播淡入动画
     try {
       await page.run();
+      if (current !== page) return;
       if (shown) decorateBack(shown.state, page.path);
       restoreOpen(open);
       window.scrollTo(0, y);
-    } catch {}
+    } catch {
+    } finally {
+      if (current === page) nav.quiet = false;
+    }
   }, 90);
 };
 
@@ -258,11 +265,18 @@ async function refreshPage() {
   // 这几秒里的读请求让 Service Worker 多等网络，别马上拿旧缓存顶上（否则“刷新”了还是旧的）
   netPriority.until = Date.now() + 10_000;
   const open = openIndexes();
-  await page.run();
+  const y = scrollY;
+  nav.quiet = true; // 刷新后的重画不播淡入，内容原地换新
+  try {
+    await page.run();
+  } finally {
+    if (current === page) nav.quiet = false;
+  }
   if (current !== page) return; // 刷新途中切到别的页了
   page.used = new Set(nav.used);
   if (shown) decorateBack(shown.state, page.path);
   restoreOpen(open);
+  window.scrollTo(0, y);
 }
 initPull(refreshPage);
 
@@ -351,5 +365,5 @@ addEventListener("offline", () => setOffline(true));
 
 // 滚动位置由我们自己按页面恢复（内容是异步画出来的，浏览器自己恢复会落空）
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-registerSW(new URL(import.meta.url).searchParams.get("v") ?? "");
+registerSW(pageVersionOf());
 boot();

@@ -99,6 +99,9 @@ svg.emblem-s { width: 15px; height: 15px; stroke-width: 1.6; }
 
 main { max-width: 660px; margin: 0 auto; padding: 0 16px; outline: none; }
 .view { animation: fade .35s ease both; }
+/* 后台换新 / 下拉刷新的重画：内容原地换，不再淡入、不再盖章 */
+.view.quiet, .view.quiet .stamp { animation: none; }
+.view.quiet .stamp { opacity: .95; }
 @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
