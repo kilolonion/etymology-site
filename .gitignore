@@ -3,3 +3,4 @@ var/
 .env
 .local-test.mjs
 deploy/deploy.env
+.deploy-info
