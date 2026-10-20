@@ -107,7 +107,7 @@ function stopSpeaking() {
     try {
       playing.src?.stop();
     } catch {}
-    playing.btn?.classList.remove("playing", "loading");
+    playing.btn?.classList.remove("playing", "say-loading");
     playing = null;
   }
   if ("speechSynthesis" in window) speechSynthesis.cancel();
@@ -126,7 +126,7 @@ function pickVoice(lang) {
 function speakLocally(text, accent, btn) {
   const me = { src: null, btn };
   playing = me;
-  btn?.classList.remove("loading");
+  btn?.classList.remove("say-loading");
   if (!("speechSynthesis" in window)) return stopSpeaking();
   const lang = accent === "us" ? "en-US" : "en-GB";
   const u = new SpeechSynthesisUtterance(text);
@@ -168,7 +168,7 @@ export function speak(text, btn = null) {
   ctx.resume?.(); // 必须在点按的同一拍里调用
   const me = { src: null, btn };
   playing = me;
-  btn?.classList.add("playing", "loading");
+  btn?.classList.add("playing", "say-loading"); // 别用 loading：全局 .loading 是整页加载占位（min-height: 50vh），按钮会瞬间变得极高
   (async () => {
     const res = await fetch(sayUrl(q, accent), { credentials: "same-origin" });
     if (!res.ok) throw new Error(String(res.status));
@@ -181,7 +181,7 @@ export function speak(text, btn = null) {
       if (playing === me) stopSpeaking();
     };
     me.src = src;
-    btn?.classList.remove("loading");
+    btn?.classList.remove("say-loading");
     src.start();
   })().catch(() => {
     if (playing === me) speakLocally(q, accent, btn); // 服务器取不到发音、离线又没存过：用浏览器的语音
@@ -232,14 +232,26 @@ export function invalidate(prefix) {
   for (const k of [...cache.keys()]) if (k.startsWith(prefix)) cache.delete(k);
 }
 
+/** 下拉刷新后的这几秒里，读请求告诉 Service Worker：多等一会儿网络，别急着拿旧缓存顶上 */
+export const netPriority = { until: 0 };
+/** 拿到的是“网络慢、先给的旧缓存”：几秒后后台再拉一次（SW 那边的请求没被掐断，到时多半已经存好新的了） */
+const staleRetries = new Map();
+function retryStale(path) {
+  const n = staleRetries.get(path) ?? 0;
+  if (n >= 2) return;
+  staleRetries.set(path, n + 1);
+  setTimeout(() => revalidate(path), 3000 * (n + 1));
+}
+
 async function request(path, { method = "GET", body } = {}, signal) {
   const write = method !== "GET";
+  const headers = write ? { "content-type": "application/json" } : Date.now() < netPriority.until ? { "x-ety-fresh": "1" } : undefined;
   let res;
   try {
     res = await fetch("/api" + path, {
       method,
       credentials: "same-origin",
-      headers: write ? { "content-type": "application/json" } : undefined,
+      headers,
       body: write ? JSON.stringify(body ?? {}) : undefined,
       signal,
     });
@@ -249,14 +261,19 @@ async function request(path, { method = "GET", body } = {}, signal) {
     setOffline(true);
     throw Object.assign(new Error("离线中，联网后再试"), { offline: true });
   }
-  // Service Worker 拿缓存顶上时会带 x-offline
+  // Service Worker 只有真的连不上服务器才带 x-offline；网络慢 / 服务器在重启时带的是 x-stale，不算离线
   setOffline(res.headers.get("x-offline") === "1");
+  if (!write) {
+    if (res.headers.get("x-stale") === "1" || res.headers.get("x-offline") === "1") retryStale(path);
+    else staleRetries.delete(path);
+  }
   const data = await res.json().catch(() => ({}));
   if (res.status === 401) {
     hooks.onUnauthorized();
     throw Object.assign(new Error("unauthorized"), { status: 401 });
   }
   if (!res.ok) {
+    if (res.status >= 502 && res.status <= 524 && !data.error) data.error = "服务器正在更新，稍后再试";
     throw Object.assign(new Error(data.error ?? res.statusText), { status: res.status, offline: res.headers.get("x-offline") === "1" });
   }
   return data;

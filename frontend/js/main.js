@@ -1,9 +1,9 @@
 // 入口：路由、全局动作、登录状态
 
-import { actions, api, beginNav, empty, esc, hooks, invalidate, nav, prefetch, render, skeleton, skeletonFor, speak, toast } from "./lib.js?v=212dd6fbae";
+import { actions, api, beginNav, empty, esc, hooks, invalidate, nav, netPriority, prefetch, render, skeleton, skeletonFor, speak, toast } from "./lib.js?v=212dd6fbae";
 import { clearOfflineData, flushReads, precacheLoaded, setOffline, warmForOffline } from "./offline.js?v=212dd6fbae";
 import { initPull } from "./pull.js?v=212dd6fbae";
-import { disablePush, registerSW } from "./push.js?v=212dd6fbae";
+import { checkForUpdate, disablePush, registerSW } from "./push.js?v=212dd6fbae";
 import "./wordcard.js?v=212dd6fbae";
 import { viewAccount } from "./views/account.js?v=212dd6fbae";
 import { viewAdmin } from "./views/admin.js?v=212dd6fbae";
@@ -248,10 +248,13 @@ hooks.onRevalidate = (path) => {
 // 下拉刷新：清掉接口缓存，把当前这一页重新画一遍（不整页重载）；顺便让 Service Worker 检查前端新版本
 async function refreshPage() {
   navigator.serviceWorker?.getRegistration().then((r) => r?.update()).catch(() => {});
+  checkForUpdate(true);
   syncReads();
   const page = current;
   if (!page) return location.reload();
   invalidate();
+  // 这几秒里的读请求让 Service Worker 多等网络，别马上拿旧缓存顶上（否则“刷新”了还是旧的）
+  netPriority.until = Date.now() + 10_000;
   const open = openIndexes();
   await page.run();
   if (current !== page) return; // 刷新途中切到别的页了

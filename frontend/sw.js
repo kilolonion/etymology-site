@@ -5,7 +5,8 @@
 // - 页面本身、没带哈希的静态文件（本地开发时）：先走网络，失败才用缓存；
 // - 字体、图标：先读缓存；
 // - 发音 /api/say：同一段话的发音不会变，先读缓存（单独一个缓存，不随退出登录清掉，太多了删最早的）；
-// - GET /api：先走网络，成功的回包顺手存一份。网络慢但没断时，手里有旧数据才在 4 秒后改用旧数据；
+// - GET /api：先走网络，成功的回包顺手存一份。网络慢但没断时，手里有旧数据才在 4 秒后（下拉刷新 12 秒）先给旧数据（标 x-stale，
+//   不算离线），网络请求不掐断，回来照样存；网关错误（502/503/504，后端重启时）先自动重试一次；
 //   手里什么都没有就一直等网络（慢总比报“离线”强）。真的没网又没存过，回 503；
 // - 页面导航：缓存里有旧页面才限时（4 秒），没有就交给浏览器自己去取，不替它判死刑；
 // - 登录态（/api/auth、/api/me）永不走缓存：旧的“已登录”会把过期会话的人带进一个全是 401 的空壳页。
@@ -16,6 +17,8 @@ const API = "ety-api";
 const AUDIO = "ety-audio";
 const AUDIO_MAX = 400;
 const NET_TIMEOUT = 4000;
+/** 下拉刷新时（请求头 x-ety-fresh: 1）多等一会儿网络 */
+const FRESH_TIMEOUT = 12000;
 const HASHED = /[?&]v=[0-9a-f]{10}$/;
 // 管理、推送、邀请、登录态这些接口不缓存（auth / me 决定“是不是已登录”，不能拿旧的顶上）
 const NO_CACHE_API = /^\/api\/(admin|push|invites|login|logout|register|auth|me)(\/|\?|$)/;
@@ -43,7 +46,7 @@ self.addEventListener("fetch", (event) => {
   if (req.mode === "navigate") event.respondWith(page(req, event));
   else if (url.pathname === "/api/say") event.respondWith(audioGet(req));
   else if (url.pathname.startsWith("/api/")) {
-    if (!NO_CACHE_API.test(url.pathname)) event.respondWith(apiGet(req));
+    if (!NO_CACHE_API.test(url.pathname)) event.respondWith(apiGet(req, event));
   } else if (HASHED.test(url.search) || /^\/(fonts|icons)\//.test(url.pathname)) event.respondWith(cacheFirst(req));
   else event.respondWith(networkFirst(req, STATIC));
 });
@@ -133,21 +136,58 @@ async function pruneStatic(ver) {
   }
 }
 
-async function apiGet(req) {
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+/** 网关错误（后端重启、Cloudflare 一时连不上源站）：短暂的，值得马上再试一次 */
+const TRANSIENT = new Set([502, 503, 504, 520, 521, 522, 523, 524]);
+
+/** 发一次请求；网关错误时隔一下再试一次。网络本身断了返回 undefined */
+async function fetchApi(req) {
+  for (let i = 0; ; i++) {
+    let res;
+    try {
+      res = await fetch(req.clone());
+    } catch {
+      if (i >= 1) return undefined;
+      await sleep(800);
+      continue;
+    }
+    if (!TRANSIENT.has(res.status) || i >= 1) return res;
+    await sleep(1200);
+  }
+}
+
+/** 给缓存里的旧回包打个标记：x-offline（连不上服务器）或 x-stale（网络慢 / 服务器出错，先给旧的） */
+async function marked(hit, flag) {
+  const headers = new Headers(hit.headers);
+  headers.set(flag, "1");
+  return new Response(await hit.blob(), { status: hit.status, headers });
+}
+
+/**
+ * 接口：先走网络。手里有旧数据时最多等 4 秒（下拉刷新 12 秒），等不到先给旧数据，
+ * 但网络请求不掐断，回来后存进缓存，页面过几秒再取就是新的了（以前是超时直接 abort，越慢越拿不到新数据）。
+ */
+async function apiGet(req, event) {
   const hit = await caches.match(req);
-  // 有旧数据可退才限时；一份存货都没有（比如第一次来）就一直等，慢总比报“离线”强
-  const res = await tryNetwork(req, hit ? NET_TIMEOUT : 0);
-  if (res?.ok) {
-    (await caches.open(API)).put(req, res.clone());
+  const store = async (res) => {
+    if (res?.ok) await (await caches.open(API)).put(req, res.clone());
     return res;
-  }
-  if (res && res.status !== 0 && res.status < 500) return res; // 401、404 之类照实返回
+  };
+  const net = fetchApi(req).then(store);
   if (hit) {
-    // 标一下“这是离线时的旧数据”，页面据此显示离线提示
-    const headers = new Headers(hit.headers);
-    headers.set("x-offline", "1");
-    return new Response(await hit.blob(), { status: hit.status, headers });
+    const wait = req.headers.get("x-ety-fresh") === "1" ? FRESH_TIMEOUT : NET_TIMEOUT;
+    const res = await Promise.race([net, sleep(wait).then(() => "slow")]);
+    if (res === "slow") {
+      event?.waitUntil(net.catch(() => {}));
+      return marked(hit, "x-stale");
+    }
+    if (res?.ok) return res;
+    if (res && !TRANSIENT.has(res.status) && res.status < 500) return res; // 401、404 之类照实返回
+    return marked(hit, res ? "x-stale" : "x-offline");
   }
+  // 一份存货都没有（比如第一次来）就一直等，慢总比报“离线”强
+  const res = await net;
+  if (res) return res;
   return new Response(JSON.stringify({ error: "离线中，这一页还没有缓存" }), {
     status: 503,
     headers: { "content-type": "application/json", "x-offline": "1" },

@@ -39,8 +39,8 @@ export function registerSW(version = "") {
 
 let lastCheck = 0;
 /** 拉一份线上首页，版本号和自己不一样就提示刷新（一分钟内最多查一次） */
-export async function checkForUpdate() {
-  if (!pageVersion || Date.now() - lastCheck < 60_000) return;
+export async function checkForUpdate(force = false) {
+  if (!pageVersion || (!force && Date.now() - lastCheck < 60_000)) return;
   lastCheck = Date.now();
   try {
     const res = await fetch("/", { cache: "no-store" });

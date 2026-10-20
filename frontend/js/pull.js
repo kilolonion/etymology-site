@@ -8,7 +8,7 @@
 // - 跟手的位移只用 transform / opacity，每帧最多写一次（requestAnimationFrame 合并）；
 // - 刷新最多转 MAX_SPIN 毫秒：网络再慢也要把指示器收起来（数据回来了照样会画上去）。
 
-import { icon } from "./lib.js?v=212dd6fbae";
+import { icon, toast } from "./lib.js?v=212dd6fbae";
 
 /** 拉到这么远（指示器下移的像素）松手才刷新 */
 const TRIGGER = 64;
@@ -135,12 +135,21 @@ export function initPull(refresh) {
     try {
       const t0 = Date.now();
       // 刷新卡住也不能一直转：到点就收起来，数据回来后页面自己会更新
-      await Promise.race([Promise.resolve().then(refresh).catch(() => {}), sleep(MAX_SPIN)]);
+      const result = await Promise.race([
+        Promise.resolve().then(refresh).then(() => "ok", (err) => err),
+        sleep(MAX_SPIN).then(() => "slow"),
+      ]);
       await sleep(Math.max(0, MIN_SPIN - (Date.now() - t0)));
       ind.classList.remove("spin");
-      ind.classList.add("done");
-      ic.innerHTML = icon("check");
-      await sleep(300);
+      if (result === "ok") {
+        ind.classList.add("done");
+        ic.innerHTML = icon("check");
+        await sleep(300);
+      } else if (result === "slow") {
+        toast("网络有点慢，内容回来后会自动更新");
+      } else if (result?.status !== 401 && result?.name !== "AbortError") {
+        toast(result?.offline ? "连不上服务器，先显示之前存下的内容" : result?.message || "刷新失败，稍后再试");
+      }
     } finally {
       busy = false; // 不管中间出什么错，都要放开，不然之后再也拉不动
       reset();

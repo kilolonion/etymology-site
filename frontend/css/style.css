@@ -1189,7 +1189,7 @@ a.wl:hover, a.wl.on { color: var(--t-ink, var(--accent)); background: color-mix(
 
 /* 朗读按钮：取音频时轻轻闪，正在读时换成强调色 */
 [data-action="say"].playing { color: var(--accent) !important; }
-[data-action="say"].loading svg { animation: sk-glow 1s ease-in-out infinite; }
+[data-action="say"].say-loading svg { animation: sk-glow 1s ease-in-out infinite; }
 .menu .swap { font-size: 13px; color: var(--accent); }
 
 /* ---------- 返回按钮：写明回哪里；连续跳了几层时一步回到列表 ---------- */
