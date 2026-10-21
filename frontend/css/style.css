@@ -1397,6 +1397,8 @@ a.wl:hover, a.wl.on { color: var(--t-ink, var(--accent)); background: color-mix(
 [data-action="say"].playing { color: var(--accent) !important; }
 [data-action="say"].say-loading svg { animation: sk-glow 1s ease-in-out infinite; }
 .menu .swap { font-size: 13px; color: var(--accent); }
+.goal-opts { display: flex; gap: 6px; padding: 10px 16px; background: var(--bg-2); }
+.goal-opts[hidden] { display: none; }
 
 /* ---------- 返回按钮：写明回哪里；连续跳了几层时一步回到列表 ---------- */
 .back { max-width: 70vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

@@ -45,6 +45,7 @@ export async function viewMe() {
       <a href="#/me/reminder">${icon("bell")}<span class="grow">提醒与日报</span><span class="val">${reminderVal}</span>${icon("right", "i chev")}</a>
       <button class="menu-btn" data-action="accent">${icon("sound")}<span class="grow">发音</span><span class="val accent-val">${ACCENT[getAccent()]}</span><span class="swap">切换</span></button>
       <button class="menu-btn" data-action="goal" data-goal="${me.goal ?? 1}">${icon("today")}<span class="grow">每日目标</span><span class="val goal-val">每天 ${me.goal ?? 1} 个</span><span class="swap">调整</span></button>
+      <div class="goal-opts" id="goal-opts" hidden>${GOALS.map((g) => `<button type="button" class="filter" data-action="goal-opt" data-goal-opt="${g}" aria-pressed="${g === (me.goal ?? 1)}">${g} 个</button>`).join("")}</div>
       <button class="menu-btn" data-action="board-opt" data-on="${!!me.onBoard}">${icon("users")}<span class="grow">参加排行榜</span><span class="val board-val">${me.onBoard ? "参加中" : "已关闭"}</span><span class="swap">${me.onBoard ? "关闭" : "打开"}</span></button>
     </nav>
     <nav class="menu">
@@ -67,18 +68,41 @@ actions.accent = (el) => {
   toast(`发音改为${ACCENT[next]}`);
 };
 
-/** 每日目标：1 → 2 → 3 → 5 → 1 轮着换；首页“本周”和读完时的收尾都按它算 */
+/** 每日目标档位（与后端 GOALS 一致）：点“调整”展开直接选，不再一个个轮着点；首页“本周”和读完时的收尾都按它算 */
 const GOALS = [1, 2, 3, 5];
-actions.goal = async (el) => {
-  const next = GOALS[(GOALS.indexOf(Number(el.dataset.goal)) + 1) % GOALS.length];
-  el.disabled = true;
+
+/** 收起档位行，“调整”文案还原 */
+const closeGoalOpts = () => {
+  const opts = document.getElementById("goal-opts");
+  if (opts) opts.hidden = true;
+  const swap = document.querySelector('[data-action="goal"] .swap');
+  if (swap) swap.textContent = "调整";
+};
+
+actions.goal = (el) => {
+  const opts = document.getElementById("goal-opts");
+  if (!opts) return;
+  opts.hidden = !opts.hidden;
+  el.querySelector(".swap").textContent = opts.hidden ? "调整" : "收起";
+};
+
+actions["goal-opt"] = async (el) => {
+  const btn = document.querySelector('[data-action="goal"]');
+  const next = Number(el.dataset.goalOpt);
+  if (next === Number(btn?.dataset.goal ?? 1)) return closeGoalOpts(); // 选的还是当前值，只收起
+  const chips = [...document.querySelectorAll("#goal-opts button")];
+  for (const b of chips) b.disabled = true;
   try {
     const { goal } = await api("/me/goal", { method: "PUT", body: { goal: next } });
-    el.dataset.goal = String(goal);
-    el.querySelector(".goal-val").textContent = `每天 ${goal} 个`;
+    if (btn) {
+      btn.dataset.goal = String(goal);
+      btn.querySelector(".goal-val").textContent = `每天 ${goal} 个`;
+    }
+    for (const b of chips) b.setAttribute("aria-pressed", String(Number(b.dataset.goalOpt) === goal));
+    closeGoalOpts();
     toast(`每日目标改为 ${goal} 个`);
   } finally {
-    el.disabled = false;
+    for (const b of chips) b.disabled = false;
   }
 };
 
