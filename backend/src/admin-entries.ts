@@ -4,8 +4,8 @@
 import { Hono, type Context } from "hono";
 import type { AppEnv } from "./auth.ts";
 import {
-  AuthoringError, contextForNew, contextForPatch, contextForRevise, detailOf, exportAdded, importText, listAll, lookupWord,
-  publish, remove, revisionData, rollback, STATUS_TEXT, unpublish, update,
+  AuthoringError, contextForNew, contextForPatch, contextForPick, contextForRevise, contextForText, detailOf, exportAdded, importText,
+  listAll, lookupWord, parseTargets, publish, remove, revisionData, rollback, STATUS_TEXT, unpublish, update, type CatalogMode,
 } from "./authoring.ts";
 import * as db from "./db.ts";
 import { bookEntry, getEntry, isBookId, rebuild, search } from "./entries.ts";
@@ -42,7 +42,7 @@ entriesAdmin.get("/", (c) => {
 /** 查重：每个词现在是什么状态 */
 entriesAdmin.post("/lookup", async (c) => {
   const { words: w } = await body<{ words?: unknown }>(c);
-  return c.json(words(w).map(lookupWord));
+  return c.json(parseTargets(w).map((t) => lookupWord(t.word)));
 });
 
 /** 原书词条联想（补写时挑词用） */
@@ -50,21 +50,27 @@ entriesAdmin.get("/book", (c) =>
   c.json(search(c.req.query("q") ?? "", 10).filter((h) => !h.redirect && isBookId(h.id)).map((h) => ({ id: h.id, headword: h.headword, meaning: h.meaning }))),
 );
 
-/** 交给别的 AI 的上下文：new = 写新词，patch = 补写原书词条，revise = 修改一份稿子 */
+/**
+ * 交给别的 AI 的上下文：new = 写指定的词（可带写作要求），pick = 让它按方向自己选词，text = 从一段英文里找词，
+ * patch = 补写原书词条，revise = 修改一份稿子。catalog 是附多少已有词条（full / ids / near / none）
+ */
 entriesAdmin.post("/context", async (c) => {
-  const { mode = "new", words: w, ids, fields, id, notes = "" } = await body<{
+  const { mode = "new", words: w, ids, fields, id, notes = "", catalog, count, theme, hint, taste, text } = await body<{
     mode?: string; words?: unknown; ids?: unknown; fields?: string[]; id?: string; notes?: string;
+    catalog?: CatalogMode; count?: number; theme?: string; hint?: string; taste?: string; text?: string;
   }>(c);
   return guard(c, () => {
     if (mode === "revise") return { text: contextForRevise(String(id ?? ""), String(notes)) };
     if (mode === "patch") {
       const list = words(ids).filter((x) => bookEntry(x));
       if (!list.length) throw new AuthoringError("先挑几个原书词条");
-      return { text: contextForPatch(list, Array.isArray(fields) ? fields : []) };
+      return { text: contextForPatch(list, Array.isArray(fields) ? fields : [], { catalog }) };
     }
-    const list = words(w);
+    if (mode === "pick") return { text: contextForPick({ count, theme, hint, taste, catalog }) };
+    if (mode === "text") return { text: contextForText({ text, count, catalog }) };
+    const list = parseTargets(w);
     if (!list.length) throw new AuthoringError("先写几个要加的词");
-    return { text: contextForNew(list) };
+    return { text: contextForNew(list, { catalog }) };
   });
 });
 

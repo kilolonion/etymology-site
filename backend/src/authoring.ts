@@ -4,7 +4,7 @@
 
 import * as db from "./db.ts";
 import {
-  allSummaries, bookEntry, findWord, getEntry, getRedirect, hasId, isBookId, kinOf, rebuild, setOverlay, type Overlay,
+  allSummaries, bookEntry, findWord, getEntry, getRedirect, hasId, isBookId, kinOf, rebuild, search, setOverlay, type Overlay,
 } from "./entries.ts";
 import { LANGS, LINK_TYPES, PATCH_FIELDS, SUBTHEMES, THEMES, type FullEntry, type Origin, type Source } from "./types.ts";
 import { checkEntry, checkOrigin, ID_RE, type Issues } from "./validate.ts";
@@ -315,6 +315,10 @@ export function listAll() {
       reports: reports.get(r.id) ?? 0,
       updatedAt: r.updated_at,
       updatedBy: r.updated_by,
+      // 建稿时间不随修改、发布变化，后台列表按它排，审完的稿子不会被顶到最前
+      createdAt: r.created_at,
+      createdBy: r.created_by,
+      publishedAt: r.published_at,
     };
   });
 }
@@ -512,12 +516,75 @@ function example(): string {
   return `\`\`\`json\n${JSON.stringify(sample, null, 2)}\n\`\`\``;
 }
 
-/** 已有词条清单：id、词头、简短释义（写 links、避免重复用） */
-function catalog(): string {
+/** 已有词条清单：id、词头、简短释义（写 links、避免重复用）；给了 ids 就只列这些 */
+function catalog(ids?: string[]): string {
+  const only = ids && new Set(ids);
   return allSummaries()
-    .filter((s) => !s.redirect)
+    .filter((s) => !s.redirect && (!only || only.has(s.id)))
     .map((s) => `${s.id} | ${s.headword} | ${String(s.meaning ?? "").split("；")[0]!.slice(0, 16)}`)
     .join("\n");
+}
+
+/**
+ * 附在上下文末尾的已有词条清单，详略可选（全部清单有一万多字，只写一两个词时没必要全带）：
+ * full = id | 词头 | 释义；ids = 只列 id；near = 只列和要写的词拼写、内容相近的；none = 不附，links 留空
+ */
+export const CATALOG_MODES = ["full", "ids", "near", "none"] as const;
+export type CatalogMode = (typeof CATALOG_MODES)[number];
+const catalogMode = (v: unknown, fallback: CatalogMode): CatalogMode => (CATALOG_MODES as readonly string[]).includes(String(v)) ? (v as CatalogMode) : fallback;
+
+/** 和这些词可能有关的已有词条：正文里提到它们的、id 开头几个字母相同的（同根词常常这样） */
+function nearby(words: string[], limit = 40): string[] {
+  const ids = new Set<string>();
+  const all = allSummaries().filter((s) => !s.redirect);
+  for (const w of words) {
+    for (const h of search(w, 10)) if (!h.redirect) ids.add(h.id);
+    const stem = toId(w).replace(/[^a-z]/g, "").slice(0, 4);
+    if (stem.length === 4) for (const s of all) if (s.id.includes(stem)) ids.add(s.id);
+  }
+  for (const w of words) ids.delete(toId(w)); // 要写的词自己不算
+  return [...ids].slice(0, limit);
+}
+
+function catalogSection(mode: CatalogMode, words: string[] = []): string {
+  if (mode === "none") return `## 已有词条\n\n这次不附已有词条清单：links 一律写 []。`;
+  if (mode === "ids") {
+    const ids = allSummaries().filter((s) => !s.redirect).map((s) => s.id);
+    return `## 已有词条的 id（${ids.length} 个）\n\n写 links 时只能用这里的 id；这些词都已经收录了，不要再写。\n\n\`\`\`\n${ids.join(", ")}\n\`\`\``;
+  }
+  if (mode === "near") {
+    const ids = nearby(words);
+    if (!ids.length) return `## 已有词条\n\n没有找到和这些词相近的已有词条：links 写 []。`;
+    return `## 可能相关的已有词条（id | 词头 | 释义）\n\n只列了和要写的词拼写或内容相近的 ${ids.length} 个。links 只能从这里选，没有确实的关系就写 []。\n\n\`\`\`\n${catalog(ids)}\n\`\`\``;
+  }
+  return `## 已有词条（id | 词头 | 释义），写 links 时只能用这里的 id\n\n\`\`\`\n${catalog()}\n\`\`\``;
+}
+
+const INTRO = "「词源一日」是一个中文的英语词源阅读网站，每天讲一个英语单词的来历。现有词条整理自《英语词源典故词典》；你写的词条不在书里，页面上会标明“AI 整理”，并列出你给的参考来源和存疑之处。";
+
+/** 要写的词，每个可以带一句写作要求 */
+export type Target = { word: string; note?: string };
+
+/**
+ * 解析“每行一个词，后面可以跟备注”：serendipity：重点讲 Walpole 的信 / petrichor | 雨后的气味。
+ * 没有备注的行可以用逗号隔开好几个词。传数组时每项是词或 {word, note}。
+ */
+export function parseTargets(v: unknown, limit = 30): Target[] {
+  const out: Target[] = [];
+  const push = (word: string, note = "") => {
+    const w = word.trim();
+    if (w && !out.some((t) => toId(t.word) === toId(w))) out.push(note.trim() ? { word: w, note: note.trim().slice(0, 200) } : { word: w });
+  };
+  if (Array.isArray(v)) {
+    for (const x of v) typeof x === "string" ? push(x) : x && typeof x === "object" && push(String((x as any).word ?? ""), String((x as any).note ?? ""));
+  } else {
+    for (const line of String(v ?? "").split("\n")) {
+      const m = line.match(/^\s*([^:：|]+?)\s*(?:[:：|]| - | — )\s*(\S.*)$/);
+      if (m) push(m[1]!, m[2]!);
+      else for (const w of line.split(/[,，、;；]+/)) push(w);
+    }
+  }
+  return out.slice(0, limit);
 }
 
 /** 写作规范（MCP 的 get_guidelines 也返回这一段） */
@@ -545,31 +612,90 @@ ${lists()}
 ${example()}`;
 }
 
-/** 新词：要写的词 + 规范 + 已有词条清单 */
-export function contextForNew(words: string[]): string {
-  const rows = words.map((w) => lookupWord(w)).filter((l) => l.word);
+/** 指定词：要写的词（可带写作要求）+ 规范 + 已有词条清单 */
+export function contextForNew(words: (string | Target)[], opts: { catalog?: CatalogMode } = {}): string {
+  const items = parseTargets(words);
+  const rows = items.map((t) => ({ ...lookupWord(t.word), note: t.note })).filter((l) => l.word);
   const todo = rows.filter((l) => l.status === "new" || l.status === "similar" || l.status === "draft");
   if (!todo.length) throw new AuthoringError("这些词都已经收录了");
-  return `# 任务：为「词源一日」写 ${todo.length} 个新词条
+  const noted = todo.some((l) => l.note);
+  return `# 任务：为「词源一日」写 ${todo.length === 1 ? `新词条 ${todo[0]!.word}` : `${todo.length} 个新词条`}
 
-「词源一日」是一个中文的英语词源阅读网站，每天讲一个英语单词的来历。现有词条整理自《英语词源典故词典》；你写的词条不在书里，页面上会标明“AI 整理”，并列出你给的参考来源和存疑之处。
+${INTRO}
 
 ## 要写的词
 
-${todo.map((l) => `- ${l.word}（id：${l.id}）${l.status === "similar" ? `　注意：已有词条 ${l.target?.headword}，确认不是同一个词再写` : ""}`).join("\n")}
+${todo.map((l) => `- **${l.word}**（id：${l.id}）${l.note ? `\n  编辑的要求：${l.note}` : ""}${l.status === "similar" ? `\n  注意：已有词条 ${l.target?.headword}，确认不是同一个词再写` : ""}`).join("\n")}
+${noted ? "\n“编辑的要求”优先于下面的通用要求，但事实依据、格式规则照旧。\n" : ""}
+${guidelines()}
+
+${catalogSection(catalogMode(opts.catalog, "full"), todo.map((l) => l.word))}
+`;
+}
+
+const TASTES: Record<string, string> = {
+  common: "常用词优先：四六级、考研、雅思或日常阅读里常见，但来历少有人知的词",
+  rare: "有故事的冷门词：不常见，但来历有趣、值得一讲",
+  any: "不限常用还是冷门，来历有趣就行",
+};
+
+/** 让 AI 自己选词：给方向、数量、偏好 */
+export function contextForPick(o: { count?: number; theme?: string; hint?: string; taste?: string; catalog?: CatalogMode }): string {
+  const n = Math.min(Math.max(Math.round(Number(o.count) || 5), 1), 20);
+  const theme = (THEMES as readonly string[]).includes(String(o.theme)) ? String(o.theme) : "";
+  const hint = String(o.hint ?? "").trim().slice(0, 200);
+  const mode = catalogMode(o.catalog, "ids");
+  return `# 任务：为「词源一日」挑 ${n} 个值得讲的英语单词，写成词条
+
+${INTRO}
+
+## 选词要求
+
+- 数量：${n} 个
+- 方向：${[theme && `专题“${theme}”`, hint].filter(Boolean).join("；") || "不限，挑来历有故事的词"}
+- 偏好：${TASTES[String(o.taste)] ?? TASTES.common}
+- 只挑**还没收录**的词${mode === "none" ? "（这次没附清单，系统导入时会查重，撞上已收录的会被退回）" : "：下面清单里的词都已经有了，同一个词的其他拼法、派生形式也算"}。
+- 来历要有可靠来源支撑，说不清来历的词不要拿来凑数。
+- 这 ${n} 个词尽量各不相同：不同语源、不同年代、不同类型的故事。
+${theme ? `- themes 里要包含“${theme}”。\n` : ""}
+${guidelines()}
+
+${catalogSection(mode)}
+`;
+}
+
+/** 从一段英文里找词 */
+export function contextForText(o: { text?: string; count?: number; catalog?: CatalogMode }): string {
+  const text = String(o.text ?? "").trim();
+  if (!text) throw new AuthoringError("先粘一段英文");
+  if (text.length > 8000) throw new AuthoringError("文章太长了，一次不超过 8000 字");
+  const n = Math.min(Math.max(Math.round(Number(o.count) || 3), 1), 15);
+  const mode = catalogMode(o.catalog, "ids");
+  return `# 任务：从下面这段英文里挑 ${n} 个值得讲来历的词，写成「词源一日」的词条
+
+${INTRO}
+
+## 选词要求
+
+- 只从原文里出现的词里挑，词头用词典原形（复数、过去式等还原）。
+- 挑读者看到会好奇的词：来历有故事、和今义反差大的。不要挑 the、and 这类功能词，也不要挑来历平平无奇的词。
+- 只挑**还没收录**的词${mode === "none" ? "（这次没附清单，系统导入时会查重）" : "，下面清单里的都已经有了"}。不够 ${n} 个就少写几个，不要凑数。
+- examples 的第一条用原文里含这个词的句子（太长可以截短），配上中文翻译；其余例句照常写。
+
+## 原文
+
+\`\`\`text
+${text}
+\`\`\`
 
 ${guidelines()}
 
-## 已有词条（id | 词头 | 释义），写 links 时只能用这里的 id
-
-\`\`\`
-${catalog()}
-\`\`\`
+${catalogSection(mode)}
 `;
 }
 
 /** 补写原书词条：把原书内容给它看，只让它写指定的字段 */
-export function contextForPatch(ids: string[], fields: string[]): string {
+export function contextForPatch(ids: string[], fields: string[], opts: { catalog?: CatalogMode } = {}): string {
   const fs = fields.filter((f) => (PATCH_FIELDS as readonly string[]).includes(f));
   const want = fs.length ? fs : ["links"];
   const items = ids.map((id) => bookEntry(id)).filter((e): e is FullEntry => !!e);
@@ -602,11 +728,7 @@ ${lists()}
 
 ${items.map(show).join("\n")}
 
-## 已有词条（id | 词头 | 释义）
-
-\`\`\`
-${catalog()}
-\`\`\`
+${catalogSection(catalogMode(opts.catalog, "full"), items.map((e) => e.headword))}
 `;
 }
 
