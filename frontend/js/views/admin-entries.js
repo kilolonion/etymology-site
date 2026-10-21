@@ -47,6 +47,7 @@ export async function entriesTab(query) {
 // ---------- 总览 ----------
 
 async function listView() {
+  navQueue = null; // 回到总览，翻页队列重新冻结
   const [o, reports] = await Promise.all([fresh("/admin/entries"), fresh("/admin/entries/reports")]);
   const d = o.drafts;
   const count = (f) => d.filter(f).length;
@@ -326,12 +327,21 @@ const NAV_FILTERS = {
   archived: (x) => x.status === "archived" || x.status === "merged",
 };
 
-/** 稿子详情页的上一个/下一个：顺序和总览列表一致；当前筛选里没有这份时退回全部 */
+// 翻页队列：进详情时按当时总览列表的顺序冻结，整轮审核都用它。发布会刷新 updatedAt、
+// 把刚审的稿子顶到列表最前，每次现算邻居的话审完一份顺序就乱、又被带回第一个。
+// 回到总览列表时清空（listView），下次进来重新冻结。
+let navQueue = null;
+
+/** 稿子详情页的上一个/下一个：顺序和进来时的总览列表一致；当前筛选里没有这份时退回全部 */
 async function navFor(id) {
-  const o = await fresh("/admin/entries").catch(() => null);
-  if (!o?.drafts?.length) return "";
-  let list = o.drafts.filter(NAV_FILTERS[st.filter] ?? NAV_FILTERS.all);
-  if (!list.some((x) => x.id === id)) list = o.drafts;
+  if (!navQueue?.some((x) => x.id === id)) {
+    const o = await fresh("/admin/entries").catch(() => null);
+    if (!o?.drafts?.length) return "";
+    let list = o.drafts.filter(NAV_FILTERS[st.filter] ?? NAV_FILTERS.all);
+    if (!list.some((x) => x.id === id)) list = o.drafts;
+    navQueue = list.map((x) => ({ id: x.id, headword: x.headword }));
+  }
+  const list = navQueue;
   const i = list.findIndex((x) => x.id === id);
   if (i < 0 || list.length < 2) return "";
   const btn = (x, label) =>
