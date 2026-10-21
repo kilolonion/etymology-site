@@ -59,7 +59,7 @@ export async function viewEntry(id, query) {
         ${emblem(theme)}
         <div class="hero-bar">
           <button class="back" data-action="back">${icon("left")}返回</button>
-          <span class="hero-acts"><span class="mins">约 ${readMinutes(e)} 分钟</span><button class="icon-btn fs-btn" data-action="font-size" aria-label="调整字号">Aa</button>${e.preview ? "" : starBtn(e)}</span>
+          <span class="hero-acts"><span class="hero-btns"><button class="icon-btn fs-btn" data-action="font-size" aria-label="调整字号">Aa</button>${e.preview ? "" : starBtn(e)}</span><span class="mins">约 ${readMinutes(e)} 分钟</span></span>
         </div>
         ${themeTag(theme)}
         <h1>${esc(e.headword)}</h1>

@@ -2078,8 +2078,9 @@ a.w-era:hover .era-big b { color: var(--accent); }
    ========================================================= */
 .read-progress { position: fixed; inset: 0 0 auto; z-index: 50; height: 3px; pointer-events: none; }
 .read-progress span { display: block; height: 100%; background: var(--t-fill, var(--accent)); transform-origin: left; transform: scaleX(0); transition: transform .12s linear; }
-.hero-acts { display: inline-flex; align-items: center; gap: 2px; }
-.hero-acts .mins { margin-right: 6px; font-size: 12.5px; letter-spacing: .08em; opacity: .8; }
+.hero-acts { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.hero-btns { display: inline-flex; align-items: center; gap: 2px; }
+.hero-acts .mins { font-size: 12.5px; letter-spacing: .08em; opacity: .8; white-space: nowrap; }
 .hero .fs-btn { font: italic 700 15px var(--display); color: var(--cream); }
 
 /* 读前先猜：在封面色块里，按钮是半透明的白 */
