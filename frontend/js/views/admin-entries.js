@@ -336,9 +336,9 @@ async function navFor(id) {
   if (i < 0 || list.length < 2) return "";
   const btn = (x, label) =>
     x
-      ? `<a class="btn sm" href="#/me/admin?tab=entries&d=${encodeURIComponent(x.id)}">${label === "上一个" ? icon("left") : ""}${label}：${esc(x.headword)}${label === "下一个" ? icon("right") : ""}</a>`
-      : `<span class="btn sm dis" aria-disabled="true">${label}</span>`;
-  return `<div class="ae-nav">${btn(list[i - 1], "上一个")}<span class="hint">第 ${i + 1} / ${list.length} 份</span>${btn(list[i + 1], "下一个")}</div>`;
+      ? `<a class="btn sm${label === "下一个" ? " next" : ""}" href="#/me/admin?tab=entries&d=${encodeURIComponent(x.id)}">${label === "上一个" ? icon("left") : ""}<span class="w">${label}：${esc(x.headword)}</span>${label === "下一个" ? icon("right") : ""}</a>`
+      : `<span class="btn sm dis" aria-disabled="true"><span class="w">${label}</span></span>`;
+  return `<div class="ae-nav">${btn(list[i - 1], "上一个")}<span class="hint pos">第 ${i + 1} / ${list.length} 份</span>${btn(list[i + 1], "下一个")}</div>`;
 }
 
 // ---------- 单份稿子 ----------
