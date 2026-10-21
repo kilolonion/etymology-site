@@ -2064,6 +2064,8 @@ button.ae-chip { cursor: pointer; }
 .ae-fields label, .ae-doubts label, .ae-check { display: flex; gap: 8px; align-items: flex-start; }
 .ae-cmd { margin: 8px 0 10px; padding: 10px 12px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); font: 12.5px ui-monospace, Menlo, monospace; overflow-x: auto; }
 .ae-back { margin-bottom: 4px; text-decoration: none; }
+.ae-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 12px; }
+.ae-nav .btn.dis { opacity: .45; pointer-events: none; }
 .ae-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 4px; }
 .ae-head h2 { margin: 0; font: 700 26px var(--serif-en); }
 .ae-head .hint { width: 100%; margin-top: 2px; }
