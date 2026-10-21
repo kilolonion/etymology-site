@@ -316,6 +316,31 @@ actions["ae-report"] = async (el) => {
   redraw();
 };
 
+// 详情页翻页用的筛选，口径和总览 listView 的 FILTERS 一致
+const NAV_FILTERS = {
+  all: () => true,
+  draft: (x) => x.status === "draft",
+  live: (x) => x.status === "live" || x.status === "changed",
+  pending: (x) => (x.status === "live" || x.status === "changed") && !x.checked && x.kind === "ai",
+  errors: (x) => x.errors > 0,
+  archived: (x) => x.status === "archived" || x.status === "merged",
+};
+
+/** 稿子详情页的上一个/下一个：顺序和总览列表一致；当前筛选里没有这份时退回全部 */
+async function navFor(id) {
+  const o = await fresh("/admin/entries").catch(() => null);
+  if (!o?.drafts?.length) return "";
+  let list = o.drafts.filter(NAV_FILTERS[st.filter] ?? NAV_FILTERS.all);
+  if (!list.some((x) => x.id === id)) list = o.drafts;
+  const i = list.findIndex((x) => x.id === id);
+  if (i < 0 || list.length < 2) return "";
+  const btn = (x, label) =>
+    x
+      ? `<a class="btn sm" href="#/me/admin?tab=entries&d=${encodeURIComponent(x.id)}">${label === "上一个" ? icon("left") : ""}${label}：${esc(x.headword)}${label === "下一个" ? icon("right") : ""}</a>`
+      : `<span class="btn sm dis" aria-disabled="true">${label}</span>`;
+  return `<div class="ae-nav">${btn(list[i - 1], "上一个")}<span class="hint">第 ${i + 1} / ${list.length} 份</span>${btn(list[i + 1], "下一个")}</div>`;
+}
+
 // ---------- 单份稿子 ----------
 
 let cur = null; // 正在看的稿子
@@ -330,8 +355,10 @@ async function draftView(id) {
   const { errors, warnings } = cur.issues;
   const live = cur.status === "live" || cur.status === "changed";
   const reports = cur.reports.filter((r) => !r.resolvedAt);
+  const nav = await navFor(id);
   return `
     <a class="back ae-back" href="#/me/admin?tab=entries">${icon("left")}全部稿子</a>
+    ${nav}
     <header class="ae-head">
       <h2>${esc(cur.headword)}</h2>
       ${cur.mode === "patch" ? chip(["补写原书词条", ""]) : chip(["新词", ""])}${chip(STATUS[cur.status])}${live ? srcChip({ kind: cur.live.meta.kind, checked: !!cur.live.meta.checked }) : ""}
@@ -390,7 +417,8 @@ async function draftView(id) {
           .join("")}</ul>
         <div id="ae-diff">${compare ? diffView(compare) : ""}</div>
       </section>
-    </div>`;
+    </div>
+    ${nav}`;
 }
 
 /** 补写：原书原来的样子 vs 补写的 */
