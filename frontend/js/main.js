@@ -53,7 +53,7 @@ const titles = new Map();
 
 const STATIC_LABELS = {
   "": "今日", paper: "日报", explore: "探索", "explore/az": "按字母", "explore/routes": "语源之路", "explore/timeline": "时间长廊",
-  me: "我的", "me/starred": "我的收藏", "me/history": "阅读记录", "me/reminder": "每日提醒", "me/account": "账号与安全", "me/admin": "管理后台",
+  me: "我的", "me/starred": "我的收藏", "me/history": "阅读记录", "me/reminder": "提醒与日报", "me/account": "账号与安全", "me/admin": "管理后台",
 };
 
 function labelOf(hash) {

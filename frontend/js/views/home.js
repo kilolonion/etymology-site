@@ -87,7 +87,7 @@ const APPS = {
   "app-history": ["阅读记录", "clock", "#/me/history", 4],
   "app-random": ["随机一词", "shuffle", "", 7],
   "app-me": ["我的", "me", "#/me", 12],
-  "app-reminder": ["每日提醒", "bell", "#/me/reminder", 1],
+  "app-reminder": ["提醒与日报", "bell", "#/me/reminder", 1],
 };
 
 /** 日报组件的尺寸：“行-列”，1-8 是宽屏一整行的细条（手机上 4 列，8 列宽的自动收成 4 列） */

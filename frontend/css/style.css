@@ -962,7 +962,7 @@ body.locked { padding-bottom: 40px; }
   .tl-entries { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
   .tl-day { padding-bottom: 18px; }
 
-  /* 每日提醒：左边设置，右边通知预览 */
+  /* 提醒与日报：每日提醒左边设置，右边通知预览 */
   .reminder-grid {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 32px; align-items: start;
     grid-template-areas: "menu demo" "tip demo";
@@ -1039,6 +1039,7 @@ code { font: 600 .95em ui-monospace, Menlo, monospace; letter-spacing: .04em; }
 .mail-email .err { min-height: 0; margin: 6px 0 0; color: var(--accent); font-size: 13px; }
 .mail-email .err:empty { display: none; }
 .mail-email .text-btn, .mail-email .hint { margin-top: 8px; }
+.reminder-mail { margin-top: 14px; }
 
 .mail-kinds { display: grid; gap: 12px; margin-top: 18px; }
 .mail-kind {

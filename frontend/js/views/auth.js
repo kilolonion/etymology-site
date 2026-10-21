@@ -137,7 +137,7 @@ export async function renderJoin(code = "") {
         <label class="auth-check">
           <input type="checkbox" name="mail" checked>
           <span><b>每天早上 8 点，把「今日一词」发到这个邮箱</b>
-          <small>${tz ? `按你设备的时区（${esc(tz)}）。` : ""}之后可以在「我的 → 账号与安全」改时间、加订日报，或随时退订。</small></span>
+          <small>${tz ? `按你设备的时区（${esc(tz)}）。` : ""}之后可以在「我的 → 提醒与日报」改时间、加订日报，或随时退订。</small></span>
         </label>
       </div>
       <p class="fld-note" id="mail-note">留了邮箱才能收邮件日报；不填也不影响使用，以后可以再补。</p>

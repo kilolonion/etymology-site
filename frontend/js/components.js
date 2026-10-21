@@ -143,7 +143,7 @@ actions["push-enable"] = async (el) => {
 actions["push-dismiss"] = (el) => {
   local.set("reminder-dismissed", true);
   el.closest(".prompt")?.remove();
-  toast("可以随时在“我的 → 每日提醒”里开启");
+  toast("可以随时在“我的 → 提醒与日报”里开启");
 };
 
 /** 词的亲缘：中间是这个词，四周是参见词和同根、同典故、衍生的词；下面逐条写出理由 */
