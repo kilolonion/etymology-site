@@ -43,6 +43,13 @@ export async function viewAdmin(query) {
   const t = query?.get("tab");
   if (TABS.some(([k]) => k === t)) tab = t;
 
+  // 审稿页（以及一轮审完的收尾页）只留审核本身：不要大标题和页签，翻下一份时版面不跳
+  if (tab === "entries" && (query?.get("d") || query?.get("round"))) {
+    render(`<div id="adm-body"></div>`);
+    await draw();
+    return;
+  }
+
   render(`
     <button class="back" data-action="back">${icon("left")}我的</button>
     <header class="page-head"><h1>管理后台<span class="en">Admin</span></h1><p>看看大家读得怎么样，也在这里管成员、邀请和站点。</p></header>
