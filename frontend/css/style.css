@@ -2117,7 +2117,8 @@ a.w-era:hover .era-big b { color: var(--accent); }
 .fin-letter span { font: 700 15px/1.6 var(--serif-zh); }
 .fin-acts { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
 .fin-acts .btn.primary { justify-content: center; }
-.fin-acts .btn.ghost { align-self: center; }
+.fin-sub { display: flex; gap: 10px; }
+.fin-sub .btn { flex: 1; justify-content: center; }
 .fin-acts .btn em { margin: 0 4px; font: italic 700 16px var(--display); }
 .fin-acts .btn .i { width: 16px; height: 16px; }
 /* 再读一个：独占整行全宽展示，上一行小字“再读一个”，下一行单词 + 箭头；单词不截断，放不下就折行 */
