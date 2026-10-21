@@ -138,6 +138,18 @@ export function openDb(path: string): void {
       action     TEXT NOT NULL,
       detail     TEXT
     );
+    -- 邮件日报的发送记录：每人每种每天一行（day 是收件人自己时区的日期），发过就不再发；失败的隔一阵重试几次
+    CREATE TABLE IF NOT EXISTS mail_log (
+      user_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      kind     TEXT NOT NULL,
+      day      TEXT NOT NULL,
+      issue    TEXT NOT NULL,
+      status   TEXT NOT NULL,
+      tries    INTEGER NOT NULL DEFAULT 1,
+      error    TEXT,
+      at       TEXT NOT NULL,
+      PRIMARY KEY (user_id, kind, day)
+    );
   `);
   // 旧库补字段（加列很快，不锁表太久；回滚到旧代码也不受影响）
   const cols = new Set((db.prepare("PRAGMA table_info(users)").all() as { name: string }[]).map((c) => c.name));
@@ -146,6 +158,12 @@ export function openDb(path: string): void {
   if (!cols.has("on_board")) db.exec("ALTER TABLE users ADD COLUMN on_board INTEGER NOT NULL DEFAULT 1");
   if (!cols.has("daily_goal")) db.exec("ALTER TABLE users ADD COLUMN daily_goal INTEGER NOT NULL DEFAULT 1");
   if (!cols.has("last_recap_day")) db.exec("ALTER TABLE users ADD COLUMN last_recap_day TEXT");
+  // 邮件：选填的邮箱、订了哪几种（每日单词 / 日报）、几点发、按哪个时区（空 = 站点时区）
+  if (!cols.has("email")) db.exec("ALTER TABLE users ADD COLUMN email TEXT");
+  if (!cols.has("mail_word")) db.exec("ALTER TABLE users ADD COLUMN mail_word INTEGER NOT NULL DEFAULT 0");
+  if (!cols.has("mail_paper")) db.exec("ALTER TABLE users ADD COLUMN mail_paper INTEGER NOT NULL DEFAULT 0");
+  if (!cols.has("mail_time")) db.exec("ALTER TABLE users ADD COLUMN mail_time TEXT NOT NULL DEFAULT '08:00'");
+  if (!cols.has("mail_tz")) db.exec("ALTER TABLE users ADD COLUMN mail_tz TEXT");
   // 手动“标为已读”的：书架照常算，排行榜、连续天数、每日目标不算
   const pcols = new Set((db.prepare("PRAGMA table_info(progress)").all() as { name: string }[]).map((c) => c.name));
   if (!pcols.has("manual")) db.exec("ALTER TABLE progress ADD COLUMN manual INTEGER NOT NULL DEFAULT 0");
@@ -256,6 +274,99 @@ export function setLastRecapDay(uid: number, day: string): void {
 
 export function setLastPushDay(uid: number, day: string): void {
   db.prepare("UPDATE users SET last_push_day = ? WHERE id = ?").run(day, uid);
+}
+
+// ---------- 邮件日报 ----------
+
+export type MailKind = "word" | "paper";
+export type MailPrefs = { email: string | null; word: boolean; paper: boolean; time: string; tz: string | null };
+type MailRow = { email: string | null; mail_word: number; mail_paper: number; mail_time: string; mail_tz: string | null };
+const toPrefs = (r: MailRow): MailPrefs => ({ email: r.email, word: !!r.mail_word, paper: !!r.mail_paper, time: r.mail_time, tz: r.mail_tz });
+
+export function getMailPrefs(uid: number): MailPrefs | undefined {
+  const r = db.prepare("SELECT email, mail_word, mail_paper, mail_time, mail_tz FROM users WHERE id = ?").get(uid) as MailRow | undefined;
+  return r && toPrefs(r);
+}
+
+/** 只改传进来的那几项；邮箱清空时两种订阅一起关掉 */
+export function setMailPrefs(uid: number, p: Partial<MailPrefs>): void {
+  const sets: string[] = [];
+  const args: (string | number | null)[] = [];
+  if (p.email !== undefined) sets.push("email = ?"), args.push(p.email);
+  if (p.word !== undefined) sets.push("mail_word = ?"), args.push(p.word ? 1 : 0);
+  if (p.paper !== undefined) sets.push("mail_paper = ?"), args.push(p.paper ? 1 : 0);
+  if (p.time !== undefined) sets.push("mail_time = ?"), args.push(p.time);
+  if (p.tz !== undefined) sets.push("mail_tz = ?"), args.push(p.tz);
+  if (p.email === null) sets.push("mail_word = 0", "mail_paper = 0");
+  if (!sets.length) return;
+  db.prepare(`UPDATE users SET ${sets.join(", ")} WHERE id = ?`).run(...args, uid);
+}
+
+/** 有邮箱、订了至少一种、没停用的成员 */
+export function mailTargets(): ({ id: number; username: string } & MailPrefs)[] {
+  const rows = db
+    .prepare(
+      `SELECT id, username, email, mail_word, mail_paper, mail_time, mail_tz FROM users
+        WHERE disabled = 0 AND email IS NOT NULL AND email != '' AND (mail_word = 1 OR mail_paper = 1)`,
+    )
+    .all() as ({ id: number; username: string } & MailRow)[];
+  return rows.map((r) => ({ id: r.id, username: r.username, ...toPrefs(r) }));
+}
+
+export type MailLog = { userId: number; kind: MailKind; day: string; issue: string; status: "sending" | "sent" | "error" | "skipped"; tries: number; error: string | null; at: string };
+type MailLogRow = { user_id: number; kind: MailKind; day: string; issue: string; status: MailLog["status"]; tries: number; error: string | null; at: string };
+const toLog = (r: MailLogRow): MailLog => ({ userId: r.user_id, kind: r.kind, day: r.day, issue: r.issue, status: r.status, tries: r.tries, error: r.error, at: r.at });
+
+export function getMailLog(uid: number, kind: MailKind, day: string): MailLog | undefined {
+  const r = db.prepare("SELECT * FROM mail_log WHERE user_id = ? AND kind = ? AND day = ?").get(uid, kind, day) as MailLogRow | undefined;
+  return r && toLog(r);
+}
+
+/**
+ * 占一个发送名额：这一天还没记录、或上次失败且已过了 retryAfter 毫秒、没超过 maxTries 次，才返回 true。
+ * 先写“sending”再真去发，两个进程 / 两次 tick 撞在一起也不会发两封；发到一半进程没了的“sending”也按失败算。
+ */
+export function claimMail(uid: number, kind: MailKind, day: string, issue: string, retryAfter: number, maxTries: number): boolean {
+  const t = now();
+  const before = new Date(Date.now() - retryAfter).toISOString();
+  const r = db
+    .prepare(
+      `INSERT INTO mail_log (user_id, kind, day, issue, status, tries, at) VALUES (?, ?, ?, ?, 'sending', 1, ?)
+       ON CONFLICT (user_id, kind, day) DO UPDATE SET status = 'sending', tries = tries + 1, issue = excluded.issue, at = excluded.at
+        WHERE mail_log.status IN ('error', 'sending') AND mail_log.tries < ? AND mail_log.at <= ?`,
+    )
+    .run(uid, kind, day, issue, t, maxTries, before);
+  return r.changes === 1;
+}
+
+export function finishMail(uid: number, kind: MailKind, day: string, status: "sent" | "error" | "skipped", error = ""): void {
+  db.prepare("UPDATE mail_log SET status = ?, error = ?, at = ? WHERE user_id = ? AND kind = ? AND day = ?").run(
+    status, error ? error.slice(0, 300) : null, now(), uid, kind, day,
+  );
+}
+
+/** 最近的发送记录（后台看） */
+export function recentMail(limit = 30, uid?: number): (MailLog & { username: string | null })[] {
+  const rows = db
+    .prepare(
+      `SELECT m.*, u.username FROM mail_log m LEFT JOIN users u ON u.id = m.user_id
+        ${uid === undefined ? "" : "WHERE m.user_id = ?"} ORDER BY m.at DESC LIMIT ?`,
+    )
+    .all(...((uid === undefined ? [limit] : [uid, limit]) as number[])) as (MailLogRow & { username: string | null })[];
+  return rows.map((r) => ({ ...toLog(r), username: r.username }));
+}
+
+/** 订阅人数（后台总览用） */
+export function mailCounts(): { withEmail: number; word: number; paper: number } {
+  const r = db
+    .prepare(
+      `SELECT SUM(email IS NOT NULL AND email != '') AS withEmail,
+              SUM(email IS NOT NULL AND email != '' AND mail_word = 1) AS word,
+              SUM(email IS NOT NULL AND email != '' AND mail_paper = 1) AS paper
+         FROM users WHERE disabled = 0`,
+    )
+    .get() as { withEmail: number | null; word: number | null; paper: number | null };
+  return { withEmail: r.withEmail ?? 0, word: r.word ?? 0, paper: r.paper ?? 0 };
 }
 
 // ---------- 登录会话（只存令牌的散列） ----------

@@ -1,11 +1,15 @@
-// 日报：主页“今天的一个词”之外的一整版。头版（今天的词）→ 头条 → 接着读 → 今日专题 → 同一时代同一条路 → 冷门 → 还值得一读 → 温故。
+// 日报：主页“今天的一个词”之外的一整版，排得像一份报纸。
+//   报头（和首页同一套）→ 报眉：进度、往期 → 头版：左边头条（大标题 + 导语 + 首字下沉的正文开头），
+//   右边栏“今日一词”和“本期导读” → 之后每个栏目一版：版头粗线 + 第几版，篇目按栏排开、栏间细线 → 版权栏。
 // 每人每天一份，当天不变；从这里点进文章、读完返回，回到原来的位置，读过的盖上“已读”。
 
+import { actions, api, cnDate, esc, fmtDay, icon, local, mastSkeleton, render, rich, skeletons, srcMark, weekday } from "../lib.js?v=212dd6fbae";
 import { reasonText } from "../components.js?v=212dd6fbae";
-import { api, cnDate, esc, fmtDay, icon, local, render, rich, srcMark, weekday } from "../lib.js?v=212dd6fbae";
 import { primaryTheme, themeTag, tint } from "../themes.js?v=212dd6fbae";
 
 const eraText = (c) => (c < 0 ? `公元前 ${-c} 世纪` : `${c} 世纪`);
+const CN = "〇一二三四五六七八九十";
+const cnNum = (n) => (n <= 10 ? CN[n] : n < 20 ? "十" + CN[n % 10] : String(n));
 
 /** 日报自己的几种推荐理由，其余交给通用的 reasonText */
 function why(r) {
@@ -35,18 +39,42 @@ export function notePaperRead(id) {
   local.set("paper-read", [...read].slice(-60));
 }
 
+const MAST_SUB = "The Etymon Daily, Twelve Stories a Day";
+
+/** 日报骨架：报头同真报头（位置和首页一致），下面是报眉和头版的灰条 */
+skeletons.paper = () => `${mastSkeleton("词源日报", MAST_SUB)}
+  <div class="pp-ear sk-ear"><i class="sk-t" style="width:64px;height:24px;border-radius:999px"></i><i class="sk-t" style="width:200px"></i></div>
+  <div class="pp-front-page sk-pp"><div class="sk-lines"><span class="sk" style="height:14px;width:40%"></span><span class="sk" style="height:58px;width:62%"></span><span class="sk" style="height:22px;width:90%"></span><span class="sk" style="height:14px"></span><span class="sk" style="height:14px"></span><span class="sk" style="height:14px;width:70%"></span></div><div class="pp-side"><span class="sk" style="height:120px"></span></div></div>`;
+
 const stamp = (s) => (s.read ? `<span class="pp-stamp" aria-label="已读">已读</span>` : "");
 
-function story(s, { recall = false, big = false } = {}) {
+/** 栏目里的一篇：专题眉题 → 斜体词头 → 释义 → 问题（温故给“一句话记住”）→ 推荐理由 */
+function story(s, { recall = false } = {}) {
   const theme = primaryTheme(s);
-  const body = recall || s.read ? (s.keyline ? rich(s.keyline) : "") : rich(s.teaser || "");
+  const body = recall || s.read ? (s.keyline ? rich(s.keyline) : rich(s.teaser || "")) : rich(s.teaser || "");
   const reason = why(s.reason);
-  return `<a class="pp-story${big ? " lead" : ""}${s.read ? " read" : ""}${recall ? " recall" : ""}" href="#/w/${esc(s.id)}" style="${tint(s)}">
+  return `<a class="pp-story${s.read ? " read" : ""}${recall ? " recall" : ""}" href="#/w/${esc(s.id)}" style="${tint(s)}">
     <span class="pp-top">${theme ? themeTag(theme) : ""}${stamp(s)}</span>
     <b class="pp-word">${esc(s.headword)}${srcMark(s)}</b>
-    <span class="pp-mean">${esc(s.meaning ?? "")}</span>
-    <span class="pp-text">${recall ? `<small>一句话记住</small>` : ""}${body}</span>
-    ${reason ? `<span class="pp-why">${icon("spark")}${reason}</span>` : ""}
+    <span class="pp-mean">${s.ipa ? `<i class="pp-ipa">/${esc(s.ipa)}/</i>` : ""}${esc(s.meaning ?? "")}</span>
+    <span class="pp-body">
+      <span class="pp-text">${recall ? `<small>一句话记住</small>` : ""}${body}</span>
+      ${reason ? `<span class="pp-why">${icon("spark")}<span>${reason}</span></span>` : ""}
+    </span>
+  </a>`;
+}
+
+/** 头条：整版最大的字，导语是问题，正文开头首字下沉 */
+function headline(s) {
+  const theme = primaryTheme(s);
+  const reason = why(s.reason);
+  return `<a class="pp-lead${s.read ? " read" : ""}" href="#/w/${esc(s.id)}" style="${tint(s)}">
+    <span class="pp-top"><span class="pp-label">头条 · Headline</span>${theme ? themeTag(theme) : ""}${stamp(s)}</span>
+    <b class="pp-lead-word">${esc(s.headword)}${srcMark(s)}</b>
+    <span class="pp-lead-mean">${s.ipa ? `<i class="pp-ipa">/${esc(s.ipa)}/</i>` : ""}${esc(s.meaning ?? "")}</span>
+    <span class="pp-deck">${rich(s.teaser || "")}</span>
+    ${s.gist ? `<span class="pp-lede">${rich(s.gist)}</span>` : ""}
+    <span class="pp-lead-foot">${reason ? `<span class="pp-why">${icon("spark")}<span>${reason}</span></span>` : "<span></span>"}<span class="pp-readon">读全文${icon("right")}</span></span>
   </a>`;
 }
 
@@ -63,47 +91,80 @@ export async function viewPaper(_, q) {
   }
 
   const pct = p.total ? Math.round((p.read / p.total) * 100) : 0;
-  // 返回按钮放在双线下面，和往期日期排一行：报头位置和首页完全一致，切页时报头不跳
+  const minutes = Math.max(3, Math.round(p.total * 1.5));
+
+  // 报眉：返回 · 进度 · 往期。返回按钮放在双线下面：报头位置和首页完全一致，切页时报头不跳
   const back = `<button class="pp-back" data-action="back" aria-label="返回">${icon("left")}<span>今日</span></button>`;
   const issues = p.days.length > 1
-    ? `<nav class="pp-issues" aria-label="往期">${back}${p.days
-        .map((d) => `<a href="#/paper${d === p.days[0] && p.today ? "" : `?day=${d}`}"${d === p.day ? ` aria-current="page"` : ""}>${fmtDay(d, { weekday: false })}</a>`)
+    ? `<nav class="pp-issues" aria-label="往期"><span class="pp-issues-l">往期</span>${p.days
+        .map((d) => `<a href="#/paper${d === p.days[0] && p.today ? "" : `?day=${d}`}"${d === p.day ? ` aria-current="page"` : ""}>${d === p.days[0] && p.today ? "今天" : fmtDay(d, { weekday: false }).replace(/ /g, "")}</a>`)
         .join("")}</nav>`
-    : `<nav class="pp-issues">${back}</nav>`;
+    : "";
+  const ear = `<div class="pp-ear">
+    ${back}
+    <div class="pp-progress">
+      <span>${p.today ? "今天" : "这一期"} <b>${p.total}</b> 篇 · 已读 <b>${p.read}</b>${p.today && p.read < p.total ? ` · 约 ${minutes} 分钟` : ""}</span>
+      <span class="progress" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></span>
+    </div>
+    ${issues}
+  </div>`;
+
+  // 右栏：今日一词 + 本期导读
   const front = p.front
     ? `<a class="pp-front${p.front.read ? " read" : ""}" href="#/w/${esc(p.front.id)}" style="${tint(p.front)}">
-        <small>头版 · 今天的词</small><b>${esc(p.front.headword)}</b><span>${p.front.read ? esc(p.front.meaning) : rich(p.front.teaser ?? "")}</span>${stamp(p.front)}
+        <span class="pp-label">今日一词 · Today’s Word</span>
+        <b>${esc(p.front.headword)}</b>
+        <span class="pp-front-text">${p.front.read ? esc(p.front.meaning) : rich(p.front.teaser ?? "")}</span>
+        ${stamp(p.front)}
       </a>`
     : "";
+  const toc = p.sections.length
+    ? `<nav class="pp-toc" aria-label="本期导读">
+        <span class="pp-label">本期导读 · In This Issue</span>
+        <ol>${p.sections
+          .map((s, i) => {
+            const done = s.items.filter((x) => x.read).length;
+            return `<li><button data-action="pp-jump" data-to="pp-${esc(s.key)}"><span class="n">${cnNum(i + 2)}</span><span class="t">${esc(s.title)}</span><span class="dots"></span><span class="c">${done ? `${done}/` : ""}${s.items.length}</span></button></li>`;
+          })
+          .join("")}</ol>
+      </nav>`
+    : "";
+
+  const sections = p.sections
+    .map(
+      (s, i) => `<section class="pp-sec pp-${esc(s.key)}" id="pp-${esc(s.key)}">
+        <header class="pp-sec-head">
+          <h2>${esc(s.title)}<span class="en">${esc(s.en)}</span></h2>
+          <span class="pp-page">第${cnNum(i + 2)}版</span>
+        </header>
+        ${s.note ? `<p class="pp-note">${esc(s.note)}</p>` : ""}
+        <div class="pp-cols n${Math.min(s.items.length, 3)}">${s.items.map((x) => story(x, { recall: s.key === "recall" })).join("")}</div>
+      </section>`,
+    )
+    .join("");
 
   render(`
     <header class="mast pp-mast">
       <div class="mast-meta"><span class="no">No. ${p.issue} · Etymon</span><span class="date">${cnDate(p.day)} · ${weekday(p.day)}</span></div>
       <h1 class="mast-title"><span class="seal"></span>词源日报</h1>
-      <p class="mast-sub">The Etymon Daily, Twelve Stories a Day</p>
+      <p class="mast-sub">${MAST_SUB}</p>
       <div class="mast-rule"></div>
     </header>
-    <div class="pp-head">
-      <div class="pp-progress">
-        <span>${p.today ? "今天" : "这一期"} ${p.total} 篇 · 已读 <b>${p.read}</b></span>
-        <span class="progress"><span style="width:${pct}%"></span></span>
-      </div>
-      ${issues}
+    ${ear}
+    <div class="pp-front-page${p.lead ? "" : " no-lead"}">
+      ${p.lead ? headline(p.lead) : ""}
+      ${front || toc ? `<aside class="pp-side">${front}${toc}</aside>` : ""}
     </div>
-    ${front}
-    ${p.lead ? `<section class="pp-sec"><h2 class="kicker">头条<span class="en">Headline</span></h2>${story(p.lead, { big: true })}</section>` : ""}
-    ${p.sections
-      .map(
-        (s) => `<section class="pp-sec pp-${esc(s.key)}">
-          <h2 class="kicker">${esc(s.title)}<span class="en">${esc(s.en)}</span></h2>
-          ${s.note ? `<p class="pp-note">${esc(s.note)}</p>` : ""}
-          <div class="pp-grid">${s.items.map((x) => story(x, { recall: s.key === "recall" })).join("")}</div>
-        </section>`,
-      )
-      .join("")}
+    ${sections}
     <footer class="pp-end">
+      <div class="pp-end-rule"></div>
       <span class="seal"></span>
-      <p>${p.today ? "今天的日报就到这里，明天早上换新的一版" : "这是往期的日报"}</p>
+      <p class="pp-end-t">${p.today ? (p.read >= p.total && p.total ? "今天这一版都读完了" : "今天的日报就到这里") : `这是 ${fmtDay(p.day, { weekday: false })} 的日报`}</p>
+      <p class="pp-end-s">${p.today ? "明天早上换新的一版 · 也可以在「账号与安全」里订阅邮件版" : "往期只保留最近七天"}</p>
       <div class="acts"><a class="btn sm" href="#/">回到今日</a><a class="btn sm ghost" href="#/explore">去探索</a></div>
     </footer>`);
 }
+
+actions["pp-jump"] = (el) => {
+  document.getElementById(el.dataset.to)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+};

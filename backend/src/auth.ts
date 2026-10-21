@@ -7,6 +7,9 @@ import { promisify } from "node:util";
 import type { Context, MiddlewareHandler } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import * as db from "./db.ts";
+import { isEmail } from "./smtp.ts";
+import { isTz } from "./mail.ts";
+import { TZ } from "./daily.ts";
 
 export type AppEnv = { Variables: { user: db.User; sessionHash: string } };
 
@@ -154,11 +157,15 @@ export async function login(c: Context, username: string, password: string): Pro
   return null;
 }
 
+/** 注册时的选填项：邮箱、要不要订每日单词邮件、浏览器报上来的时区 */
+export type RegisterExtra = { email?: string; mail?: boolean; tz?: string };
+
 /** 凭邀请码注册并直接登录 */
-export async function register(c: Context, code: string, username: string, password: string): Promise<string | null> {
+export async function register(c: Context, code: string, username: string, password: string, extra: RegisterExtra = {}): Promise<string | null> {
   if (!allow(`register:ip:${clientIp(c)}`, 10)) return TOO_MANY;
   const name = username.trim();
-  const err = checkUsername(name) ?? checkPassword(password);
+  const email = (extra.email ?? "").trim();
+  const err = checkUsername(name) ?? checkPassword(password) ?? (email && !isEmail(email) ? "邮箱格式不对，不想填可以留空" : null);
   if (err) return err;
   const inv = inviteStatus(code);
   if (!inv.ok) return inv.error;
@@ -170,6 +177,8 @@ export async function register(c: Context, code: string, username: string, passw
     uid = db.tx(() => {
       const id = db.createUser(name, passHash, inv.isAdmin);
       if (!db.useInvite(inv.code, id)) throw new Error("邀请码已经被用过了");
+      // 时区和站点一样时不存，以后站点改时区也跟着走
+      if (email) db.setMailPrefs(id, { email, word: !!extra.mail, tz: extra.tz && isTz(extra.tz) && extra.tz !== TZ ? extra.tz : null });
       return id;
     });
   } catch (e) {

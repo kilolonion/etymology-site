@@ -9,12 +9,12 @@ import { Hono, type Context } from "hono";
 import { compress } from "hono/compress";
 import { secureHeaders } from "hono/secure-headers";
 import {
-  changePassword, checkInvite, currentUser, ensureSetupInvite, login, logout, newInvite, normalizeCode, register,
+  allow, changePassword, checkInvite, currentUser, ensureSetupInvite, login, logout, newInvite, normalizeCode, register,
   requireAdmin, requireAuth, resetPassword, type AppEnv,
 } from "./auth.ts";
 import {
   bestStreak, futureAssigned, isDone, localDay, resurface, review, shiftDay, streak, todayId, todayProgress, todayReason, tomorrowId,
-  weekDays,
+  TZ, weekDays,
 } from "./daily.ts";
 import { recommend } from "./recommend.ts";
 import { getOrBuildPaper } from "./paper.ts";
@@ -29,6 +29,11 @@ import {
 import type { FullEntry } from "./types.ts";
 import { checkTime, initPush, isValidSub, sendToUser, vapidPublicKey } from "./push.ts";
 import { cleanSpeech, gloss, initSpeech, speech, type Accent } from "./speech.ts";
+import {
+  checkUnsub, compose, initMail, isEmail, isTz, KIND_NAME, KINDS, sendNow, siteUrl, unsubPage, unsubscribe, unsubUrl,
+  type MailKind,
+} from "./mail.ts";
+import { mailConfigInfo, mailConfigured } from "./smtp.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const PORT = Number(process.env.PORT ?? 8787);
@@ -42,6 +47,7 @@ db.purgeExpiredSessions();
 initAuthoring();
 loadEntries(process.env.ENTRIES_PATH ?? resolve(ROOT, "data/entries.json"));
 initPush();
+initMail();
 // 发音缓存放在数据库旁边，部署时不会被覆盖
 initSpeech(process.env.AUDIO_CACHE ?? resolve(dirname(STATE_DB), "audio"));
 
@@ -50,7 +56,9 @@ app.use(secureHeaders());
 app.use(compress());
 
 // 改动数据的请求必须是 JSON：浏览器跨站提交表单发不出 JSON，配合 SameSite Cookie 防 CSRF
+// 例外是邮件退订：邮件客户端的“一键退订”和退订页的按钮都是普通表单提交，靠链接里的签名认人，不靠 Cookie
 app.use("/api/*", async (c, next) => {
+  if (c.req.path === "/api/mail/unsubscribe") return next();
   if (!["GET", "HEAD", "OPTIONS"].includes(c.req.method) && !c.req.header("content-type")?.includes("application/json")) {
     return c.json({ error: "请求格式不对" }, 415);
   }
@@ -75,14 +83,37 @@ app.post("/api/login", async (c) => {
 app.get("/api/invites/:code", (c) => c.json(checkInvite(c, c.req.param("code"))));
 
 app.post("/api/register", async (c) => {
-  const { code = "", username = "", password = "" } = await body<{ code?: string; username?: string; password?: string }>(c);
-  const err = await register(c, String(code), String(username), String(password));
+  const { code = "", username = "", password = "", email = "", mail = false, tz = "" } =
+    await body<{ code?: string; username?: string; password?: string; email?: string; mail?: boolean; tz?: string }>(c);
+  const err = await register(c, String(code), String(username), String(password), { email: String(email), mail: mail === true, tz: String(tz) });
   return err ? c.json({ error: err }, 400) : c.json({ ok: true });
 });
 
 app.post("/api/logout", (c) => {
   logout(c);
   return c.json({ ok: true });
+});
+
+// 邮件退订：GET 先出一张确认页（免得邮件网关预取链接就把人退订了），POST 才真退订；
+// 邮件客户端的一键退订（RFC 8058）直接 POST 到同一个地址
+const mailSite = (c: Context) => {
+  const proto = c.req.header("x-forwarded-proto") ?? new URL(c.req.url).protocol.replace(":", "");
+  const host = c.req.header("x-forwarded-host") ?? c.req.header("host");
+  return siteUrl(host ? `${proto}://${host}` : undefined);
+};
+app.on(["GET", "POST"], "/api/mail/unsubscribe", (c) => {
+  const uid = Number(c.req.query("u"));
+  const kind = c.req.query("k") ?? "";
+  const site = mailSite(c);
+  if (!checkUnsub(uid, kind, c.req.query("t") ?? "") || !db.getUser(uid)) {
+    return c.html(unsubPage({ site, title: "链接不对", text: "这个退订链接不完整或已经失效。可以登录后在「我的 → 账号与安全」里关掉邮件。" }), 400);
+  }
+  const what = kind === "all" ? "所有邮件" : `「${KIND_NAME[kind as MailKind]}」邮件`;
+  if (c.req.method === "GET") {
+    return c.html(unsubPage({ site, title: `退订${what}？`, text: `确认之后，就不会再收到词源一日发来的${what}。以后想收，随时可以在账号设置里再打开。`, form: { action: unsubUrl(site, uid, kind), label: "确认退订" } }));
+  }
+  unsubscribe(uid, kind);
+  return c.html(unsubPage({ site, title: "已退订", text: `以后不会再收到${what}了。` }));
 });
 
 // MCP：给别的 AI 程序用，凭令牌（Authorization: Bearer）而不是登录 Cookie
@@ -208,7 +239,9 @@ api.get("/paper", (c) => {
   const sections = p.sections
     .map((s) => ({ ...s, items: s.items.map((it) => item(it.id, it.reason)).filter(Boolean) }))
     .filter((s) => s.items.length);
-  const lead = p.lead ? item(p.lead, p.leadReason ?? null) : null;
+  // 头条多给一段正文开头，版面上排成导语
+  const leadItem = p.lead ? item(p.lead, p.leadReason ?? null) : null;
+  const lead = leadItem ? { ...leadItem, gist: gist(getEntry(p.lead!)!, 140) } : null;
   const todayWordId = (db.getDaily(uid, day) ?? []).find((id) => getEntry(id));
   const ids = [p.lead, ...p.sections.flatMap((s) => s.items.map((it) => it.id))].filter((x): x is string => !!x && !!getEntry(x));
   return c.json({
@@ -497,6 +530,74 @@ api.put("/me/password", async (c) => {
   return err ? c.json({ error: err }, 400) : c.json({ ok: true });
 });
 
+// ---------- 邮件日报：邮箱选填，两种信各自开关，几点收、按哪个时区 ----------
+
+const mailState = (uid: number) => {
+  const p = db.getMailPrefs(uid)!;
+  return {
+    ...p,
+    siteTz: TZ,
+    configured: mailConfigured(),
+    recent: db.recentMail(6, uid).map(({ kind, day, status, at, error }) => ({ kind, day, status, at, error: status === "error" ? "没发出去，稍后会重试" : error })),
+  };
+};
+
+api.get("/me/mail", (c) => c.json(mailState(uidOf(c))));
+
+api.put("/me/mail", async (c) => {
+  const uid = uidOf(c);
+  const b = await body<{ email?: string | null; word?: boolean; paper?: boolean; time?: string; tz?: string | null }>(c);
+  const next: Partial<db.MailPrefs> = {};
+  if (b.email !== undefined) {
+    const email = String(b.email ?? "").trim();
+    if (email && !isEmail(email)) return c.json({ error: "邮箱格式不对" }, 400);
+    next.email = email || null;
+  }
+  if (b.time !== undefined) {
+    if (!checkTime(String(b.time))) return c.json({ error: "时间格式应为 HH:MM" }, 400);
+    next.time = String(b.time);
+  }
+  if (b.tz !== undefined) {
+    const tz = String(b.tz ?? "").trim();
+    if (tz && !isTz(tz)) return c.json({ error: "不认识这个时区" }, 400);
+    next.tz = tz && tz !== TZ ? tz : null;
+  }
+  if (typeof b.word === "boolean") next.word = b.word;
+  if (typeof b.paper === "boolean") next.paper = b.paper;
+  const email = next.email !== undefined ? next.email : db.getMailPrefs(uid)?.email;
+  if ((next.word || next.paper) && !email) return c.json({ error: "先填一个邮箱" }, 400);
+  db.setMailPrefs(uid, next);
+  return c.json(mailState(uid));
+});
+
+const kindOf = (s: unknown): MailKind => (KINDS.includes(s as MailKind) ? (s as MailKind) : "word");
+
+/** 预览自己今天的信（浏览器里直接打开就是邮件的样子）；?format=text 看纯文本版 */
+api.get("/me/mail/preview", (c) => {
+  const uid = uidOf(c);
+  const out = compose(kindOf(c.req.query("kind")), uid, localDay(), mailSite(c));
+  if (!out) return c.html(unsubPage({ site: mailSite(c), title: "还没有内容", text: "今天还没有可以发的内容。" }), 404);
+  if (c.req.query("format") === "text") return c.text(out.text);
+  return c.html(out.html);
+});
+
+/** 给自己发一封试试：一分钟最多两封 */
+api.post("/me/mail/test", async (c) => {
+  const uid = uidOf(c);
+  const { kind } = await body<{ kind?: string }>(c);
+  const email = db.getMailPrefs(uid)?.email;
+  if (!email) return c.json({ error: "先填一个邮箱" }, 400);
+  if (!mailConfigured()) return c.json({ error: "站点还没配置发信服务，暂时发不了" }, 503);
+  if (!allow(`mail-test:${uid}`, 2)) return c.json({ error: "发得太快了，一分钟后再试" }, 429);
+  try {
+    await sendNow(kindOf(kind), uid, email, mailSite(c));
+    return c.json({ ok: true, to: email });
+  } catch (err) {
+    console.error("[mail] 测试信发送失败：", err);
+    return c.json({ error: `没发出去：${(err as Error).message}` }, 502);
+  }
+});
+
 // ---------- 推送提醒（提醒时间每个用户一份，订阅按设备） ----------
 
 api.get("/reminder", (c) => {
@@ -741,6 +842,32 @@ admin.post("/push", async (c) => {
   for (const id of ids) sent += await sendToUser(id, { title: t, body: b, url: "/#/" });
   adminLog(c, "发送推送", `${userId === undefined ? "所有订阅者" : db.getUser(Number(userId))?.username ?? userId}：${t}（成功 ${sent} 台设备）`);
   return c.json({ users: ids.length, sent });
+});
+
+// ----- 邮件日报：发信配置、订阅人数、最近的发送记录、发一封测试信 -----
+admin.get("/mail", (c) => c.json({
+  configured: mailConfigured(),
+  config: mailConfigInfo(),
+  siteUrl: process.env.SITE_URL ?? null,
+  counts: db.mailCounts(),
+  me: db.getMailPrefs(uidOf(c))?.email ?? null,
+  recent: db.recentMail(30),
+}));
+
+admin.post("/mail/test", async (c) => {
+  const { kind, to = "" } = await body<{ kind?: string; to?: string }>(c);
+  const addr = String(to).trim() || db.getMailPrefs(uidOf(c))?.email || "";
+  if (!isEmail(addr)) return c.json({ error: "填一个收件地址（或先在账号里填好自己的邮箱）" }, 400);
+  if (!mailConfigured()) return c.json({ error: "还没有配置 SMTP：在 .env 里填 SMTP_HOST、MAIL_FROM 等，重启服务" }, 503);
+  if (!allow(`mail-test:${uidOf(c)}`, 5)) return c.json({ error: "发得太快了，一分钟后再试" }, 429);
+  const k = kindOf(kind);
+  try {
+    const receipt = await sendNow(k, uidOf(c), addr, mailSite(c));
+    adminLog(c, "发测试邮件", `${KIND_NAME[k]} → ${addr}`);
+    return c.json({ ok: true, to: addr, receipt });
+  } catch (err) {
+    return c.json({ error: `没发出去：${(err as Error).message}` }, 502);
+  }
 });
 
 // ----- 全站设置 -----

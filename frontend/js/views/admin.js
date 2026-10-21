@@ -406,9 +406,13 @@ actions["adm-clear-expired"] = async () => {
 
 // ---------- 工具 ----------
 
+const MAIL_STATUS = { sent: "已寄出", skipped: "跳过", error: "失败", sending: "发送中" };
+const MAIL_KIND = { word: "每日单词", paper: "词源日报" };
+
 async function tools() {
-  const [o, audit] = await Promise.all([fresh("/admin/overview"), fresh("/admin/audit")]);
+  const [o, audit, mail] = await Promise.all([fresh("/admin/overview"), fresh("/admin/audit"), fresh("/admin/mail")]);
   const s = o.system;
+  const cfg = mail.config;
   return `
     <div class="admin-grid">
       <section class="panel-card">
@@ -427,6 +431,41 @@ async function tools() {
           <button class="btn sm primary" ${o.users.withPush ? "" : "disabled"}>发给所有订阅者</button>
         </form>
         <small class="hint">只会发到开了提醒的成员的设备上，会出现在通知栏。慎用，别打扰人。</small>
+      </section>
+
+      <section class="panel-card wide adm-mail">
+        <div class="sec-head"><h2>邮件日报</h2><span>${mail.counts.withEmail} 人留了邮箱 · 每日单词 ${mail.counts.word} · 日报 ${mail.counts.paper}</span></div>
+        <div class="adm-mail-grid">
+          <div>
+            <dl class="kv sm">
+              <div><dt>发信</dt><dd>${mail.configured ? `<span class="ok-dot"></span>已配置` : `<span class="off-dot"></span>未配置（不发信）`}</dd></div>
+              ${mail.configured ? `<div><dt>SMTP</dt><dd><code>${esc(cfg.host)}:${cfg.port}</code> · ${esc(cfg.security)}</dd></div>
+              <div><dt>发件人</dt><dd>${esc(cfg.from)}</dd></div>` : ""}
+              <div><dt>站点地址</dt><dd>${mail.siteUrl ? esc(mail.siteUrl) : `<span class="warn-t">没设 SITE_URL</span>`}</dd></div>
+            </dl>
+            ${mail.configured ? "" : `<small class="hint">在 <code>.env</code> 里填 <code>SMTP_HOST</code>、<code>SMTP_USER</code>、<code>SMTP_PASS</code>、<code>MAIL_FROM</code>、<code>SITE_URL</code>（见 <code>.env.example</code>），重启服务后生效。没配置时照常可以预览。</small>`}
+            <form class="push-form adm-mail-form" id="mail-test-form">
+              <div class="adm-mail-kind" role="radiogroup" aria-label="哪一种">
+                <label><input type="radio" name="kind" value="word" checked><span>每日单词</span></label>
+                <label><input type="radio" name="kind" value="paper"><span>词源日报</span></label>
+              </div>
+              <input name="to" type="email" placeholder="${esc(mail.me ?? "收件地址")}" autocomplete="off">
+              <div class="adm-mail-acts">
+                <button class="btn sm primary" ${mail.configured ? "" : "disabled"}>发一封测试信</button>
+                <button type="button" class="btn sm" data-action="adm-mail-preview">在下面预览</button>
+                <a class="btn sm ghost" id="mail-open" href="/api/me/mail/preview?kind=word" target="_blank" rel="noopener">新窗口打开</a>
+              </div>
+            </form>
+            <small class="hint">测试信和预览用的都是你自己今天的内容；收件地址留空就寄到你账号里的邮箱。</small>
+          </div>
+          <div>
+            <p class="adm-mail-sub">最近的发送</p>
+            <ul class="audit adm-mail-log">${mail.recent
+              .map((r) => `<li><time>${esc(r.at.slice(5, 16).replace("T", " "))}</time><b>${esc(r.username ?? "已删除")}</b><span>${MAIL_KIND[r.kind] ?? esc(r.kind)}</span><em class="${esc(r.status)}">${MAIL_STATUS[r.status] ?? esc(r.status)}${r.tries > 1 ? ` · 第 ${r.tries} 次` : ""}${r.error ? ` · ${esc(r.error)}` : ""}</em></li>`)
+              .join("") || `<li class="adm-empty">还没有发过</li>`}</ul>
+          </div>
+        </div>
+        <div class="adm-mail-frame" id="mail-frame" hidden></div>
       </section>
 
       <section class="panel-card">
@@ -485,6 +524,60 @@ document.addEventListener("submit", async (ev) => {
   await sendPush({ title, text });
   f.reset();
   draw();
+});
+
+// 邮件：切换种类时“新窗口打开”的链接跟着变；预览嵌在一个 iframe 里，宽度可以切手机 / 电脑
+const mailKind = () => document.querySelector('#mail-test-form input[name="kind"]:checked')?.value ?? "word";
+document.addEventListener("change", (ev) => {
+  if (ev.target.name !== "kind" || !ev.target.closest("#mail-test-form")) return;
+  const a = document.getElementById("mail-open");
+  if (a) a.href = `/api/me/mail/preview?kind=${mailKind()}`;
+  if (!document.getElementById("mail-frame")?.hidden) actions["adm-mail-preview"]();
+});
+
+// 线上 nginx 给所有响应都加了 X-Frame-Options: DENY，iframe 直接 src 接口会被挡；
+// 所以先把 HTML 取回来放进 srcdoc（沙盒里不跑脚本，信里的链接在新标签页打开）
+actions["adm-mail-preview"] = async () => {
+  const box = document.getElementById("mail-frame");
+  if (!box) return;
+  const narrow = box.dataset.narrow === "1";
+  const kind = mailKind();
+  box.hidden = false;
+  box.innerHTML = `<div class="adm-mail-bar"><span>${MAIL_KIND[kind]} · 今天</span>
+      <button type="button" class="text-btn" data-action="adm-mail-width">${narrow ? "看电脑宽度" : "看手机宽度"}</button>
+      <button type="button" class="text-btn" data-action="adm-mail-close">收起</button></div>
+    <iframe title="邮件预览" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" style="max-width:${narrow ? "390px" : "100%"}"></iframe>`;
+  const res = await fetch(`/api/me/mail/preview?kind=${kind}`, { credentials: "same-origin" });
+  const html = await res.text();
+  const frame = box.querySelector("iframe");
+  if (frame && mailKind() === kind) frame.srcdoc = html.replace(/<head>/i, '<head><base target="_blank">');
+};
+actions["adm-mail-width"] = () => {
+  const box = document.getElementById("mail-frame");
+  box.dataset.narrow = box.dataset.narrow === "1" ? "0" : "1";
+  actions["adm-mail-preview"]();
+};
+actions["adm-mail-close"] = () => {
+  const box = document.getElementById("mail-frame");
+  box.hidden = true;
+  box.innerHTML = "";
+};
+
+document.addEventListener("submit", async (ev) => {
+  if (ev.target.id !== "mail-test-form") return;
+  ev.preventDefault();
+  const f = ev.target;
+  const btn = f.querySelector("button.primary");
+  btn.disabled = true;
+  try {
+    const r = await api("/admin/mail/test", { method: "POST", body: { kind: mailKind(), to: f.to.value.trim() } });
+    toast(`已寄到 ${r.to}`);
+    draw();
+  } catch (e) {
+    toast(e.message);
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 actions["adm-backup"] = async (el) => {

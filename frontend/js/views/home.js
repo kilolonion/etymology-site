@@ -3,7 +3,7 @@
 // 同一个组件在不同尺寸下取舍内容：大的多给几行，小的只留最要紧的。
 
 import { reasonText, reminderPrompt, sayBtn } from "../components.js?v=212dd6fbae";
-import { actions, api, cnDate, esc, icon, local, render, rich, srcMark, weekday } from "../lib.js?v=212dd6fbae";
+import { actions, api, cnDate, esc, icon, local, mastSkeleton, render, rich, skeletons, srcMark, weekday } from "../lib.js?v=212dd6fbae";
 import { emblem, primaryTheme, THEMES, themeOf, themeTag, tint } from "../themes.js?v=212dd6fbae";
 import { loadLayout, mountDesk, shell } from "../desk.js?v=212dd6fbae";
 import { readMinutes } from "./entry.js?v=212dd6fbae";
@@ -69,7 +69,7 @@ function masthead(t) {
   return `<header class="mast">
     <div class="mast-meta"><span class="no">No. ${t.issue} · Etymon</span><span class="date">${cnDate(t.day)} · ${weekday(t.day)}</span></div>
     <h1 class="mast-title"><span class="seal"></span>词源一日</h1>
-    <p class="mast-sub">A Word &amp; Its Story, Every Day</p>
+    <p class="mast-sub">${MAST_SUB}</p>
     <div class="mast-rule"></div>
   </header>`;
 }
@@ -159,6 +159,20 @@ function migratePaper() {
 }
 
 const layoutHtml = () => loadLayout(WIDGETS, defaults()).map(([id, size]) => widget(id, size)).join("");
+
+const MAST_SUB = "A Word &amp; Its Story, Every Day";
+
+/**
+ * 首页骨架：报头和真报头同一套结构，桌面按这台设备真实的布局摆出一个个空格子（同样的网格、同样的尺寸），
+ * 数据回来时只是把格子填上，不会先出一套别的版式再整页跳一下。
+ */
+skeletons.home = () => {
+  const day = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Shanghai" });
+  const cells = loadLayout(WIDGETS, defaults())
+    .map(([, size]) => `<div class="w size-${esc(size)} sk-w${size === "icon" || size === "1-1" ? " sk-icon" : ""}"></div>`)
+    .join("");
+  return `${mastSkeleton("词源一日", MAST_SUB, day)}<section class="desk sk-desk"><div class="desk-grid">${cells}</div></section>`;
+};
 
 function widget(id, size) {
   const w = WIDGETS[id];

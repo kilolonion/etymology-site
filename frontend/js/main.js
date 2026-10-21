@@ -198,10 +198,12 @@ async function route() {
   current = { path, run: () => hit.view(hit.m, parseHash().query), used: new Set(), live: isTab(path) };
 
   // 接口慢的时候先出骨架，别让人对着空白页。有缓存时页面几十毫秒内就画好了，
-  // 骨架等 180ms 才出，免得“骨架闪一下又变内容”
+  // 骨架等 180ms 才出，免得“骨架闪一下又变内容”。
+  // 刚打开、屏幕上还是 index.html 的启动占位时立刻换骨架：占位只有报头，骨架把桌面的格子也摆上
+  const booting = !!document.querySelector("#app > [data-boot]");
   const slow = setTimeout(() => {
     if (!signal.aborted && !nav.rendered) skeleton(skeletonFor(path)); // 视图已经画出来的，别再拿骨架屏盖掉
-  }, 180);
+  }, booting ? 0 : 180);
 
   const st = arrive(path);
   try {
@@ -237,7 +239,7 @@ hooks.onRevalidate = (path) => {
   rerenderTimer = setTimeout(async () => {
     const page = current;
     // 正在编辑首页桌面时别重画，不然拖到一半卡片就没了
-    if (!page?.live || !page.used.has(path) || isTyping() || document.body.classList.contains("desk-editing")) return;
+    if (!page?.live || !page.used.has(path) || isTyping() || document.querySelector(".desk.editing")) return;
     const y = scrollY;
     const open = openIndexes();
     nav.quiet = true; // 悄悄重画：不播淡入动画

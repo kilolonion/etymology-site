@@ -64,7 +64,24 @@
     </a>
   </nav>
   </div>
-  <main id="app" tabindex="-1" aria-busy="true"><div class="boot" role="status"><span class="seal"></span><p>词源一日 · 正在打开…</p></div></main>
+  <main id="app" tabindex="-1" aria-busy="true"><div class="boot" role="status" data-boot><span class="seal"></span><p>词源一日 · 正在打开…</p></div></main>
+  <!-- 启动占位按地址先摆好版式：首页、日报直接画出和真报头同一套结构的报头（和 lib.js 的 mastSkeleton 保持一致），
+       并提前挂上 home / bleed，免得脚本接手时顶栏先出现再消失、报头从别处跳过来 -->
+  <script>
+    (function () {
+      var path = location.hash.replace(/^#\/?/, "").split("?")[0];
+      var body = document.body.classList;
+      var masts = { "": ["词源一日", "A Word &amp; Its Story, Every Day"], paper: ["词源日报", "The Etymon Daily, Twelve Stories a Day"] };
+      var m = masts[path];
+      if (path.indexOf("w/") === 0) body.add("bleed");
+      if (!m) return;
+      body.add("home");
+      document.getElementById("app").innerHTML =
+        '<div class="view sk-view" data-boot aria-hidden="true"><header class="mast">' +
+        '<div class="mast-meta"><span class="no"><i class="sk-t" style="width:7.2em"></i></span><span class="date"><i class="sk-t" style="width:12em"></i></span></div>' +
+        '<h1 class="mast-title"><span class="seal"></span>' + m[0] + '</h1><p class="mast-sub">' + m[1] + '</p><div class="mast-rule"></div></header></div>';
+    })();
+  </script>
   <noscript><p style="padding:24px;text-align:center">需要开启 JavaScript 才能使用。</p></noscript>
   <script type="module" src="/js/main.js?v=212dd6fbae"></script>
 </body>

@@ -388,18 +388,36 @@ export function prefetch(paths = []) {
 
 const $app = document.getElementById("app");
 
-/** 画一页。nav.quiet（后台换新、下拉刷新时的重画）不再播放淡入、盖章这些“第一次出现”的动画，免得整页闪一下 */
+/** 画一页。nav.quiet（后台换新、下拉刷新时的重画）不再播放淡入、盖章这些“第一次出现”的动画，免得整页闪一下。
+ *  替换的是骨架屏 / 启动占位时（swap）：报头原地不动，下面的内容只淡入、不再往下错 6px，看着是“填上了”而不是“换了一页” */
 export function render(html) {
   nav.rendered = true;
   applyChrome();
+  const swap = !nav.quiet && !!$app.querySelector(":scope > .sk-view, :scope > [data-boot]");
   $app.removeAttribute("aria-busy");
-  $app.innerHTML = `<div class="view${nav.quiet ? " quiet" : ""}">${html}</div>`;
+  $app.innerHTML = `<div class="view${nav.quiet ? " quiet" : swap ? " swap" : ""}">${html}</div>`;
 }
 
 // ---------- 骨架屏：接口慢的时候先占住版面，别让人对着白屏 ----------
 
 const bar = (h, w = "100%") => `<span class="sk" style="height:${h}px;width:${w}"></span>`;
 const lines = (n) => `<div class="sk-lines">${bar(13).repeat(n)}</div>`;
+
+/** 各页自己登记的骨架（首页按真实的桌面布局摆格子，日报用日报的报头）；登记了就优先用 */
+export const skeletons = {};
+
+/**
+ * 报头的骨架：和真报头同一套 .mast 结构、同样的标题字，只把期号、日期换成灰条（day 给了就直接写日期）。
+ * 这样骨架 → 真页面时报头一个像素都不动。index.html 里的启动占位是同样的结构。
+ */
+export function mastSkeleton(title, sub, day = "") {
+  return `<header class="mast">
+    <div class="mast-meta"><span class="no"><i class="sk-t" style="width:7.2em"></i></span><span class="date">${day ? `${cnDate(day)} · ${weekday(day)}` : `<i class="sk-t" style="width:12em"></i>`}</span></div>
+    <h1 class="mast-title"><span class="seal"></span>${title}</h1>
+    <p class="mast-sub">${sub}</p>
+    <div class="mast-rule"></div>
+  </header>`;
+}
 
 export function skeleton(kind = "page") {
   const heads = {
@@ -413,14 +431,18 @@ export function skeleton(kind = "page") {
     entry: `<div class="sk-hero"></div>${lines(7)}`,
     page: `<div class="sk-head">${bar(11, "90px")}${bar(28, "180px")}</div>${lines(6)}`,
   };
+  let html = heads[kind] ?? heads.page;
+  try {
+    html = skeletons[kind]?.() ?? html;
+  } catch {}
   applyChrome();
   $app.setAttribute("aria-busy", "true");
-  $app.innerHTML = `<div class="view sk-view" aria-hidden="true">${heads[kind] ?? heads.page}</div>`;
+  $app.innerHTML = `<div class="view sk-view" aria-hidden="true">${html}</div>`;
 }
 
 /** 路由页面对应的骨架形状 */
 export const skeletonFor = (path) =>
-  path === "" ? "home" : path.startsWith("w/") ? "entry" : path.startsWith("explore") ? "explore" : path.startsWith("me") ? "me" : "page";
+  path === "" ? "home" : path === "paper" ? "paper" : path.startsWith("w/") ? "entry" : path.startsWith("explore") ? "explore" : path.startsWith("me") ? "me" : "page";
 
 let toastTimer;
 export function toast(text) {

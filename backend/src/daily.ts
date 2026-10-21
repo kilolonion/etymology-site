@@ -8,12 +8,12 @@ import {
 import { dailyOrder, getEntry } from "./entries.ts";
 import { recommend, type Reason } from "./recommend.ts";
 
-const TZ = process.env.TZ_NAME ?? "Asia/Shanghai";
+export const TZ = process.env.TZ_NAME ?? "Asia/Shanghai";
 
-/** 指定时区下的日期 YYYY-MM-DD */
-export function localDay(d = new Date()): string {
+/** 指定时区下的日期 YYYY-MM-DD（默认站点时区；邮件按收件人自己的时区算） */
+export function localDay(d = new Date(), tz = TZ): string {
   return new Intl.DateTimeFormat("en-CA", {
-    timeZone: TZ,
+    timeZone: tz,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -21,9 +21,9 @@ export function localDay(d = new Date()): string {
 }
 
 /** 指定时区下的时刻 HH:MM */
-export function localTime(d = new Date()): string {
+export function localTime(d = new Date(), tz = TZ): string {
   return new Intl.DateTimeFormat("en-GB", {
-    timeZone: TZ,
+    timeZone: tz,
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",

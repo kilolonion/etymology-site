@@ -22,6 +22,8 @@ const MAX_SPIN = 8000;
 const BACK_MS = 260;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+/** 算“停在最顶上”：有的安卓机滚回顶上后 scrollY 是 0.4 这样的小数，严格比 0 会一直判成“不在顶上” */
+const atTop = () => scrollY < 1;
 
 /** refresh：刷新当前页的函数（返回 Promise） */
 export function initPull(refresh) {
@@ -40,10 +42,11 @@ export function initPull(refresh) {
   let frame = 0; // 待执行的 rAF
   let backTimer = 0;
 
+  // 只认眼下真开着的：词卡关掉时只是 hidden、.sheet 类还在；在编辑状态下离开首页，body 上的 desk-editing 也会留着。
+  // 以前按类名判断，点开过一次词卡（或编辑桌面时切走）之后下拉刷新就一直没反应
   const blocked = (target) =>
     busy ||
-    document.body.classList.contains("desk-editing") ||
-    document.querySelector(".desk-sheet, .wcard.sheet") ||
+    document.querySelector(".desk.editing, .desk-sheet, .wcard.sheet:not([hidden])") ||
     target.closest?.("input, textarea, select, [contenteditable]");
 
   /** 立刻把指示器画到 d 的位置 */
@@ -80,7 +83,8 @@ export function initPull(refresh) {
   };
 
   addEventListener("touchstart", (ev) => {
-    if (ev.touches.length !== 1 || scrollY > 0 || blocked(ev.target)) return;
+    arm(); // 内容整页换掉、滚动位置被浏览器直接夹回 0 时不一定有 scroll 事件：按下时再对一次
+    if (ev.touches.length !== 1 || !atTop() || blocked(ev.target)) return;
     start = { x: ev.touches[0].clientX, y: ev.touches[0].clientY };
     dist = 0;
   }, { passive: true });
@@ -91,8 +95,8 @@ export function initPull(refresh) {
     const dy = ev.touches[0].clientY - start.y;
     if (!pulling) {
       // 先往上划、横着划，或者页面已经不在顶上：这一下不是下拉刷新
-      if (dy < 6 || Math.abs(dx) > dy || scrollY > 0) {
-        if (dy < -4 || Math.abs(dx) > 10 || scrollY > 0) start = null;
+      if (dy < 6 || Math.abs(dx) > dy || !atTop()) {
+        if (dy < -4 || Math.abs(dx) > 10 || !atTop()) start = null;
         return;
       }
       pulling = true;
@@ -109,7 +113,7 @@ export function initPull(refresh) {
   // 只有停在最顶上才需要拦截 touchmove；往下滚了就摘掉，平时滚动不被它拖慢
   let armed = false;
   const arm = () => {
-    const want = scrollY <= 0;
+    const want = atTop();
     if (want === armed) return;
     armed = want;
     if (want) addEventListener("touchmove", onMove, { passive: false });
@@ -155,6 +159,9 @@ export function initPull(refresh) {
       reset();
     }
   };
-  addEventListener("touchend", end);
+  addEventListener("touchend", () => {
+    end();
+    arm();
+  });
   addEventListener("touchcancel", () => (pulling || start) && reset());
 }
