@@ -44,8 +44,7 @@ export async function viewMe() {
       <a href="#/me/history">${icon("clock")}<span class="grow">阅读记录</span><span class="val">${history.length ? `${history.length} 天` : ""}</span>${icon("right", "i chev")}</a>
       <a href="#/me/reminder">${icon("bell")}<span class="grow">提醒与日报</span><span class="val">${reminderVal}</span>${icon("right", "i chev")}</a>
       <button class="menu-btn" data-action="accent">${icon("sound")}<span class="grow">发音</span><span class="val accent-val">${ACCENT[getAccent()]}</span><span class="swap">切换</span></button>
-      <button class="menu-btn" data-action="goal" data-goal="${me.goal ?? 1}">${icon("today")}<span class="grow">每日目标</span><span class="val goal-val">每天 ${me.goal ?? 1} 个</span><span class="swap">调整</span></button>
-      <div class="goal-opts" id="goal-opts" hidden><div class="goal-seg" role="group" aria-label="每日目标档位">${GOALS.map((g) => `<button type="button" data-action="goal-opt" data-goal-opt="${g}" aria-pressed="${g === (me.goal ?? 1)}">${g} 个</button>`).join("")}</div><form class="goal-custom" id="goal-custom"><label for="goal-input">自定义</label><input type="number" id="goal-input" min="1" max="50" step="1" inputmode="numeric" placeholder="1–50"${GOALS.includes(me.goal ?? 1) ? "" : ` value="${me.goal ?? 1}"`}><span class="goal-unit">个</span><button type="submit" class="btn sm primary">确定</button></form></div>
+      <div class="menu-row">${icon("today")}<span class="grow">每日目标</span><span class="goal-step"><button type="button" class="gs-btn" data-action="goal-minus" aria-label="减少每日目标" ${(me.goal ?? 1) <= 1 ? "disabled" : ""}>−</button><input class="gs-num" id="goal-num" type="number" min="1" max="50" step="1" inputmode="numeric" value="${me.goal ?? 1}" data-cur="${me.goal ?? 1}" aria-label="每日目标个数"><span class="gs-unit">个</span><button type="button" class="gs-btn" data-action="goal-plus" aria-label="增加每日目标" ${(me.goal ?? 1) >= 50 ? "disabled" : ""}>＋</button></span></div>
       <button class="menu-btn" data-action="board-opt" data-on="${!!me.onBoard}">${icon("users")}<span class="grow">参加排行榜</span><span class="val board-val">${me.onBoard ? "参加中" : "已关闭"}</span><span class="swap">${me.onBoard ? "关闭" : "打开"}</span></button>
     </nav>
     <nav class="menu">
@@ -55,11 +54,17 @@ export async function viewMe() {
     </div>
     </div>`);
   document.querySelector(".spines")?.scrollTo({ left: 0 });
-  document.getElementById("goal-custom")?.addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    const v = Number(document.getElementById("goal-input").value);
-    if (!Number.isInteger(v) || v < 1 || v > 50) return toast("目标填 1–50 之间的整数");
+  const gnum = document.getElementById("goal-num");
+  gnum?.addEventListener("change", () => {
+    const v = Number(gnum.value);
+    if (!Number.isInteger(v) || v < GOAL_MIN || v > GOAL_MAX) {
+      toast(`目标填 ${GOAL_MIN}–${GOAL_MAX} 之间的整数`);
+      return syncGoalUI(Number(gnum.dataset.cur));
+    }
     setGoal(v);
+  });
+  gnum?.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter") gnum.blur();
   });
 }
 
@@ -74,47 +79,42 @@ actions.accent = (el) => {
   toast(`发音改为${ACCENT[next]}`);
 };
 
-/** 每日目标常用档位：点“调整”展开直接选，也可以自己填 1–50；首页“本周”和读完时的收尾都按它算 */
-const GOALS = [1, 2, 3, 5];
+/** 每日目标：行内步进，− / ＋ 点一下改一个，数字也能点开直接输入（1–50）；首页“本周”和读完时的收尾都按它算 */
+const GOAL_MIN = 1, GOAL_MAX = 50;
+let goalSaving = false;
 
-/** 收起档位行，“调整”文案还原 */
-const closeGoalOpts = () => {
-  const opts = document.getElementById("goal-opts");
-  if (opts) opts.hidden = true;
-  const swap = document.querySelector('[data-action="goal"] .swap');
-  if (swap) swap.textContent = "调整";
-};
+/** 把步进控件同步到某个值：数字、当前值缓存、两头按钮的可用状态 */
+function syncGoalUI(goal) {
+  const input = document.getElementById("goal-num");
+  if (!input) return;
+  input.dataset.cur = String(goal);
+  if (document.activeElement !== input) input.value = String(goal);
+  const minus = document.querySelector('[data-action="goal-minus"]');
+  const plus = document.querySelector('[data-action="goal-plus"]');
+  if (minus) minus.disabled = goal <= GOAL_MIN;
+  if (plus) plus.disabled = goal >= GOAL_MAX;
+}
 
-actions.goal = (el) => {
-  const opts = document.getElementById("goal-opts");
-  if (!opts) return;
-  opts.hidden = !opts.hidden;
-  el.querySelector(".swap").textContent = opts.hidden ? "调整" : "收起";
-};
-
-/** 设定每日目标：档位按钮和自定义输入共用；成功后更新菜单行、档位高亮并收起 */
 async function setGoal(next) {
-  const btn = document.querySelector('[data-action="goal"]');
-  if (next === Number(btn?.dataset.goal ?? 1)) return closeGoalOpts(); // 设的还是当前值，只收起
-  const ctrls = [...document.querySelectorAll("#goal-opts button, #goal-opts input")];
-  for (const b of ctrls) b.disabled = true;
+  const input = document.getElementById("goal-num");
+  if (!input || goalSaving) return;
+  next = Math.min(GOAL_MAX, Math.max(GOAL_MIN, Math.round(next)));
+  if (next === Number(input.dataset.cur)) return syncGoalUI(next); // 没变，只把显示拨正
+  goalSaving = true;
   try {
     const { goal } = await api("/me/goal", { method: "PUT", body: { goal: next } });
-    if (btn) {
-      btn.dataset.goal = String(goal);
-      btn.querySelector(".goal-val").textContent = `每天 ${goal} 个`;
-    }
-    for (const b of document.querySelectorAll("[data-goal-opt]")) b.setAttribute("aria-pressed", String(Number(b.dataset.goalOpt) === goal));
-    closeGoalOpts();
+    syncGoalUI(goal);
     toast(`每日目标改为 ${goal} 个`);
   } catch (e) {
     toast(e.message);
+    syncGoalUI(Number(input.dataset.cur));
   } finally {
-    for (const b of ctrls) b.disabled = false;
+    goalSaving = false;
   }
 }
 
-actions["goal-opt"] = (el) => setGoal(Number(el.dataset.goalOpt));
+actions["goal-minus"] = () => setGoal(Number(document.getElementById("goal-num")?.dataset.cur ?? 1) - 1);
+actions["goal-plus"] = () => setGoal(Number(document.getElementById("goal-num")?.dataset.cur ?? 1) + 1);
 
 /** 排行榜开关：关掉后别人的榜上没有你，你的首页也不显示榜；榜上别人的名字只露第一个字 */
 actions["board-opt"] = async (el) => {

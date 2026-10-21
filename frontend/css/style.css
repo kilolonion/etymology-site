@@ -1397,18 +1397,14 @@ a.wl:hover, a.wl.on { color: var(--t-ink, var(--accent)); background: color-mix(
 [data-action="say"].playing { color: var(--accent) !important; }
 [data-action="say"].say-loading svg { animation: sk-glow 1s ease-in-out infinite; }
 .menu .swap { font-size: 13px; color: var(--accent); }
-.goal-opts { display: grid; gap: 10px; padding: 12px 16px 14px; background: var(--bg-2); }
-.goal-opts[hidden] { display: none; }
-.goal-seg { display: flex; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
-.goal-seg button { flex: 1; height: 40px; border: 0; background: none; font: inherit; font-size: 14px; color: var(--ink-2); cursor: pointer; }
-.goal-seg button + button { border-left: 1px solid var(--line); }
-.goal-seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); font-weight: 600; }
-.goal-custom { display: flex; align-items: center; gap: 8px; }
-.goal-custom label { flex: none; font-size: 13px; color: var(--muted); }
-.goal-custom input { flex: 1; min-width: 0; height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; }
-.goal-custom input:focus { outline: none; border-color: var(--accent); }
-.goal-custom .goal-unit { flex: none; font-size: 13px; color: var(--muted); }
-.goal-custom .btn { flex: none; min-height: 40px; }
+.menu > .menu-row { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 58px; padding: 12px 16px; font-size: 15.5px; }
+.goal-step { display: flex; align-items: center; gap: 10px; }
+.gs-btn { width: 30px; height: 30px; flex: none; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--ink); font-size: 16px; line-height: 1; cursor: pointer; }
+.gs-btn:disabled { opacity: .35; cursor: default; }
+.gs-num { width: 44px; height: 34px; padding: 0 2px; border: 1px solid transparent; border-radius: 9px; background: none; color: var(--ink); font: inherit; font-size: 15.5px; font-weight: 600; text-align: center; appearance: textfield; -moz-appearance: textfield; }
+.gs-num::-webkit-outer-spin-button, .gs-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.gs-num:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+.gs-unit { margin-left: -6px; font-size: 13px; color: var(--muted); }
 
 /* ---------- 返回按钮：写明回哪里；连续跳了几层时一步回到列表 ---------- */
 .back { max-width: 70vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
