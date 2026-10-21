@@ -509,12 +509,12 @@ api.get("/shelf", (c) => {
 
 api.get("/me", (c) => c.json({ ...c.get("user"), onBoard: db.getOnBoard(uidOf(c)), goal: db.getGoal(uidOf(c)) }));
 
-/** 每日目标只能选这几个 */
-const GOALS = [1, 2, 3, 5];
+/** 每日目标：常用档位之外也可以自己填，1–50 之间的整数 */
 api.put("/me/goal", async (c) => {
   const { goal } = await body<{ goal?: number }>(c);
-  if (!GOALS.includes(Number(goal))) return c.json({ error: `目标只能是 ${GOALS.join(" / ")} 个` }, 400);
-  db.setGoal(uidOf(c), Number(goal));
+  const n = Number(goal);
+  if (!Number.isInteger(n) || n < 1 || n > 50) return c.json({ error: "目标填 1–50 之间的整数" }, 400);
+  db.setGoal(uidOf(c), n);
   return c.json({ goal: db.getGoal(uidOf(c)) });
 });
 

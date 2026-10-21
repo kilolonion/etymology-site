@@ -1397,8 +1397,12 @@ a.wl:hover, a.wl.on { color: var(--t-ink, var(--accent)); background: color-mix(
 [data-action="say"].playing { color: var(--accent) !important; }
 [data-action="say"].say-loading svg { animation: sk-glow 1s ease-in-out infinite; }
 .menu .swap { font-size: 13px; color: var(--accent); }
-.goal-opts { display: flex; gap: 6px; padding: 10px 16px; background: var(--bg-2); }
+.goal-opts { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 16px; background: var(--bg-2); }
 .goal-opts[hidden] { display: none; }
+.goal-custom { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.goal-custom input { width: 78px; height: 31px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; }
+.goal-custom input:focus { outline: none; border-color: var(--accent); }
+.goal-custom span { font-size: 13px; color: var(--muted); }
 
 /* ---------- 返回按钮：写明回哪里；连续跳了几层时一步回到列表 ---------- */
 .back { max-width: 70vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

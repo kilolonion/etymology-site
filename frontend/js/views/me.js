@@ -45,7 +45,7 @@ export async function viewMe() {
       <a href="#/me/reminder">${icon("bell")}<span class="grow">提醒与日报</span><span class="val">${reminderVal}</span>${icon("right", "i chev")}</a>
       <button class="menu-btn" data-action="accent">${icon("sound")}<span class="grow">发音</span><span class="val accent-val">${ACCENT[getAccent()]}</span><span class="swap">切换</span></button>
       <button class="menu-btn" data-action="goal" data-goal="${me.goal ?? 1}">${icon("today")}<span class="grow">每日目标</span><span class="val goal-val">每天 ${me.goal ?? 1} 个</span><span class="swap">调整</span></button>
-      <div class="goal-opts" id="goal-opts" hidden>${GOALS.map((g) => `<button type="button" class="filter" data-action="goal-opt" data-goal-opt="${g}" aria-pressed="${g === (me.goal ?? 1)}">${g} 个</button>`).join("")}</div>
+      <div class="goal-opts" id="goal-opts" hidden>${GOALS.map((g) => `<button type="button" class="filter" data-action="goal-opt" data-goal-opt="${g}" aria-pressed="${g === (me.goal ?? 1)}">${g} 个</button>`).join("")}<form class="goal-custom" id="goal-custom"><input type="number" id="goal-input" min="1" max="50" step="1" inputmode="numeric" placeholder="自定义" aria-label="自定义每日目标"${GOALS.includes(me.goal ?? 1) ? "" : ` value="${me.goal ?? 1}"`}><span>个</span><button type="submit" class="filter">确定</button></form></div>
       <button class="menu-btn" data-action="board-opt" data-on="${!!me.onBoard}">${icon("users")}<span class="grow">参加排行榜</span><span class="val board-val">${me.onBoard ? "参加中" : "已关闭"}</span><span class="swap">${me.onBoard ? "关闭" : "打开"}</span></button>
     </nav>
     <nav class="menu">
@@ -55,6 +55,12 @@ export async function viewMe() {
     </div>
     </div>`);
   document.querySelector(".spines")?.scrollTo({ left: 0 });
+  document.getElementById("goal-custom")?.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const v = Number(document.getElementById("goal-input").value);
+    if (!Number.isInteger(v) || v < 1 || v > 50) return toast("目标填 1–50 之间的整数");
+    setGoal(v);
+  });
 }
 
 const ACCENT = { uk: "英音", us: "美音" };
@@ -68,7 +74,7 @@ actions.accent = (el) => {
   toast(`发音改为${ACCENT[next]}`);
 };
 
-/** 每日目标档位（与后端 GOALS 一致）：点“调整”展开直接选，不再一个个轮着点；首页“本周”和读完时的收尾都按它算 */
+/** 每日目标常用档位：点“调整”展开直接选，也可以自己填 1–50；首页“本周”和读完时的收尾都按它算 */
 const GOALS = [1, 2, 3, 5];
 
 /** 收起档位行，“调整”文案还原 */
@@ -86,25 +92,29 @@ actions.goal = (el) => {
   el.querySelector(".swap").textContent = opts.hidden ? "调整" : "收起";
 };
 
-actions["goal-opt"] = async (el) => {
+/** 设定每日目标：档位按钮和自定义输入共用；成功后更新菜单行、档位高亮并收起 */
+async function setGoal(next) {
   const btn = document.querySelector('[data-action="goal"]');
-  const next = Number(el.dataset.goalOpt);
-  if (next === Number(btn?.dataset.goal ?? 1)) return closeGoalOpts(); // 选的还是当前值，只收起
-  const chips = [...document.querySelectorAll("#goal-opts button")];
-  for (const b of chips) b.disabled = true;
+  if (next === Number(btn?.dataset.goal ?? 1)) return closeGoalOpts(); // 设的还是当前值，只收起
+  const ctrls = [...document.querySelectorAll("#goal-opts button, #goal-opts input")];
+  for (const b of ctrls) b.disabled = true;
   try {
     const { goal } = await api("/me/goal", { method: "PUT", body: { goal: next } });
     if (btn) {
       btn.dataset.goal = String(goal);
       btn.querySelector(".goal-val").textContent = `每天 ${goal} 个`;
     }
-    for (const b of chips) b.setAttribute("aria-pressed", String(Number(b.dataset.goalOpt) === goal));
+    for (const b of document.querySelectorAll("[data-goal-opt]")) b.setAttribute("aria-pressed", String(Number(b.dataset.goalOpt) === goal));
     closeGoalOpts();
     toast(`每日目标改为 ${goal} 个`);
+  } catch (e) {
+    toast(e.message);
   } finally {
-    for (const b of chips) b.disabled = false;
+    for (const b of ctrls) b.disabled = false;
   }
-};
+}
+
+actions["goal-opt"] = (el) => setGoal(Number(el.dataset.goalOpt));
 
 /** 排行榜开关：关掉后别人的榜上没有你，你的首页也不显示榜；榜上别人的名字只露第一个字 */
 actions["board-opt"] = async (el) => {
