@@ -325,8 +325,6 @@ export function composeWord(uid: number, day: string, site: string): Composed | 
   const tSoft = mix(t.color, C.surface, 0.1);
   const tLine = mix(t.color, C.line, 0.28);
   const issue = db.allDaily(uid).filter((d) => d.day <= day).length;
-  const story = gist(e, 150);
-  const ex = e.examples[0];
   const paper = getOrBuildPaper(uid, day, day);
   const more = paper ? paper.sections.reduce((n, s) => n + s.items.length, 0) + (paper.lead ? 1 : 0) : 0;
 
@@ -348,9 +346,13 @@ ${kicker("今天的词", "Today’s Word")}
   <p class="ink" style="margin:8px 0 0;font-family:${F.zh};font-weight:700;font-size:21px;line-height:1.6;color:${C.ink};">${rich(e.teaser, tInk)}</p>
 </td></tr>
 <tr><td class="px" style="padding:16px 36px 0;">
-  <p class="ink2" style="margin:0;font-family:${F.zh};font-size:16px;line-height:1.95;color:${C.ink2};">${rich(story, tInk)}${story.endsWith("…") || story === e.etymology[0] ? "" : "……"}</p>
+  ${e.etymology.map((p, i) => `<p class="ink2" style="margin:${i ? "14px" : "0"} 0 0;font-family:${F.zh};font-size:16px;line-height:1.95;color:${C.ink2};">${rich(p, tInk)}</p>`).join("")}
 </td></tr>
-${ex ? `<tr><td class="px" style="padding:20px 36px 0;">
+${e.keyline ? `<tr><td class="px" style="padding:22px 36px 0;">
+  <p class="acc" style="margin:0;font-family:${F.sans};font-size:12px;font-weight:600;letter-spacing:3px;color:${C.accent};">一句话记住</p>
+  <p class="ink" style="margin:8px 0 0;font-family:${F.zh};font-weight:700;font-size:17px;line-height:1.7;color:${C.ink};">${rich(e.keyline, tInk)}</p>
+</td></tr>` : ""}
+${e.examples.map((ex, i) => `<tr><td class="px" style="padding:${i ? 14 : 20}px 36px 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
     <td width="3" class="line" style="background:${C.gold};font-size:0;">&nbsp;</td>
     <td style="padding:2px 0 2px 16px;">
@@ -358,9 +360,9 @@ ${ex ? `<tr><td class="px" style="padding:20px 36px 0;">
       <p class="mut" style="margin:4px 0 0;font-family:${F.zh};font-size:14px;line-height:1.6;color:${C.muted};">${esc(ex.zh)}</p>
     </td>
   </tr></table>
-</td></tr>` : ""}
+</td></tr>`).join("")}
 <tr><td class="px" align="left" style="padding:28px 36px 0;">
-  ${button(entryUrl(x, e.id), "读完整的故事 &rarr;")}
+  ${button(entryUrl(x, e.id), "打开这篇词条 &rarr;")}
   <p class="mut" style="margin:12px 0 0;font-family:${F.sans};font-size:12.5px;color:${C.muted};">读完会记进你的书架和连续天数。</p>
 </td></tr>
 ${more ? `<tr><td class="px" style="padding:28px 36px 0;">
@@ -380,10 +382,11 @@ ${more ? `<tr><td class="px" style="padding:28px 36px 0;">
     "",
     `今天的问题：${plain(e.teaser)}`,
     "",
-    plain(story),
-    ...(ex ? ["", plain(ex.en), ex.zh] : []),
+    e.etymology.map((p) => plain(p)).join("\n\n"),
+    ...(e.keyline ? ["", `一句话记住：${plain(e.keyline)}`] : []),
+    ...e.examples.flatMap((ex) => ["", plain(ex.en), ex.zh]),
     "",
-    `读完整的故事：${entryUrl(x, e.id)}`,
+    `在网站打开这篇：${entryUrl(x, e.id)}`,
     ...(more ? [`今天的日报还有 ${more} 篇：${site}/#/paper`] : []),
     "",
     textFooter(x),
