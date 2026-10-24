@@ -31,6 +31,10 @@ const x = (s = "") => esc(s);
 const cdata = (s: string) => `<![CDATA[${s.replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
 /** *斜体* → <em> */
 const rich = (s = "") => esc(s).replace(/\*([^*]+)\*/g, "<em>$1</em>");
+/** 词头后面括号里的释义；别的书里个别词没有释义，就整个省掉 */
+const mean = (e: FullEntry) => (e.meaning ? `（${esc(e.meaning)}）` : "");
+/** 温故：有“一句话记住”就给它，没有就把问题再问一遍 */
+const recallLine = (e: FullEntry) => (e.keyline ? `一句话记住：${rich(e.keyline)}` : `还记得吗：${rich(e.teaser)}`);
 
 /** 某个时区里 day 那天 0 点的时刻（RSS 的 pubDate） */
 function dayStart(day: string, tz = TZ): Date {
@@ -98,7 +102,7 @@ function wordFeed(uid: number, site: string, self: string): string {
     if (!e) return [];
     const theme = primary(e);
     return [{
-      title: `${e.headword} · ${e.meaning}`,
+      title: e.meaning ? `${e.headword} · ${e.meaning}` : e.headword,
       link: entryUrl(site, e.id),
       guid: `etymon-word-${d.day}-${e.id}`,
       day: d.day,
@@ -133,7 +137,7 @@ function paperItem(uid: number, day: string, today: string, site: string): Item 
 
   const html = [
     `<p>${cnDate(day)} · ${weekday(day)}　本期 ${all.length} 篇 · 约 ${minutes} 分钟读完</p>`,
-    ...(front ? [`<h3>头版 · 今天的词</h3>`, `<p>${link(front)}（${esc(front.meaning)}）<br>${rich(front.teaser)}</p>`] : []),
+    ...(front ? [`<h3>头版 · 今天的词</h3>`, `<p>${link(front)}${mean(front)}<br>${rich(front.teaser)}</p>`] : []),
     ...(lead ? [
       `<h3>头条</h3>`,
       `<p>${link(lead)}${lead.ipa ? ` /${esc(lead.ipa)}/` : ""} ${esc(lead.meaning)}</p>`,
@@ -143,7 +147,7 @@ function paperItem(uid: number, day: string, today: string, site: string): Item 
     ...sections.flatMap((s) => [
       `<h3>${esc(s.title)} <small>${esc(s.en)}</small></h3>`,
       ...(s.note ? [`<p><small>${esc(s.note)}</small></p>`] : []),
-      `<ul>${s.items.map((it) => `<li>${link(it.e)}（${esc(it.e.meaning)}）${s.key === "recall" ? `一句话记住：${rich(it.e.keyline || it.e.teaser)}` : rich(it.e.teaser)}${why(it.reason)}</li>`).join("")}</ul>`,
+      `<ul>${s.items.map((it) => `<li>${link(it.e)}${mean(it.e)}${s.key === "recall" ? recallLine(it.e) : rich(it.e.teaser)}${why(it.reason)}</li>`).join("")}</ul>`,
     ]),
     `<p><a href="${esc(paperUrl)}">打开这一期日报 →</a></p>`,
   ].join("\n");

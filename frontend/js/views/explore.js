@@ -151,7 +151,7 @@ function questions(items) {
 /** 读过的：单词 + 一句话记住，方便回想 */
 const recallCard = (s) => `<a class="rcard" href="#/w/${esc(s.id)}" style="${tint(s)}">
   <b>${esc(s.headword)}</b>
-  <p>${rich(s.keyline || s.meaning)}</p>
+  <p>${rich(s.keyline || s.meaning || s.teaser)}</p>
   ${s.starred ? icon("star", "star-s") : ""}
 </a>`;
 

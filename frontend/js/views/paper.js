@@ -58,7 +58,7 @@ function story(s, { recall = false } = {}) {
     <b class="pp-word">${esc(s.headword)}${srcMark(s)}</b>
     <span class="pp-mean">${s.ipa ? `<i class="pp-ipa">/${esc(s.ipa)}/</i>` : ""}${esc(s.meaning ?? "")}</span>
     <span class="pp-body">
-      <span class="pp-text">${recall ? `<small>一句话记住</small>` : ""}${body}</span>
+      <span class="pp-text">${recall ? `<small>${s.keyline ? "一句话记住" : "还记得吗"}</small>` : ""}${body}</span>
       ${reason ? `<span class="pp-why">${icon("spark")}<span>${reason}</span></span>` : ""}
     </span>
   </a>`;
@@ -114,7 +114,7 @@ export async function viewPaper(_, q) {
     ? `<a class="pp-front${p.front.read ? " read" : ""}" href="#/w/${esc(p.front.id)}" style="${tint(p.front)}">
         <span class="pp-label">今日一词 · Today’s Word</span>
         <b>${esc(p.front.headword)}</b>
-        <span class="pp-front-text">${p.front.read ? esc(p.front.meaning) : rich(p.front.teaser ?? "")}</span>
+        <span class="pp-front-text">${p.front.read && p.front.meaning ? esc(p.front.meaning) : rich(p.front.teaser ?? "")}</span>
         ${stamp(p.front)}
       </a>`
     : "";

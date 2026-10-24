@@ -103,7 +103,7 @@ const WIDGETS = {
   week: { name: "本周", desc: "这一周每天读了什么", sizes: ["m", "s"], icon: "today", group: "widget", draw: wWeek },
   discover: { name: "随手翻一页", desc: "推荐一个没读过的词，可以换", sizes: ["m", "l"], icon: "shuffle", group: "widget", draw: wDiscover },
   stats: { name: "阅读统计", desc: "读了多少、连续几天", sizes: ["s", "m", "bar"], icon: "spark", group: "widget", draw: wStats },
-  quiz: { name: "考考你", desc: "看“一句话记住”，猜是哪个读过的词", sizes: ["m", "l"], icon: "quiz", group: "widget", draw: wQuiz, late: true },
+  quiz: { name: "考考你", desc: "看“一句话记住”或释义，猜是哪个读过的词", sizes: ["m", "l"], icon: "quiz", group: "widget", draw: wQuiz, late: true },
   board: { name: "排行榜", desc: "今天 / 这周大家各读了几个词（只露名字第一个字）", sizes: ["m", "l", "s"], icon: "users", group: "widget", draw: wBoard },
   example: { name: "今日例句", desc: "今天这个词怎么用，可以听", sizes: ["m", "s"], icon: "quote", group: "widget", draw: wExample },
   kin: { name: "今天这个词的亲戚", desc: "参见、同根、同典故、衍生的词", sizes: ["m", "l"], icon: "users", group: "widget", draw: wKin },
@@ -193,7 +193,7 @@ const quiet = (title, text, ic = "spark", go = null) => `<div class="w-body w-ca
 const loading = (title) => `<div class="w-body w-card w-wait-load"><div class="w-head"><h2>${title}</h2></div><span class="sk"></span><span class="sk"></span></div>`;
 
 /** 一行小词条：单词 + 一句（没读过给问题，读过给“一句话记住”） */
-const blurb = (x) => rich(x.read ? x.keyline || x.meaning : x.teaser);
+const blurb = (x) => rich(x.read ? x.keyline || x.meaning || x.teaser : x.teaser);
 const miniRow = (x, text) => `<a class="mini" href="#/w/${esc(x.id)}" style="${tint(x)}">
   <b>${esc(x.headword)}${srcMark(x)}</b><span>${text ?? blurb(x)}</span>${x.read ? `<i class="seen">已读</i>` : ""}
 </a>`;
@@ -279,7 +279,7 @@ function wRecall(size) {
       </div>
       <div class="face face-back">
         ${wide ? `<small class="rc-meta"><b>${esc(x.headword)}</b>${esc(x.meaning)}${x.langs?.length ? ` · ${esc(x.langs.join(" → "))}` : ""}</small>` : ""}
-        <p>${rich(x.keyline || x.meaning)}</p>
+        <p>${rich(x.keyline || x.meaning || x.teaser)}</p>
         ${recallButtons(x)}
       </div>
     </div>
@@ -610,13 +610,21 @@ function wCollect(size) {
 /** 今天第几题、答对几题；换了一天重新数 */
 const quiz = { day: "", n: 0, right: 0, done: 0 };
 const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-/** 把“一句话记住”里的这个词挖掉，免得一眼看出答案 */
-const masked = (x) => x.keyline.replace(new RegExp(escRe(x.headword), "gi"), "＿＿");
+/** 题面：有“一句话记住”就考来历，没有（另外两本书大多没有）就考释义；把这个词挖掉，免得一眼看出答案 */
+const clue = (x) => x.keyline || x.meaning;
+const masked = (x) => clue(x).replace(new RegExp(escRe(x.headword), "gi"), "＿＿");
+const quizAsk = (x) => (x.keyline ? "哪个词的来历是这样？" : "哪个词是这个意思？");
 
 /** 出一道题：从读过的词里按日期 + 题号挑一个当答案，再挑几个读过的词当干扰项 */
 function quizItem(n) {
   // 待核对的新词不出题（答案本身可能不对）
-  const pool = ctx.all.filter((x) => x.read && x.keyline && !x.redirect && x.src !== "ai");
+  // 几本书里的同一个词只留一条，免得选项里出现两个一样的词
+  const seen = new Set();
+  const pool = ctx.all.filter((x) => {
+    if (!x.read || !clue(x) || x.redirect || x.src === "ai") return false;
+    const k = x.headword.toLowerCase();
+    return !seen.has(k) && seen.add(k);
+  });
   if (pool.length < 3) return null;
   // FNV-1a：题号只差一位，排出来的顺序也要完全不同（乘 31 累加的那种散列，前缀变了顺序几乎不变）
   const seed = `${ctx.t.day}#${quiz.n}`;
@@ -636,12 +644,12 @@ function wQuiz(size) {
   if (quiz.day !== ctx.t.day) Object.assign(quiz, { day: ctx.t.day, n: 0, right: 0, done: 0 });
   const q = quizItem(size === "l" ? 4 : 3);
   if (!q) return quiet("考考你", "读满 3 个词就能出题，考考自己还记不记得", "quiz");
-  const score = quiz.done ? `今天答对 <b>${quiz.right}</b> / ${quiz.done}` : "哪个词的来历是这样？";
+  const score = quiz.done ? `今天答对 <b>${quiz.right}</b> / ${quiz.done}` : quizAsk(q.answer);
   return `<div class="w-body w-card w-quiz" data-answer="${esc(q.answer.id)}">
     <div class="w-head"><h2>考考你</h2><span class="qz-score">${score}</span></div>
     <div class="qz-qbox"><p class="qz-q">${rich(masked(q.answer))}</p></div>
     <div class="qz-opts">${q.opts.map((o) => `<button class="qz-opt" data-action="quiz" data-id="${esc(o.id)}" style="${tint(o)}">${esc(o.headword)}</button>`).join("")}</div>
-    <p class="qz-res"><span>题目出自你读过的 ${ctx.t.stats.read} 个词${size === "l" ? "，答完揭晓原句" : ""}</span></p>
+    <p class="qz-res"><span>题目出自你读过的 ${ctx.t.stats.read} 个词${size === "l" && q.answer.keyline ? "，答完揭晓原句" : ""}</span></p>
   </div>`;
 }
 
@@ -659,7 +667,7 @@ actions.quiz = (el) => {
     b.classList.toggle("right", b.dataset.id === id);
   }
   if (!ok) el.classList.add("wrong");
-  if (x) box.querySelector(".qz-q").innerHTML = rich(x.keyline);
+  if (x) box.querySelector(".qz-q").innerHTML = rich(clue(x));
   // 答对答错都记一次复习：答错的词很快会在“旧词重逢”里再见
   api(`/entries/${encodeURIComponent(id)}/review`, { method: "POST", body: { ok } }).catch(() => {});
   box.querySelector(".qz-score").innerHTML = `今天答对 <b>${quiz.right}</b> / ${quiz.done}`;
@@ -759,7 +767,7 @@ function wPaper(size) {
   // 没读的排前面，读过的跟在后面；还放得下就接着放温故
   const ordered = [...rest.filter((x) => !x.read), ...rest.filter((x) => x.read)];
   const rows = ordered.slice(0, 12).map((x) => miniRow(x)).join("");
-  const recallRows = recall.length ? `<p class="fit-sep">温故</p>${recall.map((x) => miniRow(x, rich(x.keyline || x.meaning))).join("")}` : "";
+  const recallRows = recall.length ? `<p class="fit-sep">温故</p>${recall.map((x) => miniRow(x, rich(x.keyline || x.meaning || x.teaser))).join("")}` : "";
 
   // 竖条：大数字 + 进度，下面一列单词
   if (size === "4-2") {

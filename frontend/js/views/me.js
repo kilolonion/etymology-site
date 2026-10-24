@@ -274,7 +274,7 @@ export async function viewHistory() {
         .map(
           (x) => `<a class="tl-entry" href="#/w/${esc(x.id)}" style="${tint(x)}">
             <span class="tl-head"><b>${esc(x.headword)}</b>${x.daily ? `<span class="pushed">当日推送</span>` : ""}${x.starred ? icon("star", "star-s") : ""}</span>
-            <span class="tl-key">${rich(x.keyline || x.meaning)}</span>
+            <span class="tl-key">${rich(x.keyline || x.meaning || x.teaser)}</span>
           </a>`,
         )
         .join("")}</div>

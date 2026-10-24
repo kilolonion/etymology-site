@@ -378,7 +378,7 @@ ${more ? `<tr><td class="px" style="padding:28px 36px 0;">
   const text = [
     `词源一日 · No. ${issue} · ${cnDate(day)} ${weekday(day)}`,
     "",
-    `今天的词：${e.headword}${e.ipa ? `  /${e.ipa}/` : ""}  ${e.meaning}`,
+    `今天的词：${e.headword}${e.ipa ? `  /${e.ipa}/` : ""}${e.meaning ? `  ${e.meaning}` : ""}`,
     "",
     `今天的问题：${plain(e.teaser)}`,
     "",
@@ -415,7 +415,7 @@ function storyBlock(x: Ctx, e: FullEntry, reason: PaperReason | undefined, o: { 
     ${themeTag(e, x)}${o.read ? `<span class="acc" style="float:right;font-family:${F.zh};font-size:11px;font-weight:700;letter-spacing:2px;color:${C.accent};border:1px solid ${C.accent};border-radius:4px;padding:0 5px;">已读</span>` : ""}
     <p class="ti-${k}" style="margin:8px 0 0;font-family:${F.display};font-style:italic;font-weight:700;font-size:22px;line-height:1.2;color:${tInk};">${esc(e.headword)}</p>
     <p class="mut" style="margin:3px 0 0;font-family:${F.sans};font-size:13px;color:${C.muted};">${esc(e.meaning)}</p>
-    ${o.recall ? `<p class="mut" style="margin:10px 0 0;font-family:${F.sans};font-size:10.5px;font-weight:600;letter-spacing:2px;color:${C.muted};">一句话记住</p>` : ""}
+    ${o.recall ? `<p class="mut" style="margin:10px 0 0;font-family:${F.sans};font-size:10.5px;font-weight:600;letter-spacing:2px;color:${C.muted};">${e.keyline ? "一句话记住" : "还记得吗"}</p>` : ""}
     <p class="ink" style="margin:${o.recall ? 2 : 8}px 0 0;font-family:${F.zh};font-size:15px;line-height:1.75;color:${C.ink};">${rich(body, tInk)}</p>
     ${why ? `<p class="mut" style="margin:8px 0 0;font-family:${F.sans};font-size:12px;line-height:1.6;color:${C.muted};">✦ ${why}</p>` : ""}
     </a>
@@ -474,7 +474,7 @@ export function composePaper(uid: number, day: string, site: string): Composed |
     <a href="${entryUrl(x, front.id)}" style="display:block;text-decoration:none;color:${C.ink};">
     <p class="ti-${k}" style="margin:0;font-family:${F.sans};font-size:11px;font-weight:600;letter-spacing:3px;color:${tInk};">头版 · 今天的词${read(front.id) ? "（已读）" : ""}</p>
     <p class="ti-${k}" style="margin:6px 0 0;font-family:${F.display};font-style:italic;font-weight:700;font-size:26px;line-height:1.15;color:${tInk};">${esc(front.headword)}</p>
-    <p class="ink2" style="margin:6px 0 0;font-family:${F.zh};font-size:15px;line-height:1.7;color:${C.ink2};">${read(front.id) ? esc(front.meaning) : rich(front.teaser, tInk)}</p>
+    <p class="ink2" style="margin:6px 0 0;font-family:${F.zh};font-size:15px;line-height:1.7;color:${C.ink2};">${read(front.id) && front.meaning ? esc(front.meaning) : rich(front.teaser, tInk)}</p>
     </a>
   </td></tr></table>
 </td></tr>`;
@@ -522,12 +522,12 @@ ${secHtml}
 </td></tr>`;
 
   const textItems = (items: { e: FullEntry; reason: PaperReason }[], recall: boolean) =>
-    items.map((it) => `· ${it.e.headword}（${it.e.meaning}）${plain(recall ? it.e.keyline || it.e.teaser : it.e.teaser)}${reasonPlain(it.reason) ? ` —— ${reasonPlain(it.reason)}` : ""}\n  ${entryUrl(x, it.e.id)}`);
+    items.map((it) => `· ${it.e.headword}${it.e.meaning ? `（${it.e.meaning}）` : " "}${plain(recall ? it.e.keyline || it.e.teaser : it.e.teaser)}${reasonPlain(it.reason) ? ` —— ${reasonPlain(it.reason)}` : ""}\n  ${entryUrl(x, it.e.id)}`);
   const text = [
     `词源日报 · No. ${issue} · ${cnDate(day)} ${weekday(day)}`,
     `今天 ${all.length} 篇 · 约 ${minutes} 分钟`,
     ...(front ? ["", `【头版 · 今天的词】${front.headword}：${plain(front.teaser)}`, `  ${entryUrl(x, front.id)}`] : []),
-    ...(lead ? ["", `【头条】${lead.headword}（${lead.meaning}）`, plain(lead.teaser), plain(gist(lead, 110)), `  ${entryUrl(x, lead.id)}`] : []),
+    ...(lead ? ["", `【头条】${lead.headword}${lead.meaning ? `（${lead.meaning}）` : ""}`, plain(lead.teaser), plain(gist(lead, 110)), `  ${entryUrl(x, lead.id)}`] : []),
     ...sections.flatMap((s) => ["", `【${s.title}】${s.note ? ` ${s.note}` : ""}`, ...textItems(s.items, s.key === "recall")]),
     "",
     `打开今天的日报：${site}/#/paper`,
