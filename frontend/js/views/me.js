@@ -1,6 +1,6 @@
-// 我的：书架、阅读足迹、专题纹章、语源分布，以及收藏、阅读记录、提醒与日报、账号、（管理员）邀请与成员的入口
+// 我的：书架、阅读足迹、专题纹章、语源分布，以及收藏、阅读记录、提醒与日报（推送、邮件、RSS）、账号、（管理员）邀请与成员的入口
 
-import { actions, api, empty, esc, fmtDay, getAccent, icon, local, render, rich, row, setAccent, speak, toast } from "../lib.js?v=212dd6fbae";
+import { actions, api, copy, empty, esc, fmtDay, getAccent, icon, local, render, rich, row, setAccent, speak, toast } from "../lib.js?v=212dd6fbae";
 import { fold, isWide } from "../components.js?v=212dd6fbae";
 import { emblem, primaryTheme, themeOf, themeTag, tint } from "../themes.js?v=212dd6fbae";
 import { disablePush, enablePush, isStandalone, pushStatus } from "../push.js?v=212dd6fbae";
@@ -296,8 +296,9 @@ export async function viewHistory() {
 }
 
 export async function viewReminder() {
-  const [reminder, status, today, m] = await Promise.all([api("/reminder"), pushStatus(), api("/today"), api("/me/mail")]);
+  const [reminder, status, today, m, f] = await Promise.all([api("/reminder"), pushStatus(), api("/today"), api("/me/mail"), api("/me/feed")]);
   mail = { ...m, sample: { word: today?.entry?.headword } };
+  feed = f;
   let panel;
   if (status === "needs-install") {
     panel = `<div class="panel">
@@ -332,7 +333,8 @@ export async function viewReminder() {
       <nav class="menu">${panel}</nav>
       ${!isStandalone() && status !== "needs-install" ? `<p class="tip">${icon("phone")}<span>把本站添加到手机主屏幕，打开时没有浏览器边框，用起来就像一个 App。</span></p>` : ""}
     </div>
-    <section class="panel-card mail-card reminder-mail" id="mail-card">${mailCard()}</section>`);
+    <section class="panel-card mail-card reminder-mail" id="mail-card">${mailCard()}</section>
+    <section class="panel-card feed-card" id="feed-card">${feedCard()}</section>`);
 
   document.getElementById("push-on")?.addEventListener("change", async (ev) => {
     const box = ev.target;
@@ -510,4 +512,58 @@ actions["mail-test"] = async (el) => {
   } finally {
     el.disabled = false;
   }
+};
+
+// ---------- RSS 订阅：每人一条私密地址，阅读器里收每日单词和日报 ----------
+
+let feed = null;
+
+const FEEDS = [
+  { key: "word", name: "每日单词", desc: "一天一条，全文：问题、词源故事、一句话记住、例句。" },
+  { key: "paper", name: "词源日报", desc: "一天一期，整版目录：头条、接着读、今日专题、温故……" },
+];
+
+function feedCard() {
+  const f = feed;
+  const head = `<div class="sec-head"><h2>RSS 订阅</h2><span>在阅读器里收，不占收件箱</span></div>`;
+  if (!f.on) {
+    return `${head}
+    <p class="feed-intro">${icon("rss")}<span>生成一条只属于你的订阅地址，贴进 Reeder、NetNewsWire、Feedly、Inoreader 这类阅读器，每天自动收到你的「每日单词」和「词源日报」。</span></p>
+    <button class="btn sm primary" data-action="feed-on">生成我的订阅地址</button>`;
+  }
+  return `${head}
+    <div class="feed-list">
+      ${FEEDS.map((k) => `
+        <div class="feed-item">
+          <b>${icon("rss")}${k.name}</b>
+          <small>${k.desc}</small>
+          <div class="link-box"><input readonly value="${esc(f[k.key])}" aria-label="${k.name}的订阅地址"><button class="btn sm" data-action="feed-copy" data-kind="${k.key}">${icon("copy")}复制</button></div>
+        </div>`).join("")}
+    </div>
+    <p class="feed-note">地址里带着你的专属钥匙，谁拿到都能看你的推荐，别公开分享。在阅读器里读不记已读，点进文章在站里读完才算。</p>
+    <span class="feed-acts">
+      <button type="button" class="text-btn" data-action="feed-reset">重置地址（旧地址立刻失效）</button>
+      <button type="button" class="text-btn danger" data-action="feed-off">关闭订阅</button>
+    </span>`;
+}
+
+async function saveFeed(body, msg) {
+  feed = await api("/me/feed", { method: "PUT", body });
+  const el = document.getElementById("feed-card");
+  if (el) el.innerHTML = feedCard();
+  if (msg) toast(msg);
+}
+
+actions["feed-on"] = () => saveFeed({ on: true }, "订阅地址已生成，复制到阅读器里就行");
+
+actions["feed-copy"] = (el) => copy(feed?.[el.dataset.kind] ?? "", "订阅地址已复制");
+
+actions["feed-reset"] = async () => {
+  if (!confirm("重置后，阅读器里用的旧地址都会失效，要换成新地址重新订阅。确定吗？")) return;
+  await saveFeed({ reset: true }, "已换成新地址，记得到阅读器里更新");
+};
+
+actions["feed-off"] = async () => {
+  if (!confirm("关闭后，现有的订阅地址都会失效。确定吗？")) return;
+  await saveFeed({ on: false }, "已关闭 RSS 订阅");
 };

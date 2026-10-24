@@ -1076,6 +1076,21 @@ code { font: 600 .95em ui-monospace, Menlo, monospace; letter-spacing: .04em; }
 .mail-when select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 18px) 19px, calc(100% - 13px) 19px; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 30px; }
 .mail-when input:focus, .mail-when select:focus { outline: none; border-color: var(--accent); }
 
+/* RSS 订阅 */
+.feed-card { margin-top: 14px; }
+.feed-intro { display: flex; gap: 10px; margin: 0 0 14px; font-size: 13.5px; line-height: 1.7; color: var(--ink-2); }
+.feed-intro svg.i { flex: none; width: 18px; height: 18px; margin-top: 3px; color: var(--gold); }
+.feed-list { display: grid; gap: 12px; }
+.feed-item { padding: 14px; border-radius: 16px; border: 1px solid var(--line); background: var(--bg); }
+.feed-item b { display: flex; align-items: center; gap: 6px; font: 700 15px var(--serif-zh); letter-spacing: .1em; }
+.feed-item b svg.i { width: 16px; height: 16px; color: var(--gold); }
+.feed-item small { display: block; margin: 3px 0 10px; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+.feed-item .link-box input { height: 44px; text-overflow: ellipsis; }
+.feed-item .link-box .btn svg.i { width: 15px; height: 15px; margin-right: 4px; }
+.feed-note { margin: 12px 0 0; font-size: 12.5px; line-height: 1.7; color: var(--muted); }
+.feed-acts { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; }
+@media (min-width: 900px) { .feed-list { grid-template-columns: 1fr 1fr; } }
+
 .mail-log { margin-top: 14px; }
 .mail-log summary { cursor: pointer; font-size: 13px; color: var(--muted); }
 .mail-log ul { list-style: none; margin: 8px 0 0; padding: 0; }

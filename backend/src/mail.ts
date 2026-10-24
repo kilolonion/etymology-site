@@ -101,7 +101,7 @@ const THEMES: Record<string, { color: string; en: string }> = {
 };
 const FALLBACK = { color: "#7a5a3a", en: "Words" };
 const VAGUE = new Set(["人名", "地名"]);
-const primary = (e: FullEntry) => e.themes.find((t) => !VAGUE.has(t)) ?? e.themes[0] ?? "";
+export const primary = (e: FullEntry) => e.themes.find((t) => !VAGUE.has(t)) ?? e.themes[0] ?? "";
 const themeOf = (e: FullEntry) => ({ name: primary(e), ...(THEMES[primary(e)] ?? FALLBACK) });
 
 /** 两个颜色按比例混合（t 是 a 的占比） */
@@ -119,27 +119,27 @@ function themeCss(colors: Set<string>): string {
   }).join("");
 }
 
-const esc = (s = "") =>
+export const esc = (s = "") =>
   String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]!);
 
 /** *斜体* → 英文衬线斜体 */
 const rich = (s = "", color = "inherit") =>
   esc(s).replace(/\*([^*]+)\*/g, `<em style="font-family:${F.en};font-style:italic;color:${color};">$1</em>`);
-const plain = (s = "") => s.replace(/\*/g, "");
+export const plain = (s = "") => s.replace(/\*/g, "");
 
 const CN = "〇一二三四五六七八九";
 const cnSmall = (n: number) => (n <= 10 ? (n === 10 ? "十" : CN[n]!) : n < 20 ? "十" + CN[n % 10] : CN[Math.floor(n / 10)] + "十" + (n % 10 ? CN[n % 10] : ""));
 const WEEKDAYS = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 const parts = (day: string) => day.split("-").map(Number) as [number, number, number];
-const cnDate = (day: string) => {
+export const cnDate = (day: string) => {
   const [y, m, d] = parts(day);
   return `${String(y).replace(/\d/g, (c) => CN[Number(c)]!)}年${cnSmall(m)}月${cnSmall(d)}日`;
 };
-const weekday = (day: string) => {
+export const weekday = (day: string) => {
   const [y, m, d] = parts(day);
   return WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]!;
 };
-const shortDate = (day: string) => {
+export const shortDate = (day: string) => {
   const [, m, d] = parts(day);
   return `${m} 月 ${d} 日`;
 };
@@ -165,7 +165,7 @@ function reasonText(r: PaperReason | undefined): string {
     default: return "";
   }
 }
-const reasonPlain = (r: PaperReason | undefined) => reasonText(r).replace(/<[^>]+>/g, "").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+export const reasonPlain = (r: PaperReason | undefined) => reasonText(r).replace(/<[^>]+>/g, "").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 
 // ---------- 版式零件 ----------
 

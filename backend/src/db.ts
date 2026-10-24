@@ -164,6 +164,9 @@ export function openDb(path: string): void {
   if (!cols.has("mail_paper")) db.exec("ALTER TABLE users ADD COLUMN mail_paper INTEGER NOT NULL DEFAULT 0");
   if (!cols.has("mail_time")) db.exec("ALTER TABLE users ADD COLUMN mail_time TEXT NOT NULL DEFAULT '08:00'");
   if (!cols.has("mail_tz")) db.exec("ALTER TABLE users ADD COLUMN mail_tz TEXT");
+  // RSS：订阅地址里的随机钥匙（空 = 没开）；唯一索引允许多个 NULL
+  if (!cols.has("feed_key")) db.exec("ALTER TABLE users ADD COLUMN feed_key TEXT");
+  db.exec("CREATE UNIQUE INDEX IF NOT EXISTS users_feed_key ON users(feed_key)");
   // 手动“标为已读”的：书架照常算，排行榜、连续天数、每日目标不算
   const pcols = new Set((db.prepare("PRAGMA table_info(progress)").all() as { name: string }[]).map((c) => c.name));
   if (!pcols.has("manual")) db.exec("ALTER TABLE progress ADD COLUMN manual INTEGER NOT NULL DEFAULT 0");
@@ -311,6 +314,24 @@ export function mailTargets(): ({ id: number; username: string } & MailPrefs)[] 
     )
     .all() as ({ id: number; username: string } & MailRow)[];
   return rows.map((r) => ({ id: r.id, username: r.username, ...toPrefs(r) }));
+}
+
+// ---------- RSS 订阅 ----------
+
+export function getFeedKey(uid: number): string | null {
+  return (db.prepare("SELECT feed_key FROM users WHERE id = ?").get(uid) as { feed_key: string | null } | undefined)?.feed_key ?? null;
+}
+
+/** 换一把新钥匙（旧地址立刻失效）；传 null 关掉订阅 */
+export function setFeedKey(uid: number, key: string | null): void {
+  db.prepare("UPDATE users SET feed_key = ? WHERE id = ?").run(key, uid);
+}
+
+/** 凭钥匙找订阅的主人；停用的账号不给 */
+export function feedOwner(key: string): User | undefined {
+  if (!key) return undefined;
+  const r = db.prepare("SELECT id, username, is_admin, created_at FROM users WHERE feed_key = ? AND disabled = 0").get(key) as UserRow | undefined;
+  return r && toUser(r);
 }
 
 export type MailLog = { userId: number; kind: MailKind; day: string; issue: string; status: "sending" | "sent" | "error" | "skipped"; tries: number; error: string | null; at: string };

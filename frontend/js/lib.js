@@ -39,6 +39,7 @@ const PATHS = {
   eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
   down: '<path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19.5h14"/>',
   flag: '<path d="M5.5 21V4.5m0 0h11l-2 4 2 4h-11"/>',
+  rss: '<path d="M5 4.5a14.5 14.5 0 0 1 14.5 14.5M5 10.5a8.5 8.5 0 0 1 8.5 8.5"/><circle cx="6" cy="18" r="1.5"/>',
 };
 
 export const icon = (name, cls = "i") =>
@@ -457,6 +458,40 @@ export function toast(text) {
   el.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove("show"), 1800);
+}
+
+// ---------- 复制 ----------
+
+/**
+ * 复制文本。Safari 在 await 之后可能已经没有“用户手势”，Clipboard API 会被拒；
+ * 这时退回 execCommand，再不行就把页面上的文本选中，让人自己按 ⌘C。
+ */
+export async function copy(text, done) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return toast(done);
+  } catch {}
+
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  area.style.cssText = "position:fixed;top:0;left:-9999px;opacity:0";
+  document.body.append(area);
+  area.select();
+  area.setSelectionRange(0, text.length);
+  let ok = false;
+  try {
+    ok = document.execCommand("copy");
+  } catch {}
+  area.remove();
+  if (ok) return toast(done);
+
+  const el = [...document.querySelectorAll("input[readonly], textarea.links")].find((i) => i.value === text);
+  if (el) {
+    el.focus();
+    el.select();
+  }
+  toast("已选中，按 ⌘C / Ctrl+C 复制");
 }
 
 /** 本机的小偏好（阅读进度、关掉的提示），读写失败时静默忽略 */
