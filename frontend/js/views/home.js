@@ -710,6 +710,8 @@ function wExample(size) {
 
 // ---------- 今日日报 ----------
 
+const MONTHS = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+
 /** 日报里的篇目，按版面顺序（头条在前，温故放最后） */
 function paperItems(p) {
   const main = [p.lead, ...p.sections.filter((x) => x.key !== "recall").flatMap((x) => x.items)].filter(Boolean);
@@ -752,10 +754,24 @@ function wPaper(size) {
     return `头条 ${words[0]}${words.length > 1 ? `、${words.slice(1).join("、")}` : ""}${unread.length > n ? " 等" : ""}`;
   };
 
-  // 细条：和原来的入口条一样，宽的多列几个词
+  // 细条：像一张报纸的报头——左边日期，中间期号、头条和每篇一格的进度，宽的多列几个词
   if (size === "1-4" || size === "1-8") {
-    return `<a class="w-body w-card ${cls} pw-strip" href="#/paper">${ic}
-      <span class="pw-title"><b>今日日报</b><small>${head(size === "1-8" ? 5 : 2)}</small></span>${count}${icon("right")}
+    const day = p.day ?? ctx.t.day;
+    const [, m, d] = day.split("-").map(Number);
+    const wd = "日一二三四五六"[new Date(`${day}T12:00:00`).getDay()];
+    // 头条一个词总在；卡片够宽（容器查询）时再多露出后面几个
+    const more = unread.slice(1, size === "1-8" ? 4 : 2).map((x) => `、<em>${esc(x.headword)}</em>`).join("");
+    const line = unread.length
+      ? `<em>${esc(unread[0].headword)}</em>${more ? `<span class="pw-more">${more}</span>` : ""}<small>${unread.length > 1 ? `等 ${unread.length} 篇没读` : "最后一篇"}</small>`
+      : `<span class="pw-fin">${icon("check")}这一版都读完了</span>`;
+    const segs = Array.from({ length: p.total }, (_, i) => `<i class="${i < p.read ? "on" : ""}"></i>`).join(""); // 一篇一格，读了几篇从左往右点亮几格
+    return `<a class="w-body w-card ${cls} pw-strip pw-news" href="#/paper" aria-label="今日日报，读了 ${p.read} / ${p.total} 篇">
+      <span class="pw-date"><b>${d}</b><small>${MONTHS[m - 1]}</small></span>
+      <span class="pw-title">
+        <span class="pw-kick">词源日报 · No. ${p.issue ?? ""} · 周${wd}</span>
+        <span class="pw-hl">${line}</span>
+        <span class="pw-segs" aria-hidden="true">${segs}</span>
+      </span>${count}${icon("right")}
     </a>`;
   }
 

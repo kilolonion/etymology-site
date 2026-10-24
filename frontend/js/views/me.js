@@ -17,7 +17,7 @@ export async function viewMe() {
   const [d, history, reminder, me, status, bk] = await Promise.all([
     api("/shelf"), api("/history"), api("/reminder"), api("/me"), pushStatus(), api("/books").catch(() => null),
   ]);
-  const booksVal = !bk || bk.books.length < 2 ? "" : bk.mixed ? `${bk.books.length} 本混合` : `${bk.books.filter((b) => b.on).length} 本`;
+  const booksVal = !bk || bk.books.length < 2 ? "" : `${bk.mixed ? `${bk.books.length} 本混合` : `推 ${bk.books.filter((b) => b.level > 0).length} 本`} · 读过 ${bookPct(bk.books)}%`;
   const s = d.stats;
   const pct = s.total ? Math.round((s.read / s.total) * 100) : 0;
   const reminderVal = status === "on" ? `每天 ${esc(reminder.time)}` : STATUS_TEXT[status];
@@ -25,6 +25,7 @@ export async function viewMe() {
   render(`
     <header class="page-head"><h1>我的<span class="en">My Shelf</span></h1><p>${esc(me.username)}${me.isAdmin ? " · 管理员" : ""}</p></header>
     <div class="me-grid">
+    <div class="me-main">
     <section class="shelf-card">
       <p class="shelf-sum"><b>${s.read}</b><span>${s.read ? "个词的来历，<br>已经住进你的书架" : "本书还没上架，<br>读完一个词就放上一本"}</span></p>
       ${shelf(d.shelf)}
@@ -36,6 +37,8 @@ export async function viewMe() {
       </div>
       <div class="progress"><span style="width:${pct}%"></span></div>
     </section>
+    ${bk && bk.books.length > 1 ? myBooks(bk) : ""}
+    </div>
     ${footprints(d.footprints, history.length)}
     ${collection(d.themes)}
     ${origins(d.langs, s.read)}
@@ -577,43 +580,127 @@ export async function viewBooks() {
   render(`
     <button class="back" data-action="back">${icon("left")}我的</button>
     <header class="page-head"><h1>词书<span class="en">The Books</span></h1><p id="books-sum">${booksSum(d)}</p></header>
-    <p class="books-tip">每日一词、日报、接着读、随手翻一页，都从打开的书里挑；探索和搜索照样能看到所有书。同一个词几本书都讲过，读过其中一本，别的书里的版本就往后排，文章里也能一键“换本书读”。</p>
-    <div class="book-list" id="book-list">${d.books.map(bookCard).join("")}</div>`);
+    <p class="books-tip">每日一词、日报、接着读、随手翻一页，都按下面的配比从几本书里挑；探索和搜索照样能看到所有书。也可以点“继续读”，照原书顺序一篇篇往下读。</p>
+    <section class="mix-card" id="mix-card">${mixCard(d)}</section>
+    <div class="book-list" id="book-list">${d.books.map(bookCard).join("")}</div>
+    ${d.twins ? `<a class="cmp-entry" href="#/compare"><i>${icon("book")}</i><span><b>${d.twins} 个词几本书都讲过</b><small>并排对照，看不同的作者怎么讲同一个词</small></span>${icon("right")}</a>` : ""}`);
 }
 
-const booksSum = (d) => (d.mixed ? `${d.books.length} 本书混合推送` : `只推 ${d.books.filter((b) => b.on).length} 本：${d.books.filter((b) => b.on).map((b) => `《${esc(b.short)}》`).join("")}`);
+/** “我的”页：几本书各读到哪了，点一下接着读；底下是推送配比 */
+function myBooks(bk) {
+  const row = (b, i) => {
+    const pct = b.count ? Math.round((b.read / b.count) * 100) : 0;
+    return `<div class="mb-row" style="--c:var(--bk${i % 3})">
+      <a class="mb-seal" href="#/book/${esc(b.id)}" aria-label="《${esc(b.short)}》目录">${esc(b.seal)}</a>
+      <a class="mb-txt" href="#/book/${esc(b.id)}">
+        <span class="mb-title"><b>《${esc(b.short)}》</b><small>${b.read} / ${b.count} · ${pct}%</small></span>
+        <span class="progress"><span style="width:${Math.max(pct, b.read ? 1 : 0)}%"></span></span>
+      </a>
+      ${b.next ? `<a class="mb-go" href="#/w/${esc(b.next.id)}?in=book"><small>${b.next.resume ? "回到书签" : b.mark ? "继续读" : b.read ? "开始读" : "从头读"}</small><em>${esc(b.next.headword)}</em></a>` : `<span class="mb-go done">${icon("check")}读完了</span>`}
+    </div>`;
+  };
+  const on = bk.books.filter((b) => b.target > 0);
+  return `<section class="mybooks-card">
+    <div class="mb-head"><h2>我的词书<span class="en">Books</span></h2><a href="#/me/books">配比与进度${icon("right")}</a></div>
+    ${bk.books.map(row).join("")}
+    <div class="mb-mix"><span>推送配比</span><span class="mix-bar sm">${on
+      .map((b) => `<span style="flex:${b.target};--c:var(--bk${bk.books.indexOf(b) % 3})"><i>${esc(b.seal)}</i>${pctOf(b.target)}</span>`)
+      .join("")}</span></div>
+  </section>`;
+}
 
-function bookCard(b) {
+/** 读过的比例（几本书合起来） */
+const bookPct = (list) => {
+  const n = list.reduce((x, b) => x + b.count, 0);
+  return n ? Math.round((list.reduce((x, b) => x + b.read, 0) / n) * 100) : 0;
+};
+
+const booksSum = (d) => {
+  const on = d.books.filter((b) => b.level > 0);
+  return `${d.mixed ? `${d.books.length} 本书混合推送` : `推 ${on.length} 本，按配比混合`} · 合起来读过 ${bookPct(d.books)}%`;
+};
+
+const LEVELS = [[0, "关"], [0.5, "少"], [1, "适中"], [2, "多"]];
+const pctOf = (x) => `${Math.round(x * 100)}%`;
+
+/** 推送配比：一条按目标占比分段的条，下面是微调开关 */
+function mixCard(d) {
+  const on = d.books.filter((b) => b.target > 0);
+  return `<div class="mix-head"><b>推送配比</b><small>每日一词和日报大致按这个比例从几本书里挑</small></div>
+    <div class="mix-bar" role="img" aria-label="${esc(on.map((b) => `${b.short} ${pctOf(b.target)}`).join("，"))}">${on
+      .map((b) => `<span style="flex:${b.target};--c:var(--bk${d.books.indexOf(b) % 3})"><i>${esc(b.seal)}</i>${b.target >= 0.12 ? pctOf(b.target) : ""}</span>`)
+      .join("")}</div>
+    <label class="mix-auto"><span><b>按阅读习惯微调</b><small>推给你的词读没读完、收藏了多少、有没有主动翻这本书，会让配比在档位上浮动一点（最多 ±30%）</small></span>
+      <span class="switch"><input type="checkbox" data-mix-auto ${d.auto ? "checked" : ""} aria-label="按阅读习惯微调"><span></span></span></label>`;
+}
+
+/** 还要多久读完：按最近 30 天的速度 */
+function paceText(b) {
+  const left = b.count - b.read;
+  if (!left) return "全书读完了";
+  if (!b.read) return "还没开始读";
+  if (!b.pace) return "最近 30 天没读这本";
+  const days = Math.ceil(left / (b.pace / 30));
+  return `最近 30 天读了 ${b.pace} 篇，照这个速度${days > 730 ? "还要两年多" : days > 60 ? `还要 ${Math.round(days / 30)} 个月左右` : `还要 ${days} 天左右`}读完`;
+}
+
+function bookCard(b, i) {
   const pct = b.count ? Math.round((b.read / b.count) * 100) : 0;
-  return `<article class="book-card${b.on ? " on" : ""}">
-    <div class="bk-cover" aria-hidden="true"><i>${esc(b.seal)}</i><small>${esc(b.short)}</small></div>
+  const done = b.read >= b.count && b.count > 0;
+  const next = b.next
+    ? `<a class="btn sm" href="#/w/${esc(b.next.id)}?in=book">${b.next.resume ? "回到书签" : b.mark ? "继续读" : b.read ? "开始读" : "从头读"}<small>第 ${b.next.pos} 篇 · <em>${esc(b.next.headword)}</em></small></a>`
+    : "";
+  return `<article class="book-card${b.level > 0 ? " on" : ""}${done ? " done" : ""}" style="--c:var(--bk${i % 3})">
+    <a class="bk-cover" href="#/book/${esc(b.id)}" aria-label="《${esc(b.short)}》目录"><i>${esc(b.seal)}</i><small>${esc(b.short)}</small></a>
     <div class="bk-txt">
       <b>《${esc(b.title)}》</b>
       <small class="bk-by">${esc([b.author, b.publisher, b.year].filter(Boolean).join(" · "))}</small>
       ${b.intro ? `<p>${esc(b.intro)}</p>` : ""}
-      <div class="progress"><span style="width:${pct}%"></span></div>
-      <span class="bk-meta"><span>读过 <b>${b.read}</b> / ${b.count} 个词</span><a href="#/explore/az?book=${esc(b.id)}">翻翻这本书 →</a></span>
+      <div class="bk-prog">
+        <span class="bk-pct"><b>${pct}%</b>读过 ${b.read} / ${b.count} 篇${done ? `<em class="bk-done">${icon("check")}读完了</em>` : ""}</span>
+        <div class="progress"><span style="width:${pct}%"></span></div>
+        <small>${paceText(b)}</small>
+      </div>
+      <div class="bk-acts">${next}<a class="text-btn" href="#/book/${esc(b.id)}">目录${icon("right")}</a></div>
+      <div class="bk-level">
+        <span class="seg" role="radiogroup" aria-label="《${esc(b.short)}》推多少">${LEVELS.map(
+          ([v, label]) => `<button type="button" role="radio" aria-checked="${b.level === v}" data-book-level="${v}" data-book="${esc(b.id)}">${label}</button>`,
+        ).join("")}</span>
+        <small>${b.level > 0 ? `约占推送 <b>${pctOf(b.target)}</b>${Math.abs(b.factor - 1) >= 0.03 ? `<span class="bk-why">微调 ×${b.factor}${b.why ? `：${esc(b.why)}` : ""}</span>` : ""}` : "不推这本，探索里照样能看"}</small>
+      </div>
     </div>
-    <label class="switch" title="${b.on ? "推送这本书的词" : "不推这本书"}"><input type="checkbox" data-book="${esc(b.id)}" aria-label="推送《${esc(b.short)}》的词" ${b.on ? "checked" : ""}><span></span></label>
   </article>`;
 }
 
-document.addEventListener("change", async (ev) => {
-  const box = ev.target;
-  if (!box.dataset?.book || !box.closest("#book-list")) return;
-  const on = [...document.querySelectorAll("#book-list [data-book]")].filter((x) => x.checked).map((x) => x.dataset.book);
-  if (!on.length) {
-    box.checked = true;
-    return toast("至少留一本书");
-  }
+async function saveBooks(body, undo) {
   try {
-    const d = await api("/me/books", { method: "PUT", body: { books: on } });
+    const d = await api("/me/books", { method: "PUT", body });
     document.getElementById("book-list").innerHTML = d.books.map(bookCard).join("");
+    document.getElementById("mix-card").innerHTML = mixCard(d);
     document.getElementById("books-sum").innerHTML = booksSum(d);
-    toast(d.mixed ? "几本书混合推送" : `以后只推${d.books.filter((b) => b.on).map((b) => `《${b.short}》`).join("")}`);
+    return d;
   } catch (e) {
-    box.checked = !box.checked;
+    undo?.();
     toast(e.message);
   }
+}
+
+actions["book-level"] = async (el) => {
+  if (el.getAttribute("aria-checked") === "true") return;
+  const level = Number(el.dataset.bookLevel);
+  const d = await saveBooks({ weights: { [el.dataset.book]: level } });
+  const b = d?.books.find((x) => x.id === el.dataset.book);
+  if (b) toast(level ? `《${b.short}》约占推送 ${pctOf(b.target)}` : `不再推《${b.short}》`);
+};
+
+document.addEventListener("click", (ev) => {
+  const el = ev.target.closest?.("[data-book-level]");
+  if (el && el.closest("#book-list")) actions["book-level"](el);
 });
 
+document.addEventListener("change", async (ev) => {
+  const box = ev.target;
+  if (!box.matches?.("[data-mix-auto]")) return;
+  const d = await saveBooks({ auto: box.checked }, () => (box.checked = !box.checked));
+  if (d) toast(d.auto ? "会按你的阅读习惯微调配比" : "配比只按档位来");
+});

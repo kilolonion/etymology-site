@@ -59,6 +59,10 @@ type Index = {
   words: Map<string, string>;
   /** 同一个词头在几本书里的版本：归一后的词头 → 词条 id（按书目顺序） */
   twins: Map<string, string[]>;
+  /** 每本书按原书顺序的词条 id（不含跳转词条、后台新增的词） */
+  order: Map<string, string[]>;
+  /** 词条在自己那本书里排第几（从 0 数） */
+  pos: Map<string, number>;
 };
 
 const ORDER_SALT = process.env.ORDER_SALT ?? "etymology-daily";
@@ -189,7 +193,17 @@ export function rebuild(): void {
     const k = headKey(e.headword);
     twins.set(k, [...(twins.get(k) ?? []), e.id]);
   }
-  index = { all, full, redirects, dailyOrder, rotation, kin, words, twins };
+  // 原书顺序就是数据文件里的顺序（三本书都是按 A–Z 分章编排的）
+  const order = new Map<string, string[]>();
+  const pos = new Map<string, number>();
+  for (const e of base) {
+    if (isRedirect(e) || !e.book || !full.has(e.id)) continue;
+    const list = order.get(e.book) ?? [];
+    pos.set(e.id, list.length);
+    list.push(e.id);
+    order.set(e.book, list);
+  }
+  index = { all, full, redirects, dailyOrder, rotation, kin, words, twins, order, pos };
 }
 
 export const getEntry = (id: string) => index.full.get(id);
@@ -204,6 +218,19 @@ export const twinsOf = (id: string): string[] => {
   const e = index.full.get(id);
   return e ? (index.twins.get(headKey(e.headword)) ?? []).filter((x) => x !== id) : [];
 };
+/** 一本书按原书顺序的词条 id */
+export const bookOrder = (book: string): string[] => index.order.get(book) ?? [];
+/** 词条在原书里的位置：第几篇（从 0 数）、全书几篇 */
+export function bookPos(id: string): { book: string; i: number; n: number } | undefined {
+  const e = index.full.get(id);
+  const i = index.pos.get(id);
+  return e?.book && i !== undefined ? { book: e.book, i, n: index.order.get(e.book)?.length ?? 0 } : undefined;
+}
+/** 几本书都讲过的词：每组按书目顺序，组按词头字母 */
+export const twinGroups = (): string[][] =>
+  [...index.twins.values()]
+    .filter((ids) => ids.length > 1)
+    .sort((a, b) => cmpHead(index.full.get(a[0]!)!.headword, index.full.get(b[0]!)!.headword));
 /** 是不是书里的词条（任何一本，含跳转词条）；后台新增的词不是 */
 export const isBookId = (id: string) => baseIds.has(id);
 /** 原书里的样子（不含补写），补写编辑时对照用 */

@@ -168,7 +168,7 @@ export async function viewAZ(query) {
   render(`
     <button class="back" data-action="back">${icon("left")}探索</button>
     <header class="page-head"><h1>按字母<span class="en">A to Z</span></h1><p>${
-      many ? `${book ? `《${esc(book.short)}》的 ${book.count} 个词。` : `${bk.books.length} 本书按词头混排，词头右上角的字是出处。`}点字母展开那一组` : "按书中顺序排列。点字母展开那一组，不用从头翻到尾"
+      many ? `${book ? `《${esc(book.short)}》的 ${book.count} 个词，按字母排；<a href="#/book/${esc(book.id)}">按原书顺序读 →</a>。` : `${bk.books.length} 本书按词头混排，词头右上角的字是出处。`}点字母展开那一组` : "按书中顺序排列。点字母展开那一组，不用从头翻到尾"
     }</p></header>
     ${many ? `<nav class="book-tabs">${[["", "全部"], ...bk.books.map((b) => [b.id, `<i>${esc(b.seal)}</i>${esc(b.short)}`])]
       .map(([id, label]) => `<a href="#/explore/az${id ? `?book=${id}` : ""}"${(book?.id ?? "") === id ? ' aria-current="page"' : ""}>${label}</a>`)

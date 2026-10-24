@@ -318,22 +318,43 @@ export function mailTargets(): ({ id: number; username: string } & MailPrefs)[] 
   return rows.map((r) => ({ id: r.id, username: r.username, ...toPrefs(r) }));
 }
 
-// ---------- 词书：推送用哪几本 ----------
+// ---------- 词书：每本书推多少 ----------
 
-/** null = 全部混合（默认）；否则只推这几本 */
-export function getBooks(uid: number): string[] | null {
+/** 每本书的推送档位：0 关、0.5 少、1 适中、2 多 */
+export const BOOK_LEVELS = [0, 0.5, 1, 2] as const;
+
+/**
+ * 词书偏好。weights 只记设过的书，没写到的书用 fallback（新加的书默认“适中”；旧版只存了“推哪几本”时，没列的就是关）。
+ * auto：按阅读习惯（推过的读没读完、有没有收藏、有没有主动翻这本书）在档位上再微调一点
+ */
+export type BookPrefs = { weights: Record<string, number>; fallback: number; auto: boolean; marks: Record<string, string> };
+const DEFAULT_PREFS: BookPrefs = { weights: {}, fallback: 1, auto: true, marks: {} };
+
+export function getBookPrefs(uid: number): BookPrefs {
   const raw = (db.prepare("SELECT books FROM users WHERE id = ?").get(uid) as { books: string | null } | undefined)?.books;
-  if (!raw) return null;
+  if (!raw) return { ...DEFAULT_PREFS, weights: {}, marks: {} };
   try {
-    const list = JSON.parse(raw) as unknown;
-    return Array.isArray(list) && list.length ? list.map(String) : null;
+    const v = JSON.parse(raw) as unknown;
+    // 旧格式：["cidian", "laili"] = 只推这几本
+    if (Array.isArray(v)) return v.length ? { weights: Object.fromEntries(v.map((id) => [String(id), 1])), fallback: 0, auto: true, marks: {} } : { ...DEFAULT_PREFS, weights: {}, marks: {} };
+    const o = v as { w?: Record<string, unknown>; auto?: unknown; m?: Record<string, unknown> };
+    const weights = Object.fromEntries(
+      Object.entries(o.w ?? {}).filter(([, x]) => (BOOK_LEVELS as readonly number[]).includes(Number(x))).map(([k, x]) => [k, Number(x)]),
+    );
+    const marks = Object.fromEntries(Object.entries(o.m ?? {}).map(([k, x]) => [k, String(x)]));
+    return { weights, fallback: 1, auto: o.auto !== false, marks };
   } catch {
-    return null;
+    return { ...DEFAULT_PREFS, weights: {}, marks: {} };
   }
 }
 
-export function setBooks(uid: number, books: string[] | null): void {
-  db.prepare("UPDATE users SET books = ? WHERE id = ?").run(books?.length ? JSON.stringify(books) : null, uid);
+/**
+ * 档位、微调开关、书签存在一起；都是默认值时存 NULL，和从没设过一样。
+ * weights 要传每本书的档位（旧格式里没列的书是“关”，调用方按书目换算好再存）
+ */
+export function setBookPrefs(uid: number, p: { weights: Record<string, number>; auto: boolean; marks: Record<string, string> }): void {
+  const plain = Object.values(p.weights).every((x) => x === 1) && p.auto && !Object.keys(p.marks).length;
+  db.prepare("UPDATE users SET books = ? WHERE id = ?").run(plain ? null : JSON.stringify({ w: p.weights, auto: p.auto, m: p.marks }), uid);
 }
 
 // ---------- RSS 订阅 ----------

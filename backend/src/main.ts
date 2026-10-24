@@ -16,15 +16,15 @@ import {
   bestStreak, futureAssigned, isDone, localDay, resurface, review, shiftDay, streak, todayId, todayProgress, todayReason, tomorrowId,
   TZ, weekDays,
 } from "./daily.ts";
-import { recommend } from "./recommend.ts";
+import { bookPlan, recommend } from "./recommend.ts";
 import { getOrBuildPaper } from "./paper.ts";
 import * as db from "./db.ts";
 import { entriesAdmin } from "./admin-entries.ts";
 import { initAuthoring, previewEntry, publicOrigin } from "./authoring.ts";
 import { mcp, tokensAdmin } from "./mcp.ts";
 import {
-  allSummaries, books, findWord, getBook, getEntry, getRedirect, gist, kinOf, loadEntries, related, search, summarize,
-  themeGroups, totalCount, twinsOf, type Summary,
+  allSummaries, bookOrder, bookPos, books, findWord, getBook, getEntry, getRedirect, gist, kinOf, loadEntries, related, search,
+  summarize, themeGroups, totalCount, twinGroups, twinsOf, type Summary,
 } from "./entries.ts";
 import type { Book } from "./types.ts";
 import type { FullEntry } from "./types.ts";
@@ -205,7 +205,21 @@ function detail(uid: number, id: string, preview?: FullEntry) {
     // 出自哪本书（后台新增的词、稿子没有）；同一个词在别的书里怎么讲
     bookInfo: e.book ? bookMeta(getBook(e.book)) : null,
     twins: preview ? [] : withState(uid, summariesOf(twinsOf(id))),
+    // 原书顺序里的第几篇、上一篇、下一篇
+    bookNav: preview ? null : navOf(id),
   };
+}
+
+const brief = (id?: string) => {
+  const e = id ? getEntry(id) : undefined;
+  return e ? { id: e.id, headword: e.headword } : null;
+};
+
+function navOf(id: string) {
+  const p = bookPos(id);
+  if (!p) return null;
+  const ids = bookOrder(p.book);
+  return { book: p.book, pos: p.i + 1, total: p.n, prev: brief(ids[p.i - 1]), next: brief(ids[p.i + 1]) };
 }
 
 const bookMeta = (b?: Book) =>
@@ -564,37 +578,146 @@ api.put("/me/password", async (c) => {
   return err ? c.json({ error: err }, 400) : c.json({ ok: true });
 });
 
-// ---------- 词书：有哪几本、各读了多少；推送用哪几本（默认全部混合） ----------
+// ---------- 词书：有哪几本、各读了多少、推多少；按原书顺序读；几本书对照 ----------
+
+/** 每本书的档位（旧格式里没列的书按“关”换算） */
+const levelsOf = (p: db.BookPrefs) => Object.fromEntries(books().map((b) => [b.id, p.weights[b.id] ?? p.fallback]));
+
+/** 接着读：书签那篇没读完就回到它，读完了就往后找第一篇没读的（到书尾再从头找）；没书签从头找 */
+function continueOf(book: string, mark: string | undefined, state: Map<string, db.EntryState>) {
+  const ids = bookOrder(book);
+  const at = mark ? ids.indexOf(mark) : -1;
+  if (at >= 0 && !state.get(mark!)?.read) return { ...brief(mark)!, pos: at + 1, resume: true };
+  for (let k = 0; k < ids.length; k++) {
+    const i = (Math.max(at, -1) + 1 + k) % ids.length;
+    if (!state.get(ids[i]!)?.read) return { ...brief(ids[i])!, pos: i + 1, resume: false };
+  }
+  return null;
+}
 
 const booksState = (uid: number) => {
   const state = db.stateMap(uid);
-  const mine = db.getBooks(uid);
-  const all = allSummaries();
+  const prefs = db.getBookPrefs(uid);
+  const today = localDay();
+  const plan = new Map(bookPlan(uid, today).map((p) => [p.id, p]));
+  // 读书的速度：最近 30 天在这本书里读了几篇（推算还要多久读完）
+  const since = shiftDay(today, -30);
+  const pace = new Map<string, number>();
+  for (const r of db.readLog(uid)) {
+    const b = r.read_day && r.read_day >= since ? getEntry(r.id)?.book : undefined;
+    if (b) pace.set(b, (pace.get(b) ?? 0) + 1);
+  }
   const list = books().map((b) => {
-    let count = 0;
-    let read = 0;
-    for (const s of all) {
-      if (s.book !== b.id || s.redirect) continue;
-      count++;
-      if (state.get(s.id)?.read) read++;
-    }
-    return { ...bookMeta(b)!, intro: b.intro ?? "", count, read, on: !mine || mine.includes(b.id) };
+    const ids = bookOrder(b.id);
+    const read = ids.filter((id) => state.get(id)?.read).length;
+    const p = plan.get(b.id)!;
+    return {
+      ...bookMeta(b)!, intro: b.intro ?? "", count: ids.length, read,
+      level: p.level, factor: p.factor, target: p.target, recent: p.recent, why: p.why,
+      pace: pace.get(b.id) ?? 0,
+      next: continueOf(b.id, prefs.marks[b.id], state),
+      mark: prefs.marks[b.id] ? brief(prefs.marks[b.id]) : null,
+    };
   });
-  return { mixed: !mine, books: list };
+  const on = list.filter((b) => b.level > 0);
+  return { auto: prefs.auto, mixed: on.length === list.length && on.every((b) => b.level === on[0]!.level), twins: twinGroups().length, books: list };
 };
 
 api.get("/books", (c) => c.json(booksState(uidOf(c))));
 
-/** books: 只推这几本；null 或全选 = 全部混合 */
+/** weights：{ 书 id: 档位 }，只传要改的；auto：按阅读习惯微调。旧版的 books: [...] / null（只推这几本 / 全部）也认 */
 api.put("/me/books", async (c) => {
   const uid = uidOf(c);
-  const { books: pick } = await body<{ books?: unknown }>(c);
+  const { weights, auto, books: pick } = await body<{ weights?: unknown; auto?: unknown; books?: unknown }>(c);
   const known = books().map((b) => b.id);
-  if (pick !== null && (!Array.isArray(pick) || pick.some((x) => !known.includes(String(x))))) return c.json({ error: "不认识的书" }, 400);
-  const list = pick === null ? [] : [...new Set((pick as unknown[]).map(String))];
-  if (pick !== null && !list.length) return c.json({ error: "至少留一本书" }, 400);
-  db.setBooks(uid, list.length === known.length ? null : list);
+  const prefs = db.getBookPrefs(uid);
+  let levels = levelsOf(prefs);
+  if (weights !== undefined) {
+    if (!weights || typeof weights !== "object" || Array.isArray(weights)) return c.json({ error: "格式不对" }, 400);
+    for (const [id, v] of Object.entries(weights)) {
+      if (!known.includes(id)) return c.json({ error: "不认识的书" }, 400);
+      if (!(db.BOOK_LEVELS as readonly number[]).includes(Number(v))) return c.json({ error: "档位只能是 关 / 少 / 适中 / 多" }, 400);
+      levels[id] = Number(v);
+    }
+  } else if (pick !== undefined) {
+    if (pick !== null && (!Array.isArray(pick) || pick.some((x) => !known.includes(String(x))))) return c.json({ error: "不认识的书" }, 400);
+    levels = Object.fromEntries(known.map((id) => [id, pick === null || (pick as unknown[]).map(String).includes(id) ? 1 : 0]));
+  }
+  if (!Object.values(levels).some((x) => x > 0)) return c.json({ error: "至少留一本书" }, 400);
+  db.setBookPrefs(uid, { weights: levels, auto: typeof auto === "boolean" ? auto : prefs.auto, marks: prefs.marks });
   return c.json(booksState(uid));
+});
+
+/** 按原书顺序读：打开一篇就把书签挪到这里（从书的目录、上一篇 / 下一篇进来时才记） */
+api.put("/me/bookmark", async (c) => {
+  const uid = uidOf(c);
+  const { id } = await body<{ id?: string }>(c);
+  const p = bookPos(String(id ?? ""));
+  if (!p) return c.json({ error: "不是书里的词条" }, 400);
+  const prefs = db.getBookPrefs(uid);
+  db.setBookPrefs(uid, { weights: levelsOf(prefs), auto: prefs.auto, marks: { ...prefs.marks, [p.book]: String(id) } });
+  return c.json({ ok: true });
+});
+
+/** 一本书的目录：原书顺序，按书里的字母章分组；列表只带画一行需要的字段 */
+api.get("/books/:id", (c) => {
+  const uid = uidOf(c);
+  const b = books().find((x) => x.id === c.req.param("id"));
+  if (!b) return c.json({ error: "没有这本书" }, 404);
+  const head = booksState(uid).books.find((x) => x.id === b.id)!;
+  const state = db.stateMap(uid);
+  const chapters: { letter: string; items: unknown[] }[] = [];
+  const rows = bookOrder(b.id).map((id) => {
+    const e = getEntry(id)!;
+    const s = summarize(e);
+    return { id, letter: s.letter, headword: e.headword, meaning: e.meaning ?? "", themes: s.themes?.slice(0, 1), page: e.page, read: !!state.get(id)?.read, starred: !!state.get(id)?.starred };
+  });
+  // 书里的字母章：词头去掉冠词后的首字母大体就是章，但 a bolt from the blue 这类在书里排在 A 章。
+  // 只有连着两篇都到了后面的字母才算进了新的一章
+  rows.forEach(({ letter, ...row }, i) => {
+    const cur = chapters.at(-1);
+    const next = rows[i + 1]?.letter;
+    if (!cur || (letter > cur.letter && (next === undefined || next >= letter))) chapters.push({ letter, items: [row] });
+    else cur.items.push(row);
+  });
+  return c.json({ ...head, chapters });
+});
+
+/** 几本书都讲过的词 */
+api.get("/compare", (c) => {
+  const state = db.stateMap(uidOf(c));
+  return c.json(
+    twinGroups().map((ids) => {
+      const es = ids.map((id) => getEntry(id)!);
+      return {
+        id: ids[0],
+        headword: es[0]!.headword,
+        meaning: es.find((e) => e.meaning)?.meaning ?? "",
+        themes: es[0]!.themes.slice(0, 1),
+        books: es.map((e) => ({ id: e.id, seal: getBook(e.book)?.seal ?? "", read: !!state.get(e.id)?.read })),
+      };
+    }),
+  );
+});
+
+/** 同一个词在几本书里的讲法，并排看 */
+api.get("/compare/:id", (c) => {
+  const uid = uidOf(c);
+  const id = c.req.param("id");
+  const e = getEntry(id);
+  if (!e) return c.json({ error: "not found" }, 404);
+  const rank = (x: FullEntry) => books().findIndex((b) => b.id === x.book);
+  const group = [e, ...twinsOf(id).map((x) => getEntry(x)!)].sort((a, b) => rank(a) - rank(b));
+  const state = db.stateMap(uid);
+  return c.json({
+    headword: e.headword,
+    items: group.map((x) => ({
+      id: x.id, headword: x.headword, variants: x.variants ?? [], ipa: x.ipa, pos: x.pos ?? "", meaning: x.meaning ?? "",
+      phrases: x.phrases ?? [], teaser: x.teaser, keyline: x.keyline ?? "", etymology: x.etymology, examples: x.examples,
+      themes: x.themes, langs: x.langs ?? [], era: x.era ?? null, page: x.page ?? null, auto: x.auto ?? [],
+      bookInfo: bookMeta(getBook(x.book)), read: !!state.get(x.id)?.read, starred: !!state.get(x.id)?.starred,
+    })),
+  });
 });
 
 // ---------- 邮件日报：邮箱选填，两种信各自开关，几点收、按哪个时区 ----------

@@ -44,6 +44,8 @@ export async function viewEntry(id, query) {
   }
 
   current = e;
+  // 从目录、上一篇 / 下一篇进来的：书签挪到这一篇
+  if (query?.get("in") === "book" && e.bookNav) api("/me/bookmark", { method: "PUT", body: { id: e.id } }).catch(() => {});
   const theme = primaryTheme(e);
   // 相关的词：同专题的词；参见和有关系的词已经在“词的亲缘”里，“接着读”里有的也不重复
   const shownIds = new Set([...e.upNext, ...e.seeAlso, ...e.kin].map((x) => x.id));
@@ -101,6 +103,8 @@ export async function viewEntry(id, query) {
 
         ${e.upNext.length ? `<h3 class="kicker">接着读 <span class="en">Up Next</span></h3><div class="upnext">${e.upNext.map(nextCard).join("")}</div>` : ""}
 
+        ${bookNav(e)}
+
         <footer class="finis">
           <span class="fleuron" aria-hidden="true">${emblem(theme)}</span>
           <p>${esc(e.headword)} 的故事就到这里</p>
@@ -149,7 +153,21 @@ function twins(e) {
       <span><b>${esc(s.headword)}</b><small>${esc(s.meaning || "")}</small></span>
       <em>${s.read ? "读过" : "换本书读"}</em>
     </a>`;
-  return fold(foldHead("别的书里", "Other Tellings", `${e.twins.length} 本`), `<p class="twin-tip">同一个词，别的书讲的故事未必一样。</p><div class="twins">${e.twins.map(card).join("")}</div>`, { key: "entry.twins" });
+  const body = `<p class="twin-tip">同一个词，别的书讲的故事未必一样。<a href="#/compare/${esc(e.id)}">并排对照${icon("right")}</a></p><div class="twins">${e.twins.map(card).join("")}</div>`;
+  return fold(foldHead("别的书里", "Other Tellings", `${e.twins.length} 本`), body, { key: "entry.twins" });
+}
+
+/** 原书顺序：上一篇、在书里第几篇（点开目录）、下一篇。点这里进去的文章会挪书签 */
+function bookNav(e) {
+  const n = e.bookNav;
+  if (!n || !e.bookInfo) return "";
+  const go = (x, cls, label) =>
+    x ? `<a class="${cls}" href="#/w/${esc(x.id)}?in=book"><small>${label}</small><b>${esc(x.headword)}</b></a>` : `<span class="${cls}"></span>`;
+  return `<nav class="book-nav" aria-label="原书顺序">
+    ${go(n.prev, "bn-prev", "上一篇")}
+    <a class="bn-toc" href="#/book/${esc(n.book)}"><i>${esc(e.bookInfo.seal)}</i><small>《${esc(e.bookInfo.short)}》</small><b>${n.pos} / ${n.total}</b></a>
+    ${go(n.next, "bn-next", "下一篇")}
+  </nav>`;
 }
 const patchLabel = (p) => `${p.origin?.kind === "manual" ? "编辑补写的" : "AI 补充的"}（${p.origin?.checked ? "已核对" : "待核对"}）`;
 

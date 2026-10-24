@@ -8,13 +8,14 @@
 //   + 读得少的专题（覆盖面）
 //   − 和昨天、今天同一个主专题（避免单调）
 //   − 和最近几次推送首字母相同（避免 A、A、A……）
-//   − 和最近两次推送出自同一本书（混合推送时几本书轮着来）
+//   ± 几本书的占比往目标上拉：目标 = 每本书的档位（关 / 少 / 适中 / 多）× 阅读习惯微调，
+//     和最近两周推过、读过的实际占比相比，少了就加分、多了就减分（见 bookPlan）
 //   − 同一个词在别的书里已经读过（换个讲法再读一遍不算新词，排到后面）
 //   + 一点按种子固定的随机扰动（同一天结果稳定，不同天有变化）
-// 后台新增、还没核对的词不参与推荐（见 entries.ts 的 inRotation）；用户只选了几本书时，别的书的词也不推（bookFilter）。
+// 后台新增、还没核对的词不参与推荐（见 entries.ts 的 inRotation）；关掉的书不推（bookFilter）。
 
 import { createHash } from "node:crypto";
-import { allDaily, getBooks, readLog, stateMap } from "./db.ts";
+import { allDaily, getBookPrefs, readLog, stateMap, type BookPrefs } from "./db.ts";
 import { allFull, books, getEntry, headKey, inRotation, kinOf } from "./entries.ts";
 import { SUBTHEMES, type FullEntry } from "./types.ts";
 
@@ -44,16 +45,126 @@ function daysBefore(day: string, n: number): string {
   return new Date(Date.UTC(y, m - 1, d - n)).toISOString().slice(0, 10);
 }
 
+const levelOf = (p: BookPrefs, id: string) => p.weights[id] ?? p.fallback;
+
 /**
- * 这个用户的推送范围：没选（默认）就是全部书混合；选过的话只推选中的书。
- * 后台新增的词不属于哪本书，照常参与（它们另有 inRotation 把关）；书目里已经没有的书 id 忽略，全被忽略时退回全部
+ * 这个用户的推送范围：档位是“关”的书不推。后台新增的词不属于哪本书，照常参与（它们另有 inRotation 把关）；
+ * 书目里已经没有的书忽略，万一全关了就退回全部
  */
 export function bookFilter(uid: number): (e: { book?: string }) => boolean {
-  const known = new Set(books().map((b) => b.id));
-  const mine = (getBooks(uid) ?? []).filter((id) => known.has(id));
-  if (!mine.length) return () => true;
-  const set = new Set(mine);
-  return (e) => !e.book || set.has(e.book);
+  const prefs = getBookPrefs(uid);
+  const on = new Set(books().map((b) => b.id).filter((id) => levelOf(prefs, id) > 0));
+  if (!on.size || on.size === books().length) return () => true;
+  return (e) => !e.book || on.has(e.book);
+}
+
+/** 一本书在推送里的安排：档位、习惯系数、目标占比、最近两周的实际占比，以及系数是怎么来的 */
+export type BookPlan = {
+  id: string;
+  level: number;
+  /** 阅读习惯微调系数（没开微调就是 1），0.7～1.35 */
+  factor: number;
+  /** 目标占比（0～1），没有没读过的词了就是 0 */
+  target: number;
+  /** 最近两周推过、读过的词里这本书占多少 */
+  recent: number;
+  unread: number;
+  /** 微调的依据，给“词书”页解释用 */
+  why: string;
+};
+
+/** 统计最近两周的占比；习惯看最近 60 天 */
+const MIX_WINDOW = 14;
+const HABIT_WINDOW = 60;
+const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x));
+
+/**
+ * 混合比例。习惯微调看三个信号，都做了平滑（数据少时系数接近 1）：
+ * - 推给你的词读完了多少（和你所有书的平均读完率比）——最主要
+ * - 读过的词里收藏了多少
+ * - 没推也主动去读了多少（翻书、搜索、接着读）
+ */
+export function bookPlan(uid: number, day: string): BookPlan[] {
+  const prefs = getBookPrefs(uid);
+  const list = books();
+  const state = stateMap(uid);
+  const log = readLog(uid);
+  const daily = allDaily(uid).filter((d) => d.day <= day);
+  const mixSince = daysBefore(day, MIX_WINDOW);
+  const habitSince = daysBefore(day, HABIT_WINDOW);
+
+  type Tally = { unread: number; pushed: number; done: number; reads: number; stars: number; own: number; seen: number };
+  const per = new Map<string, Tally>(list.map((b) => [b.id, { unread: 0, pushed: 0, done: 0, reads: 0, stars: 0, own: 0, seen: 0 }]));
+  const tally = (id: string) => {
+    const b = getEntry(id)?.book;
+    return b ? per.get(b) : undefined;
+  };
+  for (const e of allFull()) {
+    const t = e.book ? per.get(e.book) : undefined;
+    if (t && !state.get(e.id)?.read && inRotation(e.id)) t.unread++;
+  }
+  // 推过的（不算今天：今天的还没来得及读）
+  const pushed = new Set(daily.filter((d) => d.day < day && d.day >= habitSince).flatMap((d) => d.ids));
+  for (const id of pushed) {
+    const t = tally(id);
+    if (!t) continue;
+    t.pushed++;
+    if (state.get(id)?.read) t.done++;
+  }
+  for (const r of log) {
+    if (!r.read_day || r.read_day < habitSince) continue;
+    const t = tally(r.id);
+    if (!t) continue;
+    t.reads++;
+    if (state.get(r.id)?.starred) t.stars++;
+    if (!pushed.has(r.id) && !r.manual) t.own++;
+  }
+  // 最近两周的曝光：推过的、读过的（去重）
+  const seen = new Set(daily.filter((d) => d.day >= mixSince).flatMap((d) => d.ids));
+  for (const r of log) if (r.read_day && r.read_day >= mixSince && r.read_day <= day) seen.add(r.id);
+  for (const id of seen) {
+    const t = tally(id);
+    if (t) t.seen++;
+  }
+
+  const sum = (f: (t: Tally) => number) => [...per.values()].reduce((n, t) => n + f(t), 0);
+  const pushedAll = sum((t) => t.pushed);
+  const finishAll = pushedAll >= 5 ? sum((t) => t.done) / pushedAll : 0.75;
+  const readsAll = sum((t) => t.reads);
+  const starAll = readsAll >= 5 ? sum((t) => t.stars) / readsAll : 0.1;
+  const ownAll = sum((t) => t.own);
+  const n = list.length;
+
+  const plans = list.map((b) => {
+    const t = per.get(b.id)!;
+    const level = levelOf(prefs, b.id);
+    let factor = 1;
+    let why = "";
+    if (prefs.auto && n > 1) {
+      const finish = (t.done + 4 * finishAll) / (t.pushed + 4);
+      const fFinish = finish / Math.max(finishAll, 0.05);
+      const star = (t.stars + 5 * starAll) / (t.reads + 5);
+      const fStar = 1 + clamp((star - starAll) * 1.5, -0.1, 0.15);
+      const own = ((t.own + 2) / (ownAll + 2 * n)) * n;
+      const fOwn = clamp(Math.pow(own, 0.2), 0.88, 1.15);
+      factor = Math.round(clamp(fFinish * fStar * fOwn, 0.7, 1.35) * 100) / 100;
+      // 说明挑影响最大的那个信号
+      const signs = [
+        { d: fFinish - 1, up: `推给你的 ${t.pushed} 个读完了 ${t.done} 个`, down: `推给你的 ${t.pushed} 个只读完 ${t.done} 个` },
+        { d: fStar - 1, up: `读过的里收藏了 ${t.stars} 个`, down: "读过的很少收藏" },
+        { d: fOwn - 1, up: `没推也主动读了 ${t.own} 个`, down: "很少主动翻这本" },
+      ].sort((a, b) => Math.abs(b.d) - Math.abs(a.d));
+      if (Math.abs(factor - 1) >= 0.03 && Math.abs(signs[0]!.d) >= 0.02) why = signs[0]!.d > 0 ? signs[0]!.up : signs[0]!.down;
+    }
+    return { id: b.id, level, factor, weight: t.unread ? level * factor : 0, unread: t.unread, seen: t.seen, why };
+  });
+  const total = plans.reduce((x, p) => x + p.weight, 0) || 1;
+  const seenAll = plans.reduce((x, p) => x + p.seen, 0);
+  return plans.map(({ weight, seen: s, ...p }) => ({
+    ...p,
+    target: Math.round((weight / total) * 1000) / 1000,
+    recent: seenAll ? Math.round((s / seenAll) * 1000) / 1000 : 0,
+  }));
 }
 
 /** 两个词是否互为“参见” */
@@ -99,6 +210,9 @@ export function recommend(opts: {
   const anchorEntry = anchor ? getEntry(anchor) : undefined;
   const scored: Pick[] = [];
   const allowed = bookFilter(uid);
+  // 几本书的占比：最近两周曝光太少（刚开始用）时只看目标，不算差额
+  const plan = new Map(bookPlan(uid, day).map((p) => [p.id, p]));
+  const enoughHistory = [...plan.values()].some((p) => p.recent > 0) && allDaily(uid).filter((d) => d.day >= daysBefore(day, MIX_WINDOW)).length >= 3;
   // 读过的词头（任何一本书）：别的书里同一个词往后排
   const readHeads = new Set(readEntries.map((r) => headKey(r.headword)));
 
@@ -147,7 +261,13 @@ export function recommend(opts: {
     if (picks[0] && primary(picks[0]) === p) score -= 2;
     if (picks[1] && primary(picks[1]) === p) score -= 1;
     if (picks.some((x) => initial(x) === initial(e))) score -= 0.8;
-    if (picks.slice(0, 2).some((x) => x.book && x.book === e.book)) score -= 0.6;
+    const bp = e.book ? plan.get(e.book) : undefined;
+    if (bp) {
+      // 差额拉回目标占比；再按目标本身给一点（档位“多”的书平时就更容易轮到）
+      if (enoughHistory) score += 3.5 * (bp.target - bp.recent);
+      score += 1.2 * (bp.target - 1 / plan.size);
+      if (picks[0]?.book === e.book) score -= 0.3; // 连着两天同一本书稍微压一压
+    }
     if (readHeads.has(headKey(e.headword))) score -= 3;
 
     const taste = tasteCount.get(p) ?? 0;
