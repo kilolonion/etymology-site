@@ -117,6 +117,16 @@ app.on(["GET", "POST"], "/api/mail/unsubscribe", (c) => {
   return c.html(unsubPage({ site, title: "已退订", text: `以后不会再收到${what}了。` }));
 });
 
+/**
+ * If-None-Match 按弱比较（RFC 9110）：nginx 开 gzip 时会把 ETag 改写成 W/"…"，阅读器回传的就是改写后的值；
+ * 也可能一次带好几个（逗号分隔），或者是 *
+ */
+const etagMatches = (header: string | undefined, etag: string) =>
+  !!header && header.split(",").some((t) => {
+    const v = t.trim();
+    return v === "*" || v.replace(/^W\//, "") === etag;
+  });
+
 // RSS：阅读器带不了 Cookie，凭订阅地址里的钥匙认人；只读，只有这个人自己的每日单词和日报。
 // private：Cloudflare 等中间缓存不存（每人内容不同、地址就是凭证）；noindex：万一地址被贴出去也别被收录
 app.get("/api/feed/:key/:file", (c) => {
@@ -129,7 +139,7 @@ app.get("/api/feed/:key/:file", (c) => {
   c.header("ETag", etag);
   c.header("Cache-Control", "private, max-age=900");
   c.header("X-Robots-Tag", "noindex, nofollow");
-  if (c.req.header("if-none-match") === etag) return c.body(null, 304);
+  if (etagMatches(c.req.header("if-none-match"), etag)) return c.body(null, 304);
   return c.body(xml, 200, { "Content-Type": "application/rss+xml; charset=utf-8" });
 });
 
