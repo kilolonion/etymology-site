@@ -33,6 +33,7 @@ export async function viewExplore(query) {
       <a class="az-link" href="#/explore/routes"><b>语源之路</b><span>Routes</span></a>
       <a class="az-link" href="#/explore/timeline"><b>时间长廊</b><span>Timeline</span></a>
       <a class="az-link" href="#/explore/az"><b>按字母浏览</b><span>A — Z</span></a>
+      <a class="az-link" href="#/me/books"><b>词书</b><span>Books</span></a>
     </div>`;
 
   const show = async (text) => {
@@ -154,8 +155,11 @@ const recallCard = (s) => `<a class="rcard" href="#/w/${esc(s.id)}" style="${tin
   ${s.starred ? icon("star", "star-s") : ""}
 </a>`;
 
-export async function viewAZ() {
-  const all = await loadSummaries();
+export async function viewAZ(query) {
+  const [every, bk] = await Promise.all([loadSummaries(), api("/books").catch(() => null)]);
+  const many = (bk?.books.length ?? 0) > 1;
+  const book = many && bk.books.find((b) => b.id === query?.get("book"));
+  const all = book ? every.filter((s) => s.book === book.id) : every;
   const groups = new Map();
   for (const s of all) {
     if (!groups.has(s.letter)) groups.set(s.letter, []);
@@ -163,7 +167,12 @@ export async function viewAZ() {
   }
   render(`
     <button class="back" data-action="back">${icon("left")}探索</button>
-    <header class="page-head"><h1>按字母<span class="en">A to Z</span></h1><p>按书中顺序排列。点字母展开那一组，不用从头翻到尾</p></header>
+    <header class="page-head"><h1>按字母<span class="en">A to Z</span></h1><p>${
+      many ? `${book ? `《${esc(book.short)}》的 ${book.count} 个词。` : `${bk.books.length} 本书按词头混排，词头右上角的字是出处。`}点字母展开那一组` : "按书中顺序排列。点字母展开那一组，不用从头翻到尾"
+    }</p></header>
+    ${many ? `<nav class="book-tabs">${[["", "全部"], ...bk.books.map((b) => [b.id, `<i>${esc(b.seal)}</i>${esc(b.short)}`])]
+      .map(([id, label]) => `<a href="#/explore/az${id ? `?book=${id}` : ""}"${(book?.id ?? "") === id ? ' aria-current="page"' : ""}>${label}</a>`)
+      .join("")}</nav>` : ""}
     <div class="letters">${"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
       .split("")
       .map((l) => `<button data-action="jump" data-letter="${l}" ${groups.has(l) ? "" : "disabled"}>${l}</button>`)

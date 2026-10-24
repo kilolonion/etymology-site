@@ -1,10 +1,13 @@
 // 词条校验规则（docs/DATA_FORMAT.md）。部署前校验 entries.json、后台导入、MCP 提交都用这一套。
 // 每条只回中文提示（不带“#3 (alcohol)”这种位置前缀），由调用的地方自己拼。
 
-import { LANGS, LINK_TYPES, ORIGIN_KINDS, SUBTHEMES, THEMES } from "./types.ts";
+import { AUTO_FIELDS, BASE_BOOK, LANGS, LINK_TYPES, ORIGIN_KINDS, SUBTHEMES, THEMES } from "./types.ts";
 
-export const ID_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+/** 第一本书和新增词：abet；其他书的词带书名后缀：abet--laili */
+export const ID_RE = /^[a-z0-9]+(-[a-z0-9]+)*(--[a-z]+)?$/;
 const FULL_FIELDS = ["pos", "meaning", "teaser", "etymology", "examples", "themes"];
+/** 其他书（epub 导入）：没有页码，音标、词性、例句看书，有的没有；钩子等编辑字段由程序生成 */
+const BOOK_FIELDS = ["teaser", "etymology", "themes"];
 const themeSet = new Set<string>(THEMES);
 const langSet = new Set<string>(LANGS);
 
@@ -27,9 +30,11 @@ export function checkEntry(e: Record<string, any>, ctx: CheckCtx): Issues {
   const warnings: string[] = [];
   if (typeof e !== "object" || e === null || Array.isArray(e)) return { errors: ["不是对象"], warnings };
 
-  for (const k of ["id", "headword", "ipa"]) if (!(k in e) || e[k] === "") errors.push(`缺少 ${k}`);
+  const other = typeof e.book === "string" && e.book !== BASE_BOOK;
+  for (const k of other ? ["id", "headword"] : ["id", "headword", "ipa"]) if (!(k in e) || e[k] === "") errors.push(`缺少 ${k}`);
   if (e.id && !ID_RE.test(e.id)) errors.push("id 格式不对（只能 a-z0-9 和 -）");
-  if (ctx.added) {
+  if (e.id && other && !String(e.id).endsWith(`--${e.book}`)) errors.push(`${e.book} 这本书的词条 id 要以 --${e.book} 结尾`);
+  if (ctx.added || other) {
     if (e.page !== undefined && !Number.isInteger(e.page)) errors.push("page 必须是整数");
   } else if (!Number.isInteger(e.page)) errors.push(e.page === undefined ? "缺少 page" : "page 必须是整数");
   if (String(e.ipa ?? "").startsWith("/")) errors.push("ipa 不要带两侧斜杠");
@@ -39,7 +44,7 @@ export function checkEntry(e: Record<string, any>, ctx: CheckCtx): Issues {
     return { errors, warnings };
   }
 
-  for (const k of FULL_FIELDS) {
+  for (const k of other ? BOOK_FIELDS : FULL_FIELDS) {
     const v = e[k];
     if (v === undefined || v === "" || (Array.isArray(v) && v.length === 0)) errors.push(`缺少或为空 ${k}`);
   }
@@ -74,10 +79,18 @@ export function checkEntry(e: Record<string, any>, ctx: CheckCtx): Issues {
   if (e.langs !== undefined && !Array.isArray(e.langs)) errors.push("langs 必须是数组");
   for (const l of Array.isArray(e.langs) ? e.langs : []) if (!langSet.has(l)) warnings.push(`langs 不在推荐列表里: ${l}`);
   if (e.teaser && len(e.teaser) > 40) warnings.push("teaser 超过 40 字");
-  if (!e.keyline) warnings.push("缺少 keyline");
+  for (const k of ["phrases", "wordNotes", "auto"]) {
+    if (e[k] !== undefined && (!Array.isArray(e[k]) || e[k].some((x: unknown) => typeof x !== "string"))) errors.push(`${k} 必须是字符串数组`);
+  }
+  for (const f of Array.isArray(e.auto) ? e.auto : []) if (!(AUTO_FIELDS as readonly string[]).includes(f)) errors.push(`auto 里不认识的字段: ${f}`);
+  // 其他书的词条：一句话记住、词义演变书里没有，补写之前不算问题
+  if (other) {
+    if (e.keyline && len(e.keyline) > 40) warnings.push("keyline 超过 40 字");
+  } else if (!e.keyline) warnings.push("缺少 keyline");
   else if (len(e.keyline) > 40) warnings.push("keyline 超过 40 字");
-  if (!e.evolution) warnings.push("缺少 evolution");
-  else if (!Array.isArray(e.evolution) || e.evolution.length < 2 || e.evolution.length > 4) {
+  if (!e.evolution) {
+    if (!other) warnings.push("缺少 evolution");
+  } else if (!Array.isArray(e.evolution) || e.evolution.length < 2 || e.evolution.length > 4) {
     errors.push("evolution 应为 2–4 个字符串");
   }
   if (e.etymology !== undefined && (!Array.isArray(e.etymology) || e.etymology.some((p: unknown) => typeof p !== "string"))) {

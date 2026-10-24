@@ -66,7 +66,7 @@ function entryCard(c) {
   return `<div class="wc-in" style="${tint(c)}">
     <div class="wc-top">${themeTag(theme)}${c.read ? `<i class="seen">已读</i>` : ""}${closeBtn}</div>
     <div class="wc-head"><b>${esc(c.headword)}${srcMark(c)}</b>${say(c.headword)}</div>
-    <p class="wc-phon">/${esc(c.ipa)}/${c.pos ? ` · ${esc(c.pos)}` : ""}</p>
+    ${c.ipa || c.pos ? `<p class="wc-phon">${[c.ipa && `/${esc(c.ipa)}/`, c.pos && esc(c.pos)].filter(Boolean).join(" · ")}</p>` : ""}
     <p class="wc-mean">${esc(c.meaning)}</p>
     <p class="wc-gist">${rich(c.gist, { link: true, used: new Set([c.id]) })}</p>
     <a class="wc-go" href="#/w/${esc(c.id)}">读完整故事 ${icon("arrow")}</a>

@@ -21,6 +21,30 @@ export const LANGS = [
 
 export type Example = { en: string; zh: string };
 
+/** 词书（data/books.json）。entries.json 是第一本（BASE_BOOK），其余每本一个文件，词条带 book 字段、id 带 --书名 后缀 */
+export const BASE_BOOK = "cidian";
+export type Book = {
+  id: string;
+  title: string;
+  /** 页面上的简称 */
+  short: string;
+  /** 一个字的书签（列表里区分同一个词的不同版本） */
+  seal: string;
+  author: string;
+  publisher?: string;
+  year?: number;
+  /** 相对 data/ 的文件名 */
+  file: string;
+  /** 词条有页码（epub 导入的没有） */
+  pages?: boolean;
+  /** 选书页上的一句介绍 */
+  intro?: string;
+  /** 出处卡上的说明：哪些照原书 */
+  note: string;
+};
+/** 程序生成（不是书里的、也不是编辑写的）的字段，导入时记在 auto 里，网页上注明 */
+export const AUTO_FIELDS = ["teaser", "themes", "subtheme", "langs", "era"] as const;
+
 /** 词条之间的关系（书里的“参见”之外另行整理的）：同根、同典故、一个由另一个衍生 */
 export const LINK_TYPES = ["同根", "同典故", "衍生"] as const;
 export type LinkType = (typeof LINK_TYPES)[number];
@@ -29,11 +53,17 @@ export type Link = { id: string; type: LinkType; why: string };
 
 export type FullEntry = {
   id: string;
+  /** 出自哪本书；没有就是第一本（entries.json），后台新增的词加载后也没有 */
+  book?: string;
   headword: string;
   variants?: string[];
   ipa: string;
   pos: string;
   meaning: string;
+  /** 书里列出的相关词组 / 这一条讲的习语 */
+  phrases?: string[];
+  /** 释义下面的同义词、反义词、派生词等小字 */
+  wordNotes?: string[];
   teaser: string;
   /** 读完后“记住这一句”：一句话概括来历 */
   keyline?: string;
@@ -54,6 +84,8 @@ export type FullEntry = {
   page?: number;
   /** 不在书里的词才有：谁写的、参考了什么、哪里拿不准、有没有人核对过 */
   origin?: Origin;
+  /** 导入时程序生成的字段（见 AUTO_FIELDS）；后台补写过的字段会从这里去掉 */
+  auto?: string[];
   /** 原书词条被后台补过编辑字段时才有：补了哪些字段、来源 */
   patched?: { fields: string[]; origin: Origin };
 };
@@ -81,6 +113,7 @@ export const PATCH_FIELDS = ["teaser", "keyline", "evolution", "links", "era", "
 
 export type RedirectEntry = {
   id: string;
+  book?: string;
   headword: string;
   ipa: string;
   redirect: string;

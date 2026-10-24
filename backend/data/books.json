@@ -1,0 +1,37 @@
+[
+  {
+    "id": "cidian",
+    "title": "英语词源典故词典",
+    "short": "英语词源典故词典",
+    "seal": "典",
+    "author": "庄和诚、庄艳 编",
+    "file": "entries.json",
+    "pages": true,
+    "intro": "605 个带典故的词：神话、圣经、历史人物、风俗。每条都补写了钩子、一句话记住和词义演变。",
+    "note": "正文、释义、例句照原书；钩子、一句话记住、词义演变为编辑补写。"
+  },
+  {
+    "id": "laili",
+    "title": "这个词是怎么来的：英语单词起源趣谈",
+    "short": "这个词是怎么来的",
+    "seal": "来",
+    "author": "鲁常英 编著",
+    "publisher": "中国纺织出版社",
+    "year": 2014,
+    "file": "laili.json",
+    "intro": "约 700 个常用词，释义、同义词、相关词组、起源故事、例句一应俱全，偏向背单词。",
+    "note": "释义、相关词组、起源、例句照原书。"
+  },
+  {
+    "id": "lishi",
+    "title": "单词的历史：英语词源漫谈",
+    "short": "单词的历史",
+    "seal": "史",
+    "author": "马丁·H. 曼瑟 著，崔峰 译",
+    "publisher": "上海译文出版社",
+    "year": 2021,
+    "file": "lishi.json",
+    "intro": "约 800 个单词和习语，像 bring home the bacon、bark up the wrong tree，一条一段小掌故。",
+    "note": "正文照原书（含译者按）；书中的引文、例句排在正文里。"
+  }
+]

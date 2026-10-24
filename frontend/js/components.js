@@ -10,9 +10,23 @@ export const starBtn = (e) =>
 export const sayBtn = (text, cls = "icon-btn") =>
   `<button class="${cls}" data-action="say" data-text="${esc(text)}" aria-label="朗读">${icon("sound")}</button>`;
 
-/** 正文段落；传 used 就给书里有的词加词卡链接（见 words.js） */
-export const prose = (paras, cls = "", used = null) =>
-  `<div class="prose ${cls}">${paras.map((p) => `<p>${rich(p, { link: !!used, used: used ?? undefined })}</p>`).join("")}</div>`;
+/**
+ * 正文段落；传 used 就给书里有的词加词卡链接（见 words.js）。
+ * 有的书把引文、例句排在正文里：“> ”开头的段落排成引文，连着的几行合成一块；“〔注〕”开头的是译者按之类的注释
+ */
+export function prose(paras, cls = "", used = null) {
+  const r = (p) => rich(p, { link: !!used, used: used ?? undefined });
+  const out = [];
+  for (const p of paras) {
+    if (p.startsWith("> ")) {
+      const line = `<p>${r(p.slice(2))}</p>`;
+      if (out.at(-1)?.startsWith("<blockquote")) out[out.length - 1] = out.at(-1).replace(/<\/blockquote>$/, `${line}</blockquote>`);
+      else out.push(`<blockquote class="cite">${line}</blockquote>`);
+    } else if (p.startsWith("〔注〕")) out.push(`<p class="note"><small>注</small>${r(p.slice(3))}</p>`);
+    else out.push(`<p>${r(p)}</p>`);
+  }
+  return `<div class="prose ${cls}">${out.join("")}</div>`;
+}
 
 // ---------- 可折叠的区块：点标题收起 / 展开；有 key 的会记住你上次的选择 ----------
 

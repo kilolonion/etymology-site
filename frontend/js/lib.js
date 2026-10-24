@@ -517,7 +517,10 @@ export const empty = (text, acts = "") =>
 
 /** 不在书里的词：列表、卡片上词头右上角的小角标（ai = AI 整理待核对，ai-ok = 已核对，edit = 编辑撰写） */
 export const SRC_TEXT = { ai: "AI 整理 · 待核对", "ai-ok": "AI 整理 · 已核对", edit: "编辑撰写" };
-export const srcMark = (s) => (s?.src ? `<sup class="ai-mark ${s.src}" title="${SRC_TEXT[s.src]}（不在原书中）">${s.src === "edit" ? "编" : "AI"}</sup>` : "");
+/** 词头右上角的小角标：几本书时先是书签字（典 / 来 / 史），后台新增的词是 AI / 编 */
+export const srcMark = (s) =>
+  (s?.seal ? `<sup class="bk-mark" title="出自哪本书（我的 → 词书）">${esc(s.seal)}</sup>` : "") +
+  (s?.src ? `<sup class="ai-mark ${s.src}" title="${SRC_TEXT[s.src]}（不在原书中）">${s.src === "edit" ? "编" : "AI"}</sup>` : "");
 
 /** 列表行：左侧圆点是词条的专题色 */
 export function row(s, { sub = "meaning", query = "" } = {}) {

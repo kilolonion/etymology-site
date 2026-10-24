@@ -14,9 +14,10 @@ const STATUS_TEXT = {
 };
 
 export async function viewMe() {
-  const [d, history, reminder, me, status] = await Promise.all([
-    api("/shelf"), api("/history"), api("/reminder"), api("/me"), pushStatus(),
+  const [d, history, reminder, me, status, bk] = await Promise.all([
+    api("/shelf"), api("/history"), api("/reminder"), api("/me"), pushStatus(), api("/books").catch(() => null),
   ]);
+  const booksVal = !bk || bk.books.length < 2 ? "" : bk.mixed ? `${bk.books.length} 本混合` : `${bk.books.filter((b) => b.on).length} 本`;
   const s = d.stats;
   const pct = s.total ? Math.round((s.read / s.total) * 100) : 0;
   const reminderVal = status === "on" ? `每天 ${esc(reminder.time)}` : STATUS_TEXT[status];
@@ -31,7 +32,7 @@ export async function viewMe() {
         <span><b>${s.streak}</b>天连续</span>
         <span><b>${s.best}</b>天最长</span>
         <span><b>${s.starred}</b>个收藏</span>
-        <span><b>${pct}%</b>全书</span>
+        <span><b>${pct}%</b>全部</span>
       </div>
       <div class="progress"><span style="width:${pct}%"></span></div>
     </section>
@@ -43,6 +44,7 @@ export async function viewMe() {
       <a href="#/me/starred">${icon("star")}<span class="grow">我的收藏</span><span class="val">${s.starred}</span>${icon("right", "i chev")}</a>
       <a href="#/me/history">${icon("clock")}<span class="grow">阅读记录</span><span class="val">${history.length ? `${history.length} 天` : ""}</span>${icon("right", "i chev")}</a>
       <a href="#/me/reminder">${icon("bell")}<span class="grow">提醒与日报</span><span class="val">${reminderVal}</span>${icon("right", "i chev")}</a>
+      ${booksVal ? `<a href="#/me/books">${icon("book")}<span class="grow">词书</span><span class="val">${booksVal}</span>${icon("right", "i chev")}</a>` : ""}
       <button class="menu-btn" data-action="accent">${icon("sound")}<span class="grow">发音</span><span class="val accent-val">${ACCENT[getAccent()]}</span><span class="swap">切换</span></button>
       <div class="menu-row">${icon("today")}<span class="grow">每日目标</span><span class="goal-step"><button type="button" class="gs-btn" data-action="goal-minus" aria-label="减少每日目标" ${(me.goal ?? 1) <= 1 ? "disabled" : ""}>−</button><input class="gs-num" id="goal-num" type="number" min="1" max="50" step="1" inputmode="numeric" value="${me.goal ?? 1}" data-cur="${me.goal ?? 1}" aria-label="每日目标个数"><span class="gs-unit">个</span><button type="button" class="gs-btn" data-action="goal-plus" aria-label="增加每日目标" ${(me.goal ?? 1) >= 50 ? "disabled" : ""}>＋</button></span></div>
       <button class="menu-btn" data-action="board-opt" data-on="${!!me.onBoard}">${icon("users")}<span class="grow">参加排行榜</span><span class="val board-val">${me.onBoard ? "参加中" : "已关闭"}</span><span class="swap">${me.onBoard ? "关闭" : "打开"}</span></button>
@@ -567,3 +569,51 @@ actions["feed-off"] = async () => {
   if (!confirm("关闭后，现有的订阅地址都会失效。确定吗？")) return;
   await saveFeed({ on: false }, "已关闭 RSS 订阅");
 };
+
+// ---------- 词书：几本书各读了多少，推送用哪几本（默认全部混合） ----------
+
+export async function viewBooks() {
+  const d = await api("/books", { fresh: true });
+  render(`
+    <button class="back" data-action="back">${icon("left")}我的</button>
+    <header class="page-head"><h1>词书<span class="en">The Books</span></h1><p id="books-sum">${booksSum(d)}</p></header>
+    <p class="books-tip">每日一词、日报、接着读、随手翻一页，都从打开的书里挑；探索和搜索照样能看到所有书。同一个词几本书都讲过，读过其中一本，别的书里的版本就往后排，文章里也能一键“换本书读”。</p>
+    <div class="book-list" id="book-list">${d.books.map(bookCard).join("")}</div>`);
+}
+
+const booksSum = (d) => (d.mixed ? `${d.books.length} 本书混合推送` : `只推 ${d.books.filter((b) => b.on).length} 本：${d.books.filter((b) => b.on).map((b) => `《${esc(b.short)}》`).join("")}`);
+
+function bookCard(b) {
+  const pct = b.count ? Math.round((b.read / b.count) * 100) : 0;
+  return `<article class="book-card${b.on ? " on" : ""}">
+    <div class="bk-cover" aria-hidden="true"><i>${esc(b.seal)}</i><small>${esc(b.short)}</small></div>
+    <div class="bk-txt">
+      <b>《${esc(b.title)}》</b>
+      <small class="bk-by">${esc([b.author, b.publisher, b.year].filter(Boolean).join(" · "))}</small>
+      ${b.intro ? `<p>${esc(b.intro)}</p>` : ""}
+      <div class="progress"><span style="width:${pct}%"></span></div>
+      <span class="bk-meta"><span>读过 <b>${b.read}</b> / ${b.count} 个词</span><a href="#/explore/az?book=${esc(b.id)}">翻翻这本书 →</a></span>
+    </div>
+    <label class="switch" title="${b.on ? "推送这本书的词" : "不推这本书"}"><input type="checkbox" data-book="${esc(b.id)}" aria-label="推送《${esc(b.short)}》的词" ${b.on ? "checked" : ""}><span></span></label>
+  </article>`;
+}
+
+document.addEventListener("change", async (ev) => {
+  const box = ev.target;
+  if (!box.dataset?.book || !box.closest("#book-list")) return;
+  const on = [...document.querySelectorAll("#book-list [data-book]")].filter((x) => x.checked).map((x) => x.dataset.book);
+  if (!on.length) {
+    box.checked = true;
+    return toast("至少留一本书");
+  }
+  try {
+    const d = await api("/me/books", { method: "PUT", body: { books: on } });
+    document.getElementById("book-list").innerHTML = d.books.map(bookCard).join("");
+    document.getElementById("books-sum").innerHTML = booksSum(d);
+    toast(d.mixed ? "几本书混合推送" : `以后只推${d.books.filter((b) => b.on).map((b) => `《${b.short}》`).join("")}`);
+  } catch (e) {
+    box.checked = !box.checked;
+    toast(e.message);
+  }
+});
+

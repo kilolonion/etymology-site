@@ -164,6 +164,8 @@ export function openDb(path: string): void {
   if (!cols.has("mail_paper")) db.exec("ALTER TABLE users ADD COLUMN mail_paper INTEGER NOT NULL DEFAULT 0");
   if (!cols.has("mail_time")) db.exec("ALTER TABLE users ADD COLUMN mail_time TEXT NOT NULL DEFAULT '08:00'");
   if (!cols.has("mail_tz")) db.exec("ALTER TABLE users ADD COLUMN mail_tz TEXT");
+  // 词书：只推哪几本（JSON 数组，空 = 全部混合推送）
+  if (!cols.has("books")) db.exec("ALTER TABLE users ADD COLUMN books TEXT");
   // RSS：订阅地址里的随机钥匙（空 = 没开）；唯一索引允许多个 NULL
   if (!cols.has("feed_key")) db.exec("ALTER TABLE users ADD COLUMN feed_key TEXT");
   db.exec("CREATE UNIQUE INDEX IF NOT EXISTS users_feed_key ON users(feed_key)");
@@ -314,6 +316,24 @@ export function mailTargets(): ({ id: number; username: string } & MailPrefs)[] 
     )
     .all() as ({ id: number; username: string } & MailRow)[];
   return rows.map((r) => ({ id: r.id, username: r.username, ...toPrefs(r) }));
+}
+
+// ---------- 词书：推送用哪几本 ----------
+
+/** null = 全部混合（默认）；否则只推这几本 */
+export function getBooks(uid: number): string[] | null {
+  const raw = (db.prepare("SELECT books FROM users WHERE id = ?").get(uid) as { books: string | null } | undefined)?.books;
+  if (!raw) return null;
+  try {
+    const list = JSON.parse(raw) as unknown;
+    return Array.isArray(list) && list.length ? list.map(String) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setBooks(uid: number, books: string[] | null): void {
+  db.prepare("UPDATE users SET books = ? WHERE id = ?").run(books?.length ? JSON.stringify(books) : null, uid);
 }
 
 // ---------- RSS 订阅 ----------

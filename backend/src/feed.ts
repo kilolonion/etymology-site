@@ -8,7 +8,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import * as db from "./db.ts";
 import { localDay, todayId, TZ } from "./daily.ts";
-import { getEntry, gist } from "./entries.ts";
+import { books, getEntry, gist } from "./entries.ts";
 import { cnDate, esc, plain, primary, reasonPlain, shortDate, weekday } from "./mail.ts";
 import { getOrBuildPaper, type PaperReason } from "./paper.ts";
 import type { FullEntry } from "./types.ts";
@@ -57,7 +57,7 @@ function channel(o: { site: string; self: string; title: string; description: st
 <atom:link href="${x(o.self)}" rel="self" type="application/rss+xml"/>
 <description>${x(o.description)}</description>
 <language>zh-CN</language>
-<copyright>词条内容整理自《英语词源典故词典》，权利归原书权利人所有；仅限个人学习使用，请勿转发订阅地址。</copyright>
+<copyright>词条内容整理自${books().map((b) => `《${b.short}》`).join("、")}，权利归原书权利人所有；仅限个人学习使用，请勿转发订阅地址。</copyright>
 <lastBuildDate>${updated.toUTCString()}</lastBuildDate>
 <ttl>60</ttl>
 <image><url>${x(o.site)}/icons/icon-180.png</url><title>${x(o.title)}</title><link>${x(o.site)}/#/</link></image>

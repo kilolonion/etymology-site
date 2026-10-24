@@ -4,7 +4,7 @@
 
 import * as db from "./db.ts";
 import {
-  allSummaries, bookEntry, findWord, getEntry, getRedirect, hasId, isBookId, kinOf, rebuild, search, setOverlay, type Overlay,
+  allSummaries, bookEntry, books, findWord, getBook, getEntry, getRedirect, hasId, isBookId, kinOf, rebuild, search, setOverlay, type Overlay,
 } from "./entries.ts";
 import { LANGS, LINK_TYPES, PATCH_FIELDS, SUBTHEMES, THEMES, type FullEntry, type Origin, type Source } from "./types.ts";
 import { checkEntry, checkOrigin, ID_RE, type Issues } from "./validate.ts";
@@ -560,7 +560,7 @@ function catalogSection(mode: CatalogMode, words: string[] = []): string {
   return `## 已有词条（id | 词头 | 释义），写 links 时只能用这里的 id\n\n\`\`\`\n${catalog()}\n\`\`\``;
 }
 
-const INTRO = "「词源一日」是一个中文的英语词源阅读网站，每天讲一个英语单词的来历。现有词条整理自《英语词源典故词典》；你写的词条不在书里，页面上会标明“AI 整理”，并列出你给的参考来源和存疑之处。";
+const INTRO = () => `「词源一日」是一个中文的英语词源阅读网站，每天讲一个英语单词的来历。现有词条整理自几本词源书（${books().map((b) => `《${b.short}》`).join("、")}）；你写的词条不在书里，页面上会标明“AI 整理”，并列出你给的参考来源和存疑之处。`;
 
 /** 要写的词，每个可以带一句写作要求 */
 export type Target = { word: string; note?: string };
@@ -621,7 +621,7 @@ export function contextForNew(words: (string | Target)[], opts: { catalog?: Cata
   const noted = todo.some((l) => l.note);
   return `# 任务：为「词源一日」写 ${todo.length === 1 ? `新词条 ${todo[0]!.word}` : `${todo.length} 个新词条`}
 
-${INTRO}
+${INTRO()}
 
 ## 要写的词
 
@@ -647,7 +647,7 @@ export function contextForPick(o: { count?: number; theme?: string; hint?: strin
   const mode = catalogMode(o.catalog, "ids");
   return `# 任务：为「词源一日」挑 ${n} 个值得讲的英语单词，写成词条
 
-${INTRO}
+${INTRO()}
 
 ## 选词要求
 
@@ -673,7 +673,7 @@ export function contextForText(o: { text?: string; count?: number; catalog?: Cat
   const mode = catalogMode(o.catalog, "ids");
   return `# 任务：从下面这段英文里挑 ${n} 个值得讲来历的词，写成「词源一日」的词条
 
-${INTRO}
+${INTRO()}
 
 ## 选词要求
 
@@ -701,11 +701,12 @@ export function contextForPatch(ids: string[], fields: string[], opts: { catalog
   const items = ids.map((id) => bookEntry(id)).filter((e): e is FullEntry => !!e);
   const show = (e: FullEntry) => {
     const kin = kinOf(e.id).map((l) => `${l.id}（${l.type}）`).join("、");
-    return `### ${e.headword}（id：${e.id}）\n\n\`\`\`json\n${JSON.stringify(pickFields(e, ["headword", "meaning", "teaser", "keyline", "evolution", "etymology", "themes", "subtheme", "langs", "era", "links"]), null, 2)}\n\`\`\`\n${kin ? `已有关系：${kin}\n` : ""}`;
+    const auto = e.auto?.length ? `程序粗略生成、可以整个重写的字段：${e.auto.join("、")}\n` : "";
+    return `### ${e.headword}（id：${e.id}，出自《${getBook(e.book)?.short ?? "原书"}》）\n\n\`\`\`json\n${JSON.stringify(pickFields(e, ["headword", "meaning", "phrases", "teaser", "keyline", "evolution", "etymology", "themes", "subtheme", "langs", "era", "links"]), null, 2)}\n\`\`\`\n${kin ? `已有关系：${kin}\n` : ""}${auto}`;
   };
   return `# 任务：给「词源一日」的 ${items.length} 个原书词条补写 ${want.join("、")}
 
-这些词条的正文来自《英语词源典故词典》，**正文、释义、例句不能改**，只补写下面指定的字段。补写的内容在页面上会标明“AI 补充”。
+这些词条的正文来自各自的原书（见每条的“出自”），**正文、释义、例句不能改**，只补写下面指定的字段。补写的内容在页面上会标明“AI 补充”。
 
 ## 要补写的字段：${want.join("、")}
 

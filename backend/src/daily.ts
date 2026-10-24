@@ -6,7 +6,7 @@ import {
   setDaily, setResurface, stateMap, type Review,
 } from "./db.ts";
 import { dailyOrder, getEntry } from "./entries.ts";
-import { recommend, type Reason } from "./recommend.ts";
+import { bookFilter, recommend, type Reason } from "./recommend.ts";
 
 export const TZ = process.env.TZ_NAME ?? "Asia/Shanghai";
 
@@ -52,7 +52,8 @@ export function futureAssigned(uid: number, day = localDay()): Set<string> {
 export function pick(uid: number, n: number, exclude: Set<string>, day: string, seed = day): { id: string; reason: Reason }[] {
   const picks = recommend({ uid, day, seed, exclude, limit: n }).map(({ id, reason }) => ({ id, reason }));
   if (picks.length >= n) return picks;
-  const rest = dailyOrder().filter((id) => !exclude.has(id) && !picks.some((p) => p.id === id));
+  const allowed = bookFilter(uid);
+  const rest = dailyOrder().filter((id) => !exclude.has(id) && !picks.some((p) => p.id === id) && allowed(getEntry(id) ?? {}));
   while (picks.length < n && rest.length) {
     picks.push({ id: rest.splice(Math.floor(Math.random() * rest.length), 1)[0]!, reason: null });
   }

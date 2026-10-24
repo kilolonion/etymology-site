@@ -13,7 +13,7 @@ import { viewEntry } from "./views/entry.js?v=212dd6fbae";
 import { invalidateSummaries, viewAZ, viewExplore, viewRoutes, viewTheme, viewTimeline } from "./views/explore.js?v=212dd6fbae";
 import { viewHome } from "./views/home.js?v=212dd6fbae";
 import { viewPaper } from "./views/paper.js?v=212dd6fbae";
-import { viewHistory, viewMe, viewReminder, viewStarred } from "./views/me.js?v=212dd6fbae";
+import { viewBooks, viewHistory, viewMe, viewReminder, viewStarred } from "./views/me.js?v=212dd6fbae";
 
 const dec = decodeURIComponent;
 
@@ -26,13 +26,14 @@ const ROUTES = [
   [/^w\/(.+)$/, "explore", (m, q) => viewEntry(dec(m[1]), q)],
   [/^explore$/, "explore", (_, q) => viewExplore(q)],
   [/^explore\/t\/(.+)$/, "explore", (m, q) => viewTheme(dec(m[1]), q)],
-  [/^explore\/az$/, "explore", () => viewAZ()],
+  [/^explore\/az$/, "explore", (_, q) => viewAZ(q)],
   [/^explore\/routes$/, "explore", () => viewRoutes()],
   [/^explore\/timeline$/, "explore", () => viewTimeline()],
   [/^me$/, "me", () => viewMe()],
   [/^me\/starred$/, "me", () => viewStarred()],
   [/^me\/history$/, "me", () => viewHistory()],
   [/^me\/reminder$/, "me", () => viewReminder()],
+  [/^me\/books$/, "me", () => viewBooks()],
   [/^me\/account$/, "me", () => viewAccount()],
   [/^me\/admin$/, "me", (_, q) => viewAdmin(q)],
 ];
@@ -53,7 +54,7 @@ const titles = new Map();
 
 const STATIC_LABELS = {
   "": "今日", paper: "日报", explore: "探索", "explore/az": "按字母", "explore/routes": "语源之路", "explore/timeline": "时间长廊",
-  me: "我的", "me/starred": "我的收藏", "me/history": "阅读记录", "me/reminder": "提醒与日报", "me/account": "账号与安全", "me/admin": "管理后台",
+  me: "我的", "me/starred": "我的收藏", "me/history": "阅读记录", "me/reminder": "提醒与日报", "me/books": "词书", "me/account": "账号与安全", "me/admin": "管理后台",
 };
 
 function labelOf(hash) {

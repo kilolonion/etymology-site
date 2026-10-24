@@ -23,9 +23,10 @@ import { entriesAdmin } from "./admin-entries.ts";
 import { initAuthoring, previewEntry, publicOrigin } from "./authoring.ts";
 import { mcp, tokensAdmin } from "./mcp.ts";
 import {
-  allSummaries, findWord, getEntry, getRedirect, gist, kinOf, loadEntries, related, search, summarize,
-  themeGroups, totalCount, type Summary,
+  allSummaries, books, findWord, getBook, getEntry, getRedirect, gist, kinOf, loadEntries, related, search, summarize,
+  themeGroups, totalCount, twinsOf, type Summary,
 } from "./entries.ts";
+import type { Book } from "./types.ts";
 import type { FullEntry } from "./types.ts";
 import { checkTime, initPush, isValidSub, sendToUser, vapidPublicKey } from "./push.ts";
 import { cleanSpeech, gloss, initSpeech, speech, type Accent } from "./speech.ts";
@@ -201,8 +202,14 @@ function detail(uid: number, id: string, preview?: FullEntry) {
     kin: kinSum,
     related: withState(uid, related(id)),
     upNext: preview ? [] : upNext,
+    // 出自哪本书（后台新增的词、稿子没有）；同一个词在别的书里怎么讲
+    bookInfo: e.book ? bookMeta(getBook(e.book)) : null,
+    twins: preview ? [] : withState(uid, summariesOf(twinsOf(id))),
   };
 }
+
+const bookMeta = (b?: Book) =>
+  b && { id: b.id, title: b.title, short: b.short, seal: b.seal, author: b.author, publisher: b.publisher ?? null, year: b.year ?? null, pages: !!b.pages, note: b.note };
 
 function stats(uid: number) {
   let read = 0;
@@ -555,6 +562,39 @@ api.put("/me/password", async (c) => {
   const { old = "", password = "" } = await body<{ old?: string; password?: string }>(c);
   const err = await changePassword(uidOf(c), c.get("sessionHash"), String(old), String(password));
   return err ? c.json({ error: err }, 400) : c.json({ ok: true });
+});
+
+// ---------- 词书：有哪几本、各读了多少；推送用哪几本（默认全部混合） ----------
+
+const booksState = (uid: number) => {
+  const state = db.stateMap(uid);
+  const mine = db.getBooks(uid);
+  const all = allSummaries();
+  const list = books().map((b) => {
+    let count = 0;
+    let read = 0;
+    for (const s of all) {
+      if (s.book !== b.id || s.redirect) continue;
+      count++;
+      if (state.get(s.id)?.read) read++;
+    }
+    return { ...bookMeta(b)!, intro: b.intro ?? "", count, read, on: !mine || mine.includes(b.id) };
+  });
+  return { mixed: !mine, books: list };
+};
+
+api.get("/books", (c) => c.json(booksState(uidOf(c))));
+
+/** books: 只推这几本；null 或全选 = 全部混合 */
+api.put("/me/books", async (c) => {
+  const uid = uidOf(c);
+  const { books: pick } = await body<{ books?: unknown }>(c);
+  const known = books().map((b) => b.id);
+  if (pick !== null && (!Array.isArray(pick) || pick.some((x) => !known.includes(String(x))))) return c.json({ error: "不认识的书" }, 400);
+  const list = pick === null ? [] : [...new Set((pick as unknown[]).map(String))];
+  if (pick !== null && !list.length) return c.json({ error: "至少留一本书" }, 400);
+  db.setBooks(uid, list.length === known.length ? null : list);
+  return c.json(booksState(uid));
 });
 
 // ---------- 邮件日报：邮箱选填，两种信各自开关，几点收、按哪个时区 ----------

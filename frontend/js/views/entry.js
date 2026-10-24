@@ -64,22 +64,26 @@ export async function viewEntry(id, query) {
         ${themeTag(theme)}
         <h1>${esc(e.headword)}</h1>
         ${e.src ? `<button class="src-badge ${e.src}" data-action="src-info">${SRC_TEXT[e.src]}</button>` : ""}
+        ${e.bookInfo && (e.twins?.length || e.bookInfo.id !== "cidian") ? `<a class="book-chip" href="#/me/books"><i>${esc(e.bookInfo.seal)}</i>《${esc(e.bookInfo.short)}》</a>` : ""}
         ${e.variants?.length ? `<p class="variants">亦作 ${e.variants.map(esc).join(", ")}</p>` : ""}
-        <div class="phon">${sayBtn(e.headword)}<span class="ipa">/${esc(e.ipa)}/</span><span class="pos">${esc(e.pos)}</span></div>
-        <p class="meaning">${esc(e.meaning)}</p>
+        <div class="phon">${sayBtn(e.headword)}${e.ipa ? `<span class="ipa">/${esc(e.ipa)}/</span>` : ""}${e.pos ? `<span class="pos">${esc(e.pos)}</span>` : ""}</div>
+        ${e.meaning ? `<p class="meaning">${esc(e.meaning)}</p>` : ""}
+        ${wordExtras(e)}
         <p class="teaser">${rich(e.teaser, { link: true, used })}</p>
         ${e.preview ? "" : guessBlock(e)}
       </header>
 
       <div class="article-body">
         <h3 class="kicker">词源 <span class="en">The Story</span></h3>
-        ${prose(e.etymology, "dropcap", used)}
+        ${prose(e.etymology, /^[\u3400-\u9fff]/.test(e.etymology[0] ?? "") ? "dropcap" : "", used)}
         <div class="guess-reveal" hidden></div>
         ${route(e, used)}
         ${pull(e, used)}
         <div class="read-mark" aria-hidden="true"></div>
 
-        ${fold(foldHead("例句", "In Use", `${e.examples.length} 句`), examples(e, 2, used), { key: "entry.examples" })}
+        ${e.examples.length ? fold(foldHead("例句", "In Use", `${e.examples.length} 句`), examples(e, 2, used), { key: "entry.examples" }) : ""}
+
+        ${twins(e)}
 
         ${family(e)}
 
@@ -90,7 +94,7 @@ export async function viewEntry(id, query) {
             ${sourceRows(e)}
             <div class="r"><span>专题</span><span>${e.themes.map(esc).join("、")}</span></div>
             ${e.langs?.length ? `<div class="r"><span>语源</span><span>${e.langs.map(esc).join(" · ")}</span></div>` : ""}
-            ${e.preview ? "" : `<div class="r"><span>阅读</span><span class="read-state ${e.read ? "ok" : ""}">${e.read ? "已读" : "读到“一句话记住”就算读完"}</span></div>
+            ${e.preview ? "" : `<div class="r"><span>阅读</span><span class="read-state ${e.read ? "ok" : ""}">${e.read ? "已读" : e.keyline ? "读到“一句话记住”就算读完" : "读到文末就算读完"}</span></div>
             <div class="acts"><button class="text-btn" data-action="report">${icon("flag")}报错</button><button class="text-btn" data-action="toggle-read" data-id="${esc(e.id)}" data-read="${e.read}">${e.read ? "标为未读" : "标为已读"}</button></div>`}
           </section>
         </aside>
@@ -119,7 +123,32 @@ export async function viewEntry(id, query) {
 // ---------- 来源：原书 / AI 整理 / 编辑撰写，补写过的原书词条 ----------
 
 const FIELD_NAMES = { teaser: "钩子", keyline: "一句话记住", evolution: "词义演变", links: "词的关系", era: "年代", subtheme: "子专题", langs: "语源" };
-const BOOK = "《英语词源典故词典》";
+const AUTO_NAMES = { teaser: "钩子", themes: "专题", subtheme: "子专题", langs: "语源", era: "年代" };
+const bookName = (e) => (e.bookInfo ? `《${e.bookInfo.short}》` : "原书");
+/** 书里的位置：有页码的写第几页 */
+const bookWhere = (e) => `${bookName(e)}${e.bookInfo?.pages && e.page ? `第 ${e.page} 页` : ""}`;
+
+/** 释义下面：这一条讲的习语 / 书里列的相关词组，同义词、派生词这些小字 */
+function wordExtras(e) {
+  const ph = e.phrases ?? [];
+  const notes = e.wordNotes ?? [];
+  if (!ph.length && !notes.length) return "";
+  return `<div class="word-extras">
+    ${ph.length ? `<p class="phrases">${ph.map((p) => `<span>${rich(p)}</span>`).join("")}</p>` : ""}
+    ${notes.map((n) => `<p class="wnote">${esc(n)}</p>`).join("")}
+  </div>`;
+}
+
+/** 同一个词，别的书里怎么讲 */
+function twins(e) {
+  if (!e.twins?.length) return "";
+  const card = (s) => `<a class="twin${s.read ? " read" : ""}" href="#/w/${esc(s.id)}">
+      <i class="tw-seal">${esc(s.seal ?? "")}</i>
+      <span><b>${esc(s.headword)}</b><small>${esc(s.meaning || "")}</small></span>
+      <em>${s.read ? "读过" : "换本书读"}</em>
+    </a>`;
+  return fold(foldHead("别的书里", "Other Tellings", `${e.twins.length} 本`), `<p class="twin-tip">同一个词，别的书讲的故事未必一样。</p><div class="twins">${e.twins.map(card).join("")}</div>`, { key: "entry.twins" });
+}
 const patchLabel = (p) => `${p.origin?.kind === "manual" ? "编辑补写的" : "AI 补充的"}（${p.origin?.checked ? "已核对" : "待核对"}）`;
 
 /** 出处卡里的“出处”一行，加一句说明哪些是原书、哪些是另写的 */
@@ -131,8 +160,11 @@ function sourceRows(e) {
   const patched = e.patched?.fields?.length
     ? `其中「${e.patched.fields.map((f) => FIELD_NAMES[f] ?? f).join("、")}」是${patchLabel(e.patched)}，<button data-action="src-info">看来源</button>。`
     : "";
-  return `<div class="r"><span>出处</span><span>${BOOK}第 ${e.page} 页</span></div>
-    <p class="src-note">正文、释义、例句照原书；钩子、一句话记住、词义演变为编辑补写。${patched}</p>`;
+  const auto = e.auto?.length ? `「${e.auto.map((f) => AUTO_NAMES[f] ?? f).join("、")}」由程序归类，仅供参考。` : "";
+  const note = e.bookInfo?.note ?? "正文、释义、例句照原书。";
+  return `<div class="r"><span>出处</span><span>${bookWhere(e)}</span></div>
+    ${e.bookInfo && (e.bookInfo.author || e.bookInfo.publisher) ? `<p class="src-note">${esc([e.bookInfo.author, e.bookInfo.publisher, e.bookInfo.year].filter(Boolean).join("，"))}</p>` : ""}
+    <p class="src-note">${esc(note)}${auto}${patched}</p>`;
 }
 
 /** 弹出一张卡片（来源说明、报错共用），关掉就移除 */
@@ -167,12 +199,12 @@ actions["src-info"] = () => {
   if (e.origin) {
     const o = e.origin;
     body = `<h2>这篇的来源<span class="src-badge ${e.src}">${SRC_TEXT[e.src]}</span></h2>
-      <p>${esc(e.headword)} 不在${BOOK}里。${o.kind === "manual" ? "这篇由本站编辑根据公开资料撰写。" : `内容由 AI${o.model ? `（${esc(o.model)}）` : ""}根据公开资料整理，`}${checkedText(o)}</p>
+      <p>${esc(e.headword)} 不在收录的几本书里。${o.kind === "manual" ? "这篇由本站编辑根据公开资料撰写。" : `内容由 AI${o.model ? `（${esc(o.model)}）` : ""}根据公开资料整理，`}${checkedText(o)}</p>
       ${sourceList(o)}`;
   } else if (e.patched) {
     const o = e.patched.origin;
     body = `<h2>补写的内容</h2>
-      <p>${esc(e.headword)} 的正文出自${BOOK}第 ${e.page} 页。「${e.patched.fields.map((f) => FIELD_NAMES[f] ?? f).join("、")}」是后来补充的${o.kind === "manual" ? "，由编辑撰写" : `，由 AI${o.model ? `（${esc(o.model)}）` : ""}整理`}。${checkedText(o)}</p>
+      <p>${esc(e.headword)} 的正文出自${bookWhere(e)}。「${e.patched.fields.map((f) => FIELD_NAMES[f] ?? f).join("、")}」是后来补充的${o.kind === "manual" ? "，由编辑撰写" : `，由 AI${o.model ? `（${esc(o.model)}）` : ""}整理`}。${checkedText(o)}</p>
       ${sourceList(o)}`;
   } else return;
   const d = dialog(`${body}<div class="sd-acts"><button class="btn sm" data-action="report">${icon("flag")}我发现了错误</button><button class="btn sm primary" data-action="dlg-close">知道了</button></div>`);

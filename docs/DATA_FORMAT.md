@@ -1,16 +1,36 @@
-# 词条数据格式（backend/data/entries.json）
+# 词条数据格式（backend/data/*.json）
 
 整本书的词条都放在 **一个 JSON 数组** 里，每个元素是一个词条对象。网站会监视这个文件，保存后约 2 秒自动重新加载，无需重启。
 
-`backend/data/entries.json` 已收录全书词条（正文第 1–459 页，abet → zodiac，共 605 条，其中 6 条为跳转词条），与书末“词目索引”逐条对应。写法可参考开头的 abet → ambulance（第 1–13 页）。
+`backend/data/entries.json`（第一本）已收录全书词条（正文第 1–459 页，abet → zodiac，共 605 条，其中 6 条为跳转词条），与书末“词目索引”逐条对应。写法可参考开头的 abet → ambulance（第 1–13 页）。
 
 **录入原则**：正文照原书转录；原书的排印错误一般照录（如 woman 的 Gascoinge、silicon 的 silium），只有与上下文自相矛盾的明显笔误才更正（如 magazine 原书“1939 年”改为 1739 年）。
+
+## 几本书（books.json）
+
+`backend/data/books.json` 是书目：每本书的 `id`、书名 `title`、简称 `short`、一字书签 `seal`（列表里词头右上角的“典 / 来 / 史”）、作者、出版社、年份、数据文件 `file`、有没有页码 `pages`、选书页的介绍 `intro`、出处卡上的说明 `note`。书目的顺序就是同一个词几本书都有时的优先顺序（正文里自动加词卡链接指向靠前的那本）。
+
+| 书 id | 文件 | 书 | 条数 |
+|---|---|---|---|
+| `cidian` | `entries.json` | 《英语词源典故词典》（第一本，下面的格式说明主要以它为准） | 605 |
+| `laili` | `laili.json` | 《这个词是怎么来的：英语单词起源趣谈》 | 697 |
+| `lishi` | `lishi.json` | 《单词的历史：英语词源漫谈》 | 761 |
+
+后两本由 `backend/scripts/import-book.py` 从 epub 转换（`python3 -I backend/scripts/import-book.py <epub> laili|lishi`），和 `entries.json` 一样进仓库、随部署同步，文件变了约 2 秒内自动重新加载。和第一本的区别：
+
+- 每条带 `book`（书 id），`id` 以 `--书 id` 结尾（`abet--laili`），所以几本书里同一个词互不冲突；第一本的 id 不带后缀、也不写 `book`。
+- 没有页码；`ipa`、`pos`、`examples` 书里没有就不写（《单词的历史》大多没有音标，例句和引文排在正文里）。
+- `phrases`：这一条讲的习语（《单词的历史》，如 bacon → bring home the bacon）或书里列的相关词组（《这个词是怎么来的》）；`wordNotes`：释义下面的同义词、反义词、派生词小字。
+- 正文里 `> ` 开头的段落是引文 / 例句（网页上排成引文，连着的几行合成一块），`〔注〕` 开头的是译者按之类的注释。
+- 书里没有的编辑字段由程序粗略生成，记在 `auto` 里（`teaser` 套模板，`themes`、`subtheme`、`langs` 按正文关键词归类，`era` 取正文里最早的年代），网页出处卡注明“由程序归类”。可以照“补写原书词条”的流程用 AI 改写，补写过的字段自动从 `auto` 里去掉；没有 `keyline`、`evolution` 时校验不报警告。
+
+几本书的词按词头字母混排（不看开头的 the / a / an：the balloon goes up 排在 B）。推送默认几本混合，每人可以在“我的 → 词书”里只留几本；同一个词在一本书里读过，别的书里的版本往后排，文章页“别的书里”能换本书读。
 
 ## 字段
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| `id` | string | ✅ | 唯一标识，用作网址。小写、只含 `a-z0-9-`。由词头转换：去掉撇号，空格/斜杠变 `-`。例：`Achilles' heel` → `achilles-heel`，`Adam's apple` → `adams-apple` |
+| `id` | string | ✅ | 唯一标识，用作网址。小写、只含 `a-z0-9-`（其他书的词条再加 `--书 id` 后缀）。由词头转换：去掉撇号，空格/斜杠变 `-`。例：`Achilles' heel` → `achilles-heel`，`Adam's apple` → `adams-apple` |
 | `headword` | string | ✅ | 词头，保持书中大小写与写法 |
 | `variants` | string[] | | 异体/另一种写法，如 `ageism/ agism` 中的 `agism`；搜索时也会匹配 |
 | `ipa` | string | ✅ | 国际音标，**不带两侧斜杠**，照书转录（书用旧式记法，如 `ɔ`、`ɪ`） |
@@ -118,5 +138,7 @@
 ```bash
 npm run validate
 ```
+
+会把 `books.json` 列出的几本书一起校验（id 跨书不能重复，`links` 可以指向别的书的词条）。
 
 规则写在 `backend/src/validate.ts`，后台导入、MCP 提交用的是同一套。会检查：JSON 能否解析、必填字段、编辑字段是否齐全与格式、`id` 格式与唯一性、`themes` 是否在列表内、`subtheme` 是否属于词条所在的专题、`links` 指向是否存在、类型是否合法、一对关系是否重复记录、`era` 是否在合理范围、`seeAlso`/`redirect` 指向的词条是否存在（不存在只给警告，因为可能还没录入）、`*` 是否成对。

@@ -222,7 +222,7 @@ function wToday() {
     ${emblem(theme)}
     <div class="w-top">${themeTag(theme)}${t.done ? `<span class="stamp">已<br>读</span>` : `<span class="mins">约 ${readMinutes(e)} 分钟</span>`}</div>
     ${why ? `<p class="w-why">${why}</p>` : ""}
-    <div class="w-word ${sizeClass(e.headword)}"><b>${esc(e.headword)}</b><span>/${esc(e.ipa)}/ · ${esc(e.meaning)}</span></div>
+    <div class="w-word ${sizeClass(e.headword)}"><b>${esc(e.headword)}</b><span>${[e.ipa && `/${esc(e.ipa)}/`, esc(e.meaning)].filter(Boolean).join(" · ")}</span></div>
     ${line}
     <span class="w-cta">${t.done ? "再看一遍" : "读这个故事"} ${icon("arrow")}</span>
   </a>`;
@@ -413,19 +413,19 @@ function wStats(size) {
   const bar = `<span class="meter"><span style="width:${Math.max(pct, 2)}%"></span></span>`;
   if (size === "s") {
     return `<a class="w-body w-card w-stats" href="#/me">
-      <small>已读</small><p class="num"><b>${s.read}</b><span>个词</span></p>${bar}<span class="pct">全书 ${pct}%</span>
+      <small>已读</small><p class="num"><b>${s.read}</b><span>个词</span></p>${bar}<span class="pct">全部 ${pct}%</span>
     </a>`;
   }
   if (size === "bar") {
     // 一条：左边大数字，中间进度，右边连续和收藏
     return `<a class="w-body w-card w-stats strip" href="#/me">
       <p class="num"><b>${s.read}</b><span>个词<br>已读</span></p>
-      <div class="mid">${bar}<span class="pct">全书 ${pct}% · 还有 ${s.total - s.read} 个没读</span></div>
+      <div class="mid">${bar}<span class="pct">全部 ${pct}% · 还有 ${s.total - s.read} 个没读</span></div>
       <ul><li><b>${s.streak}</b>天连续</li><li><b>${s.starred}</b>个收藏</li></ul>
     </a>`;
   }
   return `<a class="w-body w-card w-stats wide" href="#/me">
-    <div class="big"><small>已读</small><p class="num"><b>${s.read}</b><span>个词</span></p>${bar}<span class="pct">全书 ${s.total} 个词的 ${pct}%</span></div>
+    <div class="big"><small>已读</small><p class="num"><b>${s.read}</b><span>个词</span></p>${bar}<span class="pct">全部 ${s.total} 个词的 ${pct}%</span></div>
     <ul><li><b>${s.streak}</b>天连续</li><li><b>${s.starred}</b>个收藏</li><li><b>${s.total - s.read}</b>个没读</li></ul>
   </a>`;
 }
