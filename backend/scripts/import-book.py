@@ -381,11 +381,25 @@ def parse_lishi(files):
 PARSERS = {"laili": parse_laili, "lishi": parse_lishi}
 
 
+# 导入之后另外补写、epub 里没有的字段
+KEEP = ("keyline", "links")
+
+
 def main():
     if len(sys.argv) != 3 or sys.argv[2] not in PARSERS:
         sys.exit(__doc__)
     epub, book = sys.argv[1], sys.argv[2]
     raw = PARSERS[book](read_epub(epub))
+    root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
+    path = os.path.join(root, f"{book}.json")
+    # 导入后用 AI 补写的字段（keyline、links）不在 epub 里，重新导入时按 id 原样保留
+    kept = {}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            for old in json.load(f):
+                k = {f: old[f] for f in KEEP if f in old}
+                if k:
+                    kept[old["id"]] = k
     out, seen = [], {}
     for e in raw:
         if not e["etymology"]:
@@ -414,11 +428,12 @@ def main():
         auto = classify(entry)
         entry.update(auto)
         entry["auto"] = ["teaser", *auto.keys()]
+        if entry["id"] in kept:
+            entry.update(kept[entry["id"]])
+            entry["auto"] += [f for f in KEEP if f in kept[entry["id"]]]
         out.append(entry)
 
-    root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
     os.makedirs(root, exist_ok=True)
-    path = os.path.join(root, f"{book}.json")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
         f.write("\n")

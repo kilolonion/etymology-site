@@ -43,7 +43,8 @@ export type Book = {
   note: string;
 };
 /** 程序生成（不是书里的、也不是编辑写的）的字段，导入时记在 auto 里，网页上注明 */
-export const AUTO_FIELDS = ["teaser", "themes", "subtheme", "langs", "era"] as const;
+/** 别的书导入时程序生成的字段：前五个按正文关键词归类，keyline、links 由 AI 依据正文补写（见 scripts/import-book.py 和 docs/DATA_FORMAT.md） */
+export const AUTO_FIELDS = ["teaser", "themes", "subtheme", "langs", "era", "keyline", "links"] as const;
 
 /** 词条之间的关系（书里的“参见”之外另行整理的）：同根、同典故、一个由另一个衍生 */
 export const LINK_TYPES = ["同根", "同典故", "衍生"] as const;

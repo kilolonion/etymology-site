@@ -33,8 +33,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *abax* 原指计算数目用的板子。"
   },
   {
     "id": "abet--laili",
@@ -73,8 +75,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "斗熊戏里放狗咬熊叫 *abet the dogs*，故有教唆。"
   },
   {
     "id": "abracadabra--laili",
@@ -111,8 +115,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "犹太驱病符，倒金字塔写在羊皮纸上辟邪。"
   },
   {
     "id": "academy--laili",
@@ -149,8 +155,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "柏拉图在 Academus 园林旁讲学，称 *Academia*。"
   },
   {
     "id": "acrid--laili",
@@ -183,8 +191,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "化学家拼合 *acr-*（辛辣）与 *-id*（酸苦）。"
   },
   {
     "id": "admiral--laili",
@@ -220,8 +230,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯称号 *Amir-al*（领袖）被当成一个词。"
   },
   {
     "id": "adolescent--laili",
@@ -259,8 +271,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *alescere*（生长），正长身体的年纪。"
   },
   {
     "id": "afraid--laili",
@@ -300,8 +314,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中古英语 *affray* 原指被雷声、噪声惊醒。"
   },
   {
     "id": "agony--laili",
@@ -337,7 +353,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊竞技场 *agon* 上拼搏之苦，成了痛苦。",
+    "links": [
+      {
+        "id": "agony-column",
+        "type": "衍生",
+        "why": "agony column 由 agony 复合而成"
+      }
     ]
   },
   {
@@ -374,8 +400,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "诺曼军中喊 *as armes*，后成 *to arms*（准备作战）。"
   },
   {
     "id": "album--laili",
@@ -412,8 +440,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *albus*（空白），罗马记大事的空白板。"
   },
   {
     "id": "alcohol--laili",
@@ -450,8 +480,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "眼皮黑粉 *koh'l* 连上冠词 *al*，成了酒精。"
   },
   {
     "id": "alibi--laili",
@@ -489,8 +521,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁副词 *alibi*，18 世纪末成不在场申诉。"
   },
   {
     "id": "allegory--laili",
@@ -525,8 +559,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *allo*（他事）加 *agoria*（言谈），以此说彼。"
   },
   {
     "id": "alligator--laili",
@@ -563,8 +599,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "西班牙语 *al lagarto* 被英国人误当一个词。"
   },
   {
     "id": "alone--laili",
@@ -604,8 +642,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*all* 加 *one*，“全然一体”，14 世纪连成一词。"
   },
   {
     "id": "aloof--laili",
@@ -639,8 +679,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "航海用语 *luff* 加 a-，转舵向风避开险滩。"
   },
   {
     "id": "amazon--laili",
@@ -676,8 +718,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "传说割右乳以便拉弓的女战士部落 *Amazons*。"
   },
   {
     "id": "ambiguous--laili",
@@ -719,8 +763,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *ambiguus*“绕圈驾驶”，绕得人糊涂。"
   },
   {
     "id": "ambition--laili",
@@ -758,8 +804,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *ambio*（巡回），罗马候选人四处拉票。"
   },
   {
     "id": "ambulance--laili",
@@ -796,8 +844,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法军急救车 *ambulance volante* 简化而来。"
   },
   {
     "id": "anecdote--laili",
@@ -837,8 +887,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拜占庭史家生前未出版的秘闻集 *Anekdota*。"
   },
   {
     "id": "antic--laili",
@@ -878,8 +930,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *antiquus*（老），古迹中怪诞的图案。"
   },
   {
     "id": "april--laili",
@@ -913,8 +967,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *aperio*（展开），抽芽开花的月份。"
   },
   {
     "id": "arena--laili",
@@ -955,8 +1011,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "角斗场铺沙吸血，*arena*（沙地）成竞技场。"
   },
   {
     "id": "arrest--laili",
@@ -998,8 +1056,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *arret*（停止、扣押），入英语成执法用语。"
   },
   {
     "id": "assiduous--laili",
@@ -1039,8 +1099,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sid-*（坐），又坐在那儿学，真勤奋。"
   },
   {
     "id": "atlas--laili",
@@ -1074,7 +1136,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "麦卡托用撑天巨神 *Atlas* 为地图集命名。",
+    "links": [
+      {
+        "id": "atlantic",
+        "type": "同典故",
+        "why": "都得名于希腊神话巨神 Atlas"
+      }
     ]
   },
   {
@@ -1113,8 +1185,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*at one*（一致）合成一词，后指赎罪。"
   },
   {
     "id": "attic--laili",
@@ -1149,8 +1223,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "雅典式建筑 *Attic order*，后转指顶楼阁楼。"
   },
   {
     "id": "august--laili",
@@ -1179,8 +1255,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "元老院授屋大维称号 *Augustus*，八月以此命名。"
   },
   {
     "id": "autumn--laili",
@@ -1217,8 +1295,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *autumnus* 在 16 世纪取代了 *harvest*。"
   },
   {
     "id": "average--laili",
@@ -1255,8 +1335,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *awariyah*（受损货物），损失均摊。"
   },
   {
     "id": "awkward--laili",
@@ -1295,8 +1377,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*awk-*（反向）加 *-ward*，左手做事真别扭。"
   },
   {
     "id": "babbitt--laili",
@@ -1326,8 +1410,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "刘易斯小说主人公 *Babbitt*，成庸俗市侩代名词。"
   },
   {
     "id": "bad--laili",
@@ -1367,8 +1453,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "本是 *good* 的反义，黑人英语里竟成褒义。"
   },
   {
     "id": "ballon--laili",
@@ -1403,8 +1491,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *balloon*（大球），后指升空的热气球。"
   },
   {
     "id": "bald--laili",
@@ -1441,8 +1531,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "中古英语 *ballede*，词根 *bal-* 如球形光头。"
   },
   {
     "id": "ballot--laili",
@@ -1475,8 +1567,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "古雅典用黑白小球表决有罪与否，成了投票。"
   },
   {
     "id": "bandit--laili",
@@ -1515,8 +1609,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *band-*（捆绑），绑人的人即强盗。"
   },
   {
     "id": "bank--laili",
@@ -1555,7 +1651,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "意大利语 *banca*（兑钱者的凳子），长凳成银行。",
+    "links": [
+      {
+        "id": "bankrupt",
+        "type": "同根",
+        "why": "都源自意大利语 banca（条凳）"
+      }
     ]
   },
   {
@@ -1595,8 +1701,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "放贷者停业，条凳被拆，即 *banca rupta*。"
   },
   {
     "id": "barbarous--laili",
@@ -1634,8 +1742,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊人把听不懂的外语叫 *barbaros*。"
   },
   {
     "id": "barbecue--laili",
@@ -1670,8 +1780,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "海地土著晒鱼烤肉的高架 *barbacoa*。"
   },
   {
     "id": "bastard--laili",
@@ -1711,8 +1823,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "赶骡人以鞍为床，私生子称 *fils de bast*。"
   },
   {
     "id": "bead--laili",
@@ -1754,8 +1868,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *bede*（祈祷），拨念珠祈祷后指珠子。"
   },
   {
     "id": "bear--laili",
@@ -1794,8 +1910,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "谚语“抓熊前先卖熊皮”，*bear* 成看跌者。"
   },
   {
     "id": "bed--laili",
@@ -1834,8 +1952,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "日耳曼语 *bed* 原指挖成的苗圃，也指睡处。"
   },
   {
     "id": "bedlam--laili",
@@ -1870,7 +1990,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "伦敦疯人院 *Bethlehem* 读音相同，简作 *Bedlam*。",
+    "links": [
+      {
+        "id": "tomfoolery",
+        "type": "同典故",
+        "why": "都与伦敦疯人院 Bedlam 有关"
+      }
     ]
   },
   {
@@ -1909,7 +2039,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "贝格神父的修会 *Beghards* 被冒名行乞，成乞丐。",
+    "links": [
+      {
+        "id": "beggar-description--lishi",
+        "type": "衍生",
+        "why": "beggar description 由 beggar 构成"
+      }
     ]
   },
   {
@@ -1942,8 +2082,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "北欧披熊皮作战、刀枪不入的猛士 *Berserk*。"
   },
   {
     "id": "bible--laili",
@@ -1978,8 +2120,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "纸莎纸重镇 *Byblos*，希腊语 *biblia* 即小书。"
   },
   {
     "id": "bigot--laili",
@@ -2010,8 +2154,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "罗洛拒吻王脚，誓言 *bi got*（对上帝发誓）。"
   },
   {
     "id": "bikini--laili",
@@ -2049,8 +2195,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "美国在 *Bikini* 岛试原子弹，泳衣借其名。"
   },
   {
     "id": "bimbo--laili",
@@ -2081,8 +2229,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "先指小人物，30 年代成没头脑的金发美女。"
   },
   {
     "id": "bishop--laili",
@@ -2120,8 +2270,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *episkopos*（看管者），主教如牧羊人。"
   },
   {
     "id": "blackguard--laili",
@@ -2153,8 +2305,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "贵族出行殿后的帮厨，被戏称 *blackguard*。"
   },
   {
     "id": "blackmail--laili",
@@ -2191,8 +2345,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "苏格兰语 *black*（不正）加 *mail*（租金）：保护费。"
   },
   {
     "id": "blarney--laili",
@@ -2224,8 +2380,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "布拉尼堡主一再拖延投降，*blarney* 成花言巧语。"
   },
   {
     "id": "bless--laili",
@@ -2262,8 +2420,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古时血祭，*bless* 与 *blood* 有亲缘，后指祝福。"
   },
   {
     "id": "blizzard--laili",
@@ -2299,8 +2459,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "1870 年爱荷华小报编辑把暴风雪叫 *blizzard*。"
   },
   {
     "id": "bluestocking--laili",
@@ -2336,8 +2498,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "蒙太鸠夫人沙龙常客穿蓝毛线长袜，得此绰号。"
   },
   {
     "id": "bogus--laili",
@@ -2379,8 +2543,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "众说纷纭，一说是俄亥俄造假币机叫 *bogus*。"
   },
   {
     "id": "bohemian--laili",
@@ -2409,7 +2575,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "吉卜赛人被误认来自波西米亚，后指不羁文人。",
+    "links": [
+      {
+        "id": "gypsy",
+        "type": "同典故",
+        "why": "都源于对吉卜赛人来历的误认"
+      }
     ]
   },
   {
@@ -2446,8 +2622,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "传说医生 *Bombast* 爱吹大话，名字成了浮夸。"
   },
   {
     "id": "book--laili",
@@ -2485,8 +2663,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *boc* 指写字用的山毛榉树皮。"
   },
   {
     "id": "boss--laili",
@@ -2525,8 +2705,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "荷兰殖民者称工头 *baas*，英国人改说 *boss*。"
   },
   {
     "id": "boulevard--laili",
@@ -2565,8 +2747,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语原指防卫外城墙，废弃后成散步大道。"
   },
   {
     "id": "boutique--laili",
@@ -2604,8 +2788,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *boutique* 原指零售店，随时装进入英语。"
   },
   {
     "id": "bowie-knife--laili",
@@ -2637,8 +2823,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉莫之战英雄 James Bowie 用的猎刀。"
   },
   {
     "id": "boy--laili",
@@ -2680,8 +2868,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中古英语 *boi* 原指男仆，可溯至“捆绑”之意。"
   },
   {
     "id": "boycott--laili",
@@ -2715,8 +2905,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "管家 Boycott 拒减税，遭爱尔兰农民联合断交。"
   },
   {
     "id": "brandy--laili",
@@ -2754,8 +2946,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *brandewijn*（烧过的酒），简化成 *brandy*。"
   },
   {
     "id": "bread--laili",
@@ -2790,8 +2984,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *bread* 原是量词“一块”，后取代 *loaf*。"
   },
   {
     "id": "breakfast--laili",
@@ -2824,7 +3020,17 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
+      "subtheme",
+      "keyline",
+      "links"
+    ],
+    "keyline": "*break one's fast* 开斋，合成早餐一词。",
+    "links": [
+      {
+        "id": "brunch--laili",
+        "type": "衍生",
+        "why": "brunch 由 breakfast 与 lunch 拼成"
+      }
     ]
   },
   {
@@ -2865,8 +3071,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *bribe* 原是施舍乞丐的面包片。"
   },
   {
     "id": "bridal--laili",
@@ -2906,8 +3114,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *brydealu*：新娘 *bryd* 加麦芽酒 *ealu*。"
   },
   {
     "id": "bridegroom--laili",
@@ -2947,7 +3157,17 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "古英语 *brydguma*，生僻的 *guma* 换成 *groom*。",
+    "links": [
+      {
+        "id": "groom--laili",
+        "type": "衍生",
+        "why": "groom 是 bridegroom 的简化"
+      }
     ]
   },
   {
@@ -2987,8 +3207,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古意大利语 *brigare*（战斗），法语成 *brigade*。"
   },
   {
     "id": "broker--laili",
@@ -3024,8 +3246,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *brochiere* 本是开酒箱卖酒的人。"
   },
   {
     "id": "brunch--laili",
@@ -3057,8 +3281,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "取 *breakfast* 词首与 *lunch* 词尾拼成。"
   },
   {
     "id": "buck--laili",
@@ -3096,8 +3322,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "美国西部扑克里放在发牌人面前的标记 *buck*。"
   },
   {
     "id": "buddy--laili",
@@ -3136,8 +3364,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "英国煤矿工人称同矿伙伴 *buddy*。"
   },
   {
     "id": "budget--laili",
@@ -3180,8 +3410,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *bouge*（钱包），财政大臣开包讲预算。"
   },
   {
     "id": "bug--laili",
@@ -3219,8 +3451,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "14 世纪 *bugge* 指鬼怪，后指昆虫、窃听器。"
   },
   {
     "id": "bugle--laili",
@@ -3260,8 +3494,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *buculus*（小公牛），牛角做的号角。"
   },
   {
     "id": "bully--laili",
@@ -3296,8 +3532,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *boel* 原指帅小伙，后成恃强凌弱者。"
   },
   {
     "id": "bungalow--laili",
@@ -3330,8 +3568,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "源自 *Bengal*（孟加拉的），带凉台的平房。"
   },
   {
     "id": "bunk--laili",
@@ -3362,8 +3602,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "议员为 *Buncombe* 报纸讲空话，缩成 *bunk*。"
   },
   {
     "id": "burdensome--laili",
@@ -3401,8 +3643,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*burd-*（包袱）加 *-some*，背上包袱真累。"
   },
   {
     "id": "bureau--laili",
@@ -3441,8 +3685,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *burel*（铺桌厚毛布），转指桌子、机构。"
   },
   {
     "id": "bus--laili",
@@ -3476,8 +3722,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *omnibus*（供所有人用），缩成 *bus*。"
   },
   {
     "id": "butterfly--laili",
@@ -3509,8 +3757,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "传说女巫化蝶偷黄油 *butter*，得名蝴蝶。"
   },
   {
     "id": "buxom--laili",
@@ -3550,8 +3800,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *bugan*（顺从），因音近 *bosom* 转指丰满。"
   },
   {
     "id": "cab--laili",
@@ -3589,8 +3841,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "颠簸如小山羊 *cabri* 的篷车，简称 *cab*。"
   },
   {
     "id": "cabal--laili",
@@ -3628,8 +3882,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希伯来语 *cabbala*（犹太神秘哲学），引申指阴谋。"
   },
   {
     "id": "cabbage--laili",
@@ -3663,8 +3919,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *caboche*、拉丁语 *caput* 都指“头”，形似人头。"
   },
   {
     "id": "caesarean-section--laili",
@@ -3701,8 +3959,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "传说以 *Caesar* 命名，或源自罗马剖腹法。"
   },
   {
     "id": "calculate--laili",
@@ -3738,8 +3998,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *calculus*（小圆石），用石子来算账。"
   },
   {
     "id": "camera--laili",
@@ -3778,8 +4040,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *camera obscura*（暗室）缩成 *camera*。"
   },
   {
     "id": "canary--laili",
@@ -3819,8 +4083,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "朱巴二世称群岛 *Canaria*（狗岛），金丝雀产于此。"
   },
   {
     "id": "cancel--laili",
@@ -3857,8 +4123,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cancelli*（栅栏），抄错处划成网格。"
   },
   {
     "id": "cancer--laili",
@@ -3896,8 +4164,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "肿瘤边静脉扩张像蟹足，得名“蟹” *cancer*。"
   },
   {
     "id": "candid--laili",
@@ -3938,7 +4208,22 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *cand-*（白），洁白纯洁即坦诚。",
+    "links": [
+      {
+        "id": "candidate",
+        "type": "同根",
+        "why": "都源自拉丁语表“白”的 cand-"
+      },
+      {
+        "id": "candidate--lishi",
+        "type": "同根",
+        "why": "都源自拉丁语表“白”的 cand-"
+      }
     ]
   },
   {
@@ -3980,8 +4265,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *sukkar qandi*，原指冰糖。"
   },
   {
     "id": "cannibal--laili",
@@ -4012,8 +4299,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "哥伦布所称土著 *Canibales*，有武士吃人肉。"
   },
   {
     "id": "canter--laili",
@@ -4045,8 +4334,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "朝圣者近坎特伯雷放慢马步，简成 *canter*。"
   },
   {
     "id": "canvas--laili",
@@ -4083,8 +4374,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cannabis*（大麻），早期帆布由大麻制。"
   },
   {
     "id": "caprice--laili",
@@ -4121,8 +4414,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *capra*（山羊），吃草时突然蹦跳。"
   },
   {
     "id": "carat--laili",
@@ -4159,8 +4454,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *qirat*（角豆树种子），用来称宝石。"
   },
   {
     "id": "cardigan--laili",
@@ -4192,8 +4489,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "Cardigan 将军麾下在克里米亚首穿开襟毛衣。"
   },
   {
     "id": "cardinal--laili",
@@ -4230,8 +4529,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cardo*（枢轴），红衣主教又穿红袍。"
   },
   {
     "id": "career--laili",
@@ -4271,8 +4572,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *carriere* 原指马车道，引申为人生道路。"
   },
   {
     "id": "carnival--laili",
@@ -4310,8 +4613,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *carne vale*，斋戒禁肉前尽情狂欢。"
   },
   {
     "id": "carpet--laili",
@@ -4352,7 +4657,17 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "古法语 *carpite* 原是铺桌床的粗毛布。",
+    "links": [
+      {
+        "id": "red-carpet",
+        "type": "衍生",
+        "why": "red carpet 由 carpet 复合而成"
+      }
     ]
   },
   {
@@ -4386,8 +4701,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *cattus* 随古罗马人引入的家猫来到欧洲。"
   },
   {
     "id": "catastrophe--laili",
@@ -4424,8 +4741,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *katastrophe*（翻转）原指戏剧的结局。"
   },
   {
     "id": "caterpillar--laili",
@@ -4461,8 +4780,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *chatepelose* 意为“毛毛猫”，后附会 *pill*。"
   },
   {
     "id": "cattle--laili",
@@ -4501,8 +4822,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *catel* 原指一切动产，后缩小到牛。"
   },
   {
     "id": "catholic--laili",
@@ -4539,8 +4862,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *katholikos*（普遍的），后专指罗马天主教。"
   },
   {
     "id": "chair--laili",
@@ -4577,8 +4902,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cathedra*（教师座椅），成了椅子与教席。"
   },
   {
     "id": "chance--laili",
@@ -4621,8 +4948,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cadentia*（降落）：偶然“落下”的就是机会。"
   },
   {
     "id": "chapel--laili",
@@ -4662,8 +4991,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "圣马丁的披风 *cappella*，藏它之处成了小教堂。"
   },
   {
     "id": "character--laili",
@@ -4701,8 +5032,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊文 *kharakter* 源自“挖槽”，刻下的记号成个性。"
   },
   {
     "id": "charity--laili",
@@ -4740,8 +5073,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "圣哲罗姆译经选 *caritas*（亲爱），成了基督徒的慈悲。"
   },
   {
     "id": "charisma--laili",
@@ -4781,8 +5116,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《圣经》里的 *charismata*（神授魅力），因肯尼迪而流行。"
   },
   {
     "id": "charming--laili",
@@ -4821,8 +5158,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "原指“与魔法符咒相关”，魔力淡去只剩可爱。"
   },
   {
     "id": "chauffeur--laili",
@@ -4860,8 +5199,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法国土匪拿火烤人得名 *chauffeurs*，后指司炉、司机。"
   },
   {
     "id": "chauvinism--laili",
@@ -4893,8 +5234,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "盲目崇拜拿破仑的老兵 *Chauvin*，名字成了沙文主义。"
   },
   {
     "id": "check--laili",
@@ -4938,7 +5281,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "波斯语 *shah mat*（王死了），下棋时刻提防成“检查”。",
+    "links": [
+      {
+        "id": "exchequer--lishi",
+        "type": "衍生",
+        "why": "“支票”义 check 来自 Exchequer"
+      }
     ]
   },
   {
@@ -4971,8 +5324,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊神话狮、羊、龙拼成的喷火怪兽 *Chimera*。"
   },
   {
     "id": "china--laili",
@@ -5007,8 +5362,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "秦朝的 *chin* 加 -a 成国名，瓷器源自波斯语 *chini*。"
   },
   {
     "id": "chivalry--laili",
@@ -5041,8 +5398,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "威廉麾下的骑兵 *chevalier*（骑马者），成就骑士精神。"
   },
   {
     "id": "chowder--laili",
@@ -5074,8 +5433,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "布列塔尼渔村的公用大锅 *chaudiere*，锅名成了汤名。"
   },
   {
     "id": "class--laili",
@@ -5115,8 +5476,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古罗马按资产分六个 *classis*（等级），后指班级。"
   },
   {
     "id": "clerk--laili",
@@ -5155,8 +5518,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *clericus*（神职人员）能读会写，后成职员。"
   },
   {
     "id": "climate--laili",
@@ -5195,8 +5560,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古希腊人把地球分成七个斜坡 *klima*，引出气候。"
   },
   {
     "id": "cloak--laili",
@@ -5234,8 +5601,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中古拉丁语 *clocca*（钟）：斗篷形似一口钟。"
   },
   {
     "id": "cloud--laili",
@@ -5274,8 +5643,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *clud* 原指小山、岩石，雾中山丘似云。"
   },
   {
     "id": "clue--laili",
@@ -5315,8 +5686,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿里阿德涅给提修斯的线团 *clew*，成了线索。"
   },
   {
     "id": "coach--laili",
@@ -5358,8 +5731,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "匈牙利村庄 *Kocs* 造的大马车，一路驶成 coach。"
   },
   {
     "id": "cobalt--laili",
@@ -5392,8 +5767,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "德国矿工把害人的杂质叫 *Kobold*（妖精）。"
   },
   {
     "id": "cobra--laili",
@@ -5427,8 +5804,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *colubra*（蛇），十九世纪简化为 cobra。"
   },
   {
     "id": "cocktail--laili",
@@ -5463,8 +5842,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "来历众说纷纭，一说源自波尔多混合酒 *coquetel*。"
   },
   {
     "id": "cocoa--laili",
@@ -5494,8 +5875,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "纳瓦特尔语 *cacahuatl*（可可豆）是 cocoa 的源头。"
   },
   {
     "id": "coconut--laili",
@@ -5533,7 +5916,17 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "葡萄牙人见椰子似猴脸，叫它 *coco*，再加 *nut*。",
+    "links": [
+      {
+        "id": "coco",
+        "type": "衍生",
+        "why": "coconut 由 coco 加 nut 复合"
+      }
     ]
   },
   {
@@ -5568,8 +5961,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *qahwah*，经土耳其、法国传成 coffee。"
   },
   {
     "id": "colonel--laili",
@@ -5606,8 +6001,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "意大利语 *colonnello*（纵队指挥官），经法语传入。"
   },
   {
     "id": "coin--laili",
@@ -5646,8 +6043,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *cuneus*（楔形工具）敲出钱币，工具名成硬币。"
   },
   {
     "id": "comedy--laili",
@@ -5684,8 +6083,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "酒神狂欢 *komos* 的歌手 *komoidos*，演变成喜剧。"
   },
   {
     "id": "comfort--laili",
@@ -5723,8 +6124,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *con-* 加 *fortis*（强壮），本义是“加强”。"
   },
   {
     "id": "commando--laili",
@@ -5762,8 +6165,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "布尔人突袭土著的小股部队 *commando*，二战成突击队。"
   },
   {
     "id": "company--laili",
@@ -5802,8 +6207,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *companio*：一起分享面包 *panis* 的人。"
   },
   {
     "id": "complexion--laili",
@@ -5839,8 +6246,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "四体液调和成性情 *complexion*，相由心生转指面色。"
   },
   {
     "id": "comrade--laili",
@@ -5878,8 +6287,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "西班牙士兵的舍友 *camarada*，后成亲密同伴。"
   },
   {
     "id": "constable--laili",
@@ -5917,8 +6328,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *comes stabuli*（马厩总管）一路变成警官。"
   },
   {
     "id": "continent--laili",
@@ -5959,8 +6372,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *continere*（连在一起），后专指大陆。"
   },
   {
     "id": "cookie--laili",
@@ -5992,8 +6407,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "荷兰移民把 *Koekje*（小糕点）带到了纽约。"
   },
   {
     "id": "cool--laili",
@@ -6032,8 +6449,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *col*（凉快），乔叟赋予它“冷静”之意。"
   },
   {
     "id": "cop--laili",
@@ -6068,8 +6487,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "抓罪犯的人叫 *copper*，1859 年缩略成 cop。"
   },
   {
     "id": "copper--laili",
@@ -6102,8 +6523,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "塞浦路斯铜 *cyprium aes*，几经讹变成了 copper。"
   },
   {
     "id": "coquette--laili",
@@ -6139,8 +6562,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *coquet*（小公鸡）趾高气扬，后指卖弄风情。"
   },
   {
     "id": "cordial--laili",
@@ -6177,8 +6602,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *cor*（心），古人视心为情感的中心。"
   },
   {
     "id": "corn--laili",
@@ -6216,7 +6643,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "殖民者称玉米 *Indian corn*，corn 在美国成了玉米。",
+    "links": [
+      {
+        "id": "corny--lishi",
+        "type": "衍生",
+        "why": "corny 是 corn-fed 的缩写"
+      }
     ]
   },
   {
@@ -6250,8 +6687,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "母山羊 *Amalthea* 的断角取之不尽，成了丰饶角。"
   },
   {
     "id": "coroner--laili",
@@ -6286,8 +6725,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *corone*（王冠）：原是记录王室法务的官。"
   },
   {
     "id": "costume--laili",
@@ -6326,8 +6767,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "与 custom 同源于拉丁文 *consuetudo*（习惯），后指服装。"
   },
   {
     "id": "court--laili",
@@ -6367,8 +6810,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cohort*（农家大院）变成宫廷，再到法庭。"
   },
   {
     "id": "cousin--laili",
@@ -6409,8 +6854,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *consobrinus*（姨妈的孩子）被泛指堂表亲。"
   },
   {
     "id": "cow--laili",
@@ -6453,8 +6900,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "印欧语 *gwou* 成了古英语 *cu*，撒克逊人沿用称牛。"
   },
   {
     "id": "coward--laili",
@@ -6490,8 +6939,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "《列那狐》里胆小的野兔 *coart*，源自“尾巴”*coue*。"
   },
   {
     "id": "coxcomb--laili",
@@ -6524,8 +6975,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "弄臣戴鸡冠帽，*cockscomb* 变形为 coxcomb 指花花公子。"
   },
   {
     "id": "cravat--laili",
@@ -6558,8 +7011,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法国人把打领结的克罗地亚兵叫 *Cravate*。"
   },
   {
     "id": "crazy--laili",
@@ -6595,8 +7050,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "原意“满是裂缝的”，十七世纪起形容人疯癫。"
   },
   {
     "id": "cretin--laili",
@@ -6634,8 +7091,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *crestin*（基督徒）称阿尔卑斯病人，后成白痴。"
   },
   {
     "id": "crisscross--laili",
@@ -6669,8 +7128,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "识字板上的十字记号 *Christ-cross* 变成 crisscross。"
   },
   {
     "id": "crocodile--laili",
@@ -6704,8 +7165,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊词 *krokodilos* 意为“卵石上的虫子”。"
   },
   {
     "id": "crucial--laili",
@@ -6746,8 +7209,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *crux*（十字架），经培根、牛顿成了“关键的”。"
   },
   {
     "id": "curfew--laili",
@@ -6780,8 +7245,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *cuevrefeu*（掩火）：晚钟一响熄火就寝。"
   },
   {
     "id": "currency--laili",
@@ -6821,8 +7288,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *currere*（流动），流通的钱成了货币。"
   },
   {
     "id": "curtail--laili",
@@ -6861,8 +7330,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *curtus*（短）：截尾马 *curtal* 附会 tail。"
   },
   {
     "id": "cynic--laili",
@@ -6902,8 +7373,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "安提西尼在“白犬”*Cynosarges* 讲学，犬儒由此得名。"
   },
   {
     "id": "daffodil--laili",
@@ -6939,8 +7412,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*asphodelos* 讹为 *affodill*，再粘上荷兰语 *de*。"
   },
   {
     "id": "dais--laili",
@@ -6979,8 +7454,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *discus*（桌子）演变为贵宾高台 *deis*。"
   },
   {
     "id": "daisy--laili",
@@ -7018,8 +7495,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *daeges eage*（一日之眼）：日出开、日落合。"
   },
   {
     "id": "damask--laili",
@@ -7050,8 +7529,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "大马士革 *Damascus* 产的锦缎，英商称 *Damaske*。"
   },
   {
     "id": "date--laili",
@@ -7093,8 +7574,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "日期源自 *data Romae*（于罗马），海枣源自“手指”。"
   },
   {
     "id": "day--laili",
@@ -7136,8 +7619,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "日耳曼语 *taeg*（白昼）改 t- 为 d-，成了 day。"
   },
   {
     "id": "d-day--laili",
@@ -7159,8 +7644,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "一战已用 *D-day* 指进攻日，今泛指行动开始日。"
   },
   {
     "id": "deadline--laili",
@@ -7192,8 +7679,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "南北战争战俘营外，越界必死的那条线 *deadline*。"
   },
   {
     "id": "debt--laili",
@@ -7232,8 +7721,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *debitum* 经法语 *dette*，后人硬添不发音的 b。"
   },
   {
     "id": "debut--laili",
@@ -7269,8 +7760,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法文 *de but*（从记号处开始），原指比赛开球。"
   },
   {
     "id": "december--laili",
@@ -7307,8 +7800,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *decem*（十）：罗马旧历的第十个月。"
   },
   {
     "id": "delirium--laili",
@@ -7347,8 +7842,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *delirare*：犁地“偏离了犁沟”，喻神志不清。"
   },
   {
     "id": "demijohn--laili",
@@ -7389,8 +7886,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *damejeanne* 坛子形似胖妇人，英语念成 john。"
   },
   {
     "id": "demon--laili",
@@ -7426,8 +7925,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊文 *daimon*（神力），基督教折中成了恶魔。"
   },
   {
     "id": "denim--laili",
@@ -7460,8 +7961,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法国尼姆的斜纹布 *serge de Nimes*，简化成 denim。"
   },
   {
     "id": "derrick--laili",
@@ -7483,8 +7986,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "伦敦刽子手 *Derrick* 之名指绞架，又移给起重机。"
   },
   {
     "id": "despot--laili",
@@ -7519,8 +8024,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊文 *despotes*（主人），家主专权染上“暴虐”。"
   },
   {
     "id": "deuce--laili",
@@ -7553,8 +8060,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "德语 *der daus*（骰子二点），赌徒的咒骂成了 deuce。"
   },
   {
     "id": "devil--laili",
@@ -7592,8 +8101,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊文 *diabolos*（诽谤者）被用来译《圣经》的撒旦。"
   },
   {
     "id": "diaper--laili",
@@ -7631,8 +8142,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *diaspros*（纯白）指菱纹布，后作尿布。"
   },
   {
     "id": "dicker--laili",
@@ -7668,8 +8181,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *decuria*（十件一扎）兽皮，后指讨价还价。"
   },
   {
     "id": "dictionary--laili",
@@ -7709,8 +8224,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *dictio*（词）、*dicere*（说）演变成词典。"
   },
   {
     "id": "diet--laili",
@@ -7750,8 +8267,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古希腊语 *diaita*（生活方式），后专指饮食。"
   },
   {
     "id": "diplomat--laili",
@@ -7785,8 +8304,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古罗马对折的授权文书 *diploma*，衍生出外交官。"
   },
   {
     "id": "dirge--laili",
@@ -7818,8 +8339,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "葬礼诗篇的首字 *Dirige*（引领），被改成 dirge。"
   },
   {
     "id": "disaster--laili",
@@ -7859,8 +8382,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "意大利语 *disastro*（星的凶位）：星象不吉招灾。"
   },
   {
     "id": "discover--laili",
@@ -7894,8 +8419,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "1555 年用于记哥伦布，本义是“揭开、透露”。"
   },
   {
     "id": "dismal--laili",
@@ -7937,8 +8464,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *dies mali*（凶日）：古埃及每月两个不吉日。"
   },
   {
     "id": "divan--laili",
@@ -7977,8 +8506,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "土耳其枢密院 *divan* 里的软垫长椅，成了沙发名。"
   },
   {
     "id": "dog--laili",
@@ -8017,8 +8548,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语称狗为 *hund*，来历不明的 *dogge* 后取而代之。"
   },
   {
     "id": "dollar--laili",
@@ -8052,8 +8585,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "圣徒头像银币 *Joachimsthaler*，简称后变成 dollar。"
   },
   {
     "id": "draconian--laili",
@@ -8086,8 +8621,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "雅典立法者 *Draco* 法典严酷，罪无轻重皆重刑。"
   },
   {
     "id": "dragoman--laili",
@@ -8127,8 +8664,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *targuman* 经西、法传入，-man 并非“人”。"
   },
   {
     "id": "dragoon--laili",
@@ -8161,8 +8700,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "喷火怪 *drakon* 之名给了喷火武器，持它的骑兵叫 dragoon。"
   },
   {
     "id": "dream--laili",
@@ -8203,8 +8744,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古北欧语 *draumr*（梦）挤掉了 dream 的“欢悦”义。"
   },
   {
     "id": "dress--laili",
@@ -8243,8 +8786,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *drecier*（安排）：穿衣就是把衣服整理妥当。"
   },
   {
     "id": "dumbbell--laili",
@@ -8275,8 +8820,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "仿敲钟却不出声的健身器，叫 *dumb bell*（哑钟）。"
   },
   {
     "id": "dunce--laili",
@@ -8311,8 +8858,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "经院哲学家 *Duns* Scotus 的门徒被讥为 dunce。"
   },
   {
     "id": "dutch--laili",
@@ -8350,7 +8899,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "本与德语 *deutsch* 同源，英荷争霸后染上贬义。",
+    "links": [
+      {
+        "id": "dutch-courage",
+        "type": "衍生",
+        "why": "贬义 Dutch 组成的词组"
+      }
     ]
   },
   {
@@ -8384,8 +8943,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "盎格鲁撒克逊黎明女神的祭日 *Eastre*，借指复活节。"
   },
   {
     "id": "eavesdropper--laili",
@@ -8418,7 +8979,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "站在 *eavesdrop*（檐下空地）偷听的人。",
+    "links": [
+      {
+        "id": "eavesdrop",
+        "type": "衍生",
+        "why": "eavesdrop 加 -per 构成"
+      }
     ]
   },
   {
@@ -8458,8 +9029,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁文 *ex centrum*（偏离中心），由天文术语转指古怪。"
   },
   {
     "id": "echo--laili",
@@ -8488,7 +9061,22 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "被赫拉罚得只会学舌的仙女 *Echo*，只剩叹息回响。",
+    "links": [
+      {
+        "id": "narcissus",
+        "type": "同典故",
+        "why": "都出自 Echo 与 Narcissus 神话"
+      },
+      {
+        "id": "narcissism--laili",
+        "type": "同典故",
+        "why": "都出自 Echo 与 Narcissus 神话"
+      }
     ]
   },
   {
@@ -8525,8 +9113,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "宙斯抗击泰坦的山羊皮盾 *aigis*，引申为“保护”。"
   },
   {
     "id": "elbow--laili",
@@ -8567,8 +9157,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *ell*（肘长）加 *boog*（弯曲），成了 elbow。"
   },
   {
     "id": "electricity--laili",
@@ -8605,7 +9197,17 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "琥珀叫 *elektron*，吉伯据此造出 electricity。",
+    "links": [
+      {
+        "id": "electric",
+        "type": "衍生",
+        "why": "吉伯由 electric 造出 electricity"
+      }
     ]
   },
   {
@@ -8638,8 +9240,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "日耳曼人数完十指“还剩一”：*endleofan*。"
   },
   {
     "id": "elixir--laili",
@@ -8671,8 +9275,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "阿拉伯炼金术里的点金物 *el iksir*，后成长生药。"
   },
   {
     "id": "emancipation--laili",
@@ -8708,7 +9314,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *emancipare*“把手拿开”，奴隶就获解放。",
+    "links": [
+      {
+        "id": "emancipate",
+        "type": "衍生",
+        "why": "emancipation 是 emancipate 的名词"
+      }
     ]
   },
   {
@@ -8741,8 +9357,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "黎塞留的心腹约瑟夫穿灰袍，人称“灰衣大人”。"
   },
   {
     "id": "enthusiast--laili",
@@ -8780,8 +9398,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *entheos*“被神附体”，后泛指热衷者。"
   },
   {
     "id": "epicure--laili",
@@ -8815,8 +9435,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "哲学家 *Epicurus* 之名，被借指讲究饮食的人。"
   },
   {
     "id": "erotic--laili",
@@ -8848,8 +9470,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "爱神 *Eros* 的形容词，喻指情欲。"
   },
   {
     "id": "escape--laili",
@@ -8885,7 +9509,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *excappare*：脱下斗篷，夺门而逃。",
+    "links": [
+      {
+        "id": "scapegoat--lishi",
+        "type": "衍生",
+        "why": "scapegoat 由 escape 加 goat 组成"
+      }
     ]
   },
   {
@@ -8923,8 +9557,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *escuier*“持盾人”：替骑士扛盾的随从。"
   },
   {
     "id": "etiquette--laili",
@@ -8964,8 +9600,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法国宫廷宴前发 *etiquette*“签条”，写明礼节。"
   },
   {
     "id": "eureka--laili",
@@ -8988,7 +9626,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "阿基米德浴中悟出浮力，大喊 *Heureka*！",
+    "links": [
+      {
+        "id": "heuristic",
+        "type": "同根",
+        "why": "都源自希腊语 heuriskein（发现）"
+      }
     ]
   },
   {
@@ -9027,8 +9675,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *explodere* 本是喝倒彩把演员轰下台。"
   },
   {
     "id": "extravagant--laili",
@@ -9065,8 +9715,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *extra*（在外）加 *vagari*（游荡）。"
   },
   {
     "id": "facsimile--laili",
@@ -9101,8 +9753,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *fac simile*“做出相似的”，成了摹本。"
   },
   {
     "id": "fad--laili",
@@ -9138,8 +9792,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "土语 *faddle* 指搂吻婴儿，简化成一时嗜好。"
   },
   {
     "id": "fake--laili",
@@ -9175,8 +9831,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "窃贼黑话，较可信的来源是十五世纪的 *faken*。"
   },
   {
     "id": "fan--laili",
@@ -9214,7 +9872,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "棒球狂热者 *baseball fanatic* 缩略成 *fan*。",
+    "links": [
+      {
+        "id": "fanatic--laili",
+        "type": "衍生",
+        "why": "fan（迷）是 fanatic 的缩略"
+      }
     ]
   },
   {
@@ -9251,8 +9919,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *fanum*（神庙）：受神启发者成了狂热者。"
   },
   {
     "id": "farce--laili",
@@ -9292,8 +9962,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *farcio*“塞馅”：经文里塞进的插科打诨。"
   },
   {
     "id": "farm--laili",
@@ -9335,8 +10007,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *firmus*（固定的）：交给领主的固定年租。"
   },
   {
     "id": "fascinate--laili",
@@ -9376,8 +10050,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "罗马辟邪护身符 *fascinum*，生出“迷住”之意。"
   },
   {
     "id": "fascism--laili",
@@ -9414,8 +10090,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "墨索里尼据 *fasces*（捆斧的棍棒束）给党命名。"
   },
   {
     "id": "february--laili",
@@ -9448,8 +10126,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "牧神节抽人的皮条 *februa*，生出“净月”。"
   },
   {
     "id": "fearnought--laili",
@@ -9473,8 +10153,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*fear* 加 *nought*：水手穿上它，风浪也不怕。"
   },
   {
     "id": "feisty--laili",
@@ -9505,8 +10187,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "爱狂吠的小杂种狗 *feist*，变成“狗脾气”。"
   },
   {
     "id": "female--laili",
@@ -9543,8 +10227,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *femella*（年轻女子）与 *male* 结合而成。"
   },
   {
     "id": "fetish--laili",
@@ -9578,8 +10264,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "葡萄牙人称西非符咒为 *fetico*，传成 *fetish*。"
   },
   {
     "id": "filibuster--laili",
@@ -9618,8 +10306,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *vrijbuiter*（海盗）辗转成了阻挠议事。"
   },
   {
     "id": "flamenco--laili",
@@ -9650,7 +10340,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "骂弗兰德斯人的 *Flamenco*，转指吉卜赛人的舞。",
+    "links": [
+      {
+        "id": "flamingo",
+        "type": "同根",
+        "why": "都源自西班牙语 Flamenco（弗兰芒人）"
+      }
     ]
   },
   {
@@ -9690,8 +10390,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *furca* 原是农民耙草的耙子。"
   },
   {
     "id": "fortnight--laili",
@@ -9724,8 +10426,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*fourteen nights*（十四夜）缩写而成。"
   },
   {
     "id": "frank--laili",
@@ -9762,8 +10466,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法兰克人是唯一自由者，*Frank* 引申为直率。"
   },
   {
     "id": "friday--laili",
@@ -9798,8 +10504,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *Frigedaeg*：献给北欧爱神 Frigg 的一天。"
   },
   {
     "id": "fun--laili",
@@ -9838,8 +10546,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中古英语 *fon*（傻子），依其读音生出 *fun*。"
   },
   {
     "id": "flour--laili",
@@ -9877,7 +10587,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "*flower of meal*“磨粉的精华”，后与 *flower* 分家。",
+    "links": [
+      {
+        "id": "flower",
+        "type": "衍生",
+        "why": "flour 出自 flower of meal"
+      }
     ]
   },
   {
@@ -9920,8 +10640,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *frons*（前面）：国土的前部即边疆。"
   },
   {
     "id": "funky--laili",
@@ -9958,8 +10680,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*funk* 本指陈奶酪臭味，在黑人音乐里成了“极好”。"
   },
   {
     "id": "galaxy--laili",
@@ -9995,8 +10719,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *gala*（乳汁）：银河像一条乳白光带。"
   },
   {
     "id": "galoshes--laili",
@@ -10032,8 +10758,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *gallicula*，本是高卢人穿的木屐。"
   },
   {
     "id": "gargantuan--laili",
@@ -10063,8 +10791,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "拉伯雷笔下大胃巨人 *Gargantua*，喻指巨大。"
   },
   {
     "id": "garlic--laili",
@@ -10097,8 +10827,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *gar*（矛）加 *leac*（韭葱）：蒜瓣似矛头。"
   },
   {
     "id": "gas--laili",
@@ -10134,8 +10866,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "范海尔孟由混沌 *chaos* 联想，造出 *gas*。"
   },
   {
     "id": "gauntlet--laili",
@@ -10172,8 +10906,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "骑士铁手套 *gantelet*，混入瑞典鞭刑 *gatlopp*。"
   },
   {
     "id": "gay--laili",
@@ -10210,8 +10946,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "本义快乐，俚语 *gay-cat* 使它专指男同性恋。"
   },
   {
     "id": "gazette--laili",
@@ -10246,8 +10984,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "一枚威尼斯小铜币 *gazeta* 买一份小报。"
   },
   {
     "id": "genius--laili",
@@ -10281,8 +11021,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "罗马人的守护神 *Genius*，后指天赋与天才。"
   },
   {
     "id": "gentle--laili",
@@ -10319,8 +11061,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *gentilis*（同族），经法语“门第高”到文雅。"
   },
   {
     "id": "ghost--laili",
@@ -10358,8 +11102,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *gast* 本指心灵，十四世纪起指鬼魂。"
   },
   {
     "id": "girl--laili",
@@ -10399,8 +11145,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "日耳曼语 *gor* 本指不分男女的小孩。"
   },
   {
     "id": "glamour--laili",
@@ -10438,8 +11186,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "苏格兰人把魔法 *gramarye* 说成 *glamour*。"
   },
   {
     "id": "good-bye--laili",
@@ -10472,8 +11222,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*God be with you* 一路简化成 *good-bye*。"
   },
   {
     "id": "gorgon--laili",
@@ -10503,8 +11255,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "蛇发女妖 *gorgons*，看她一眼就变成石头。"
   },
   {
     "id": "gorilla--laili",
@@ -10539,8 +11293,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "迦太基航海家汉诺以土著族名唤它 *gorilla*。"
   },
   {
     "id": "gospel--laili",
@@ -10573,8 +11329,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *godspel*“好消息”，译自 *evangelium*。"
   },
   {
     "id": "gossamer--laili",
@@ -10607,8 +11365,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "吃鹅的 *goose summer* 时节，蛛丝漫天飘飞。"
   },
   {
     "id": "gossip--laili",
@@ -10646,8 +11406,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *godsibb*（教父母）：密友变成闲话人。"
   },
   {
     "id": "graham--laili",
@@ -10668,8 +11430,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "素食牧师 Graham 的粗面饼干，让他名附全麦。"
   },
   {
     "id": "grenade--laili",
@@ -10707,8 +11471,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *granatum*（石榴）：炸药碎粒似石榴籽。"
   },
   {
     "id": "groom--laili",
@@ -10744,8 +11510,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*bridegroom* 的简化，*groom* 本是“马夫”。"
   },
   {
     "id": "grotesque--laili",
@@ -10783,8 +11551,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "罗马古城地下的 *grottesca*（洞穴）怪诞壁画。"
   },
   {
     "id": "guillotine--laili",
@@ -10815,8 +11585,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "医生 *Guillotin* 提议用断头机减轻犯人痛苦。"
   },
   {
     "id": "gun--laili",
@@ -10855,8 +11627,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "北欧女子名 *Gunilda* 的弩炮，缩写成 *gun*。"
   },
   {
     "id": "gung-ho--laili",
@@ -10887,8 +11661,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中国“工合”被卡尔森当成口号 *gung ho*。"
   },
   {
     "id": "guy--laili",
@@ -10924,8 +11700,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "火药阴谋主谋 *Guy Fawkes*，名字变成“家伙”。"
   },
   {
     "id": "gymnasium--laili",
@@ -10964,8 +11742,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *gymnazein*“赤身训练”，后成体育馆。"
   },
   {
     "id": "gypsy--laili",
@@ -11001,8 +11781,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "英格兰人误以为他们来自埃及，称 *Egyptian*。"
   },
   {
     "id": "halcyon--laili",
@@ -11034,7 +11816,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "*Halcyone* 夫妇化翠鸟，筑巢时海平浪静。",
+    "links": [
+      {
+        "id": "halcyon-days",
+        "type": "衍生",
+        "why": "halcyon days 由 halcyon 构成"
+      }
     ]
   },
   {
@@ -11065,8 +11857,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "凯尔特人的除夕“鬼节”，被教会定为万圣节。"
   },
   {
     "id": "hamburger--laili",
@@ -11104,8 +11898,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "德国城市汉堡 *Hamburg* 的碎牛肉饼。"
   },
   {
     "id": "handicap--laili",
@@ -11137,8 +11933,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "赌博游戏 *hand in cap*：赢家多押的钱放进帽里。"
   },
   {
     "id": "handkerchief--laili",
@@ -11176,8 +11974,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "包头方巾 *kerchief* 拿在手里，前面加上 *hand*。"
   },
   {
     "id": "handsome--laili",
@@ -11213,8 +12013,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "本义“易于操作”，几经引申才专夸男子英俊。"
   },
   {
     "id": "hangnail--laili",
@@ -11241,8 +12043,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *angnaegl*（鸡眼），加了 h 变成倒刺。"
   },
   {
     "id": "harass--laili",
@@ -11277,8 +12081,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法国人放狗时喊“*Hare*！”：咬住不放的骚扰。"
   },
   {
     "id": "harvest--laili",
@@ -11320,8 +12126,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *haerfest* 本指秋季，后来才指收获。"
   },
   {
     "id": "hazard--laili",
@@ -11362,8 +12170,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *al zahr*（骰子游戏），赌得越大越危险。"
   },
   {
     "id": "hearse--laili",
@@ -11394,8 +12204,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *herse*（耙）似烛架，最后成了灵车。"
   },
   {
     "id": "hectic--laili",
@@ -11435,8 +12247,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "加伦把面红发热称为 *haktikos*（习惯性的）。"
   },
   {
     "id": "hector--laili",
@@ -11471,8 +12285,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "特洛伊勇士 *Hector* 之名被伦敦流氓盗用。"
   },
   {
     "id": "helicopter--laili",
@@ -11508,8 +12324,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *heliko*（螺旋）加 *pteron*（翼）。"
   },
   {
     "id": "helpmeet--laili",
@@ -11529,8 +12347,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《创世纪》*help meet*（合适的帮手）被误连成一词。"
   },
   {
     "id": "heresy--laili",
@@ -11569,8 +12389,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *hairesis* 本指“选择”，经保罗之口成贬义。"
   },
   {
     "id": "history--laili",
@@ -11609,7 +12431,22 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *historia*（往事记载），与 *story* 同源。",
+    "links": [
+      {
+        "id": "story--laili",
+        "type": "同根",
+        "why": "都源自拉丁语 historia"
+      },
+      {
+        "id": "herstory",
+        "type": "衍生",
+        "why": "herstory 由 history 拆字反造"
+      }
     ]
   },
   {
@@ -11647,8 +12484,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "莫里斯舞腰间的小马道具 *hobbyhorse*，简成 *hobby*。"
   },
   {
     "id": "honcho--laili",
@@ -11678,8 +12517,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "二战时从日语传入美国，原意是“班长”。"
   },
   {
     "id": "honeymoon--laili",
@@ -11708,8 +12549,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "新婚首月天天喝蜂蜜酒 *honey*，*moon* 即月。"
   },
   {
     "id": "hooker--laili",
@@ -11732,8 +12575,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：胡克将军、*Corlear's Hook* 或“上钩”。"
   },
   {
     "id": "horde--laili",
@@ -11773,8 +12618,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "土耳其语 *ordu*（游牧单位），蒙古军称 *Golden Horde*。"
   },
   {
     "id": "host--laili",
@@ -11810,8 +12657,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *hospes* 既是客人，也是招待客人的主人。"
   },
   {
     "id": "humble-pie--laili",
@@ -11845,8 +12694,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "内脏 *numbles* 误读成 *humbles*，内脏饼给仆人吃。"
   },
   {
     "id": "humbug--laili",
@@ -11880,8 +12731,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "狄更斯让吝啬鬼 Scrooge 一句“*humbug*”传遍全球。"
   },
   {
     "id": "humdrum--laili",
@@ -11914,8 +12767,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "前半截是蜜蜂的嗡嗡声 *hum*，单调乏味。"
   },
   {
     "id": "humor--laili",
@@ -11957,8 +12812,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *humor* 本是体液，偏多者怪异惹人笑。"
   },
   {
     "id": "husband--laili",
@@ -11993,8 +12850,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *husbonda*：*hus*（房子）的拥有者。"
   },
   {
     "id": "hussy--laili",
@@ -12029,8 +12888,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "主妇 *husewif* 丢了 w、f，变成轻佻女子。"
   },
   {
     "id": "hyacinth--laili",
@@ -12064,8 +12925,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿波罗让死去的少年 *Hyacinthus* 血中开花。"
   },
   {
     "id": "hysteria--laili",
@@ -12100,7 +12963,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊语 *hysterikos*（子宫的），被当作情绪病根。",
+    "links": [
+      {
+        "id": "hysterical",
+        "type": "同根",
+        "why": "都源自希腊语“子宫”一词"
+      }
     ]
   },
   {
@@ -12138,8 +13011,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *idein*（看见），经柏拉图学派变成理念。"
   },
   {
     "id": "idiom--laili",
@@ -12176,7 +13051,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊语 *idios*（私有的）：语言的个人特色。",
+    "links": [
+      {
+        "id": "idiot--lishi",
+        "type": "同根",
+        "why": "都源自希腊语 idios（个人的）"
+      }
     ]
   },
   {
@@ -12216,8 +13101,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *idiotes* 本指非公职的普通人，后被视为笨。"
   },
   {
     "id": "ignoramus--laili",
@@ -12248,7 +13135,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "陪审团写在诉状背面的“我们不知”*ignoramus*。",
+    "links": [
+      {
+        "id": "ignore",
+        "type": "同根",
+        "why": "都源自拉丁语 ignorare（不知道）"
+      }
     ]
   },
   {
@@ -12285,8 +13182,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *impedire*“戴上脚镣”，走路处处受阻。"
   },
   {
     "id": "inaugurate--laili",
@@ -12317,8 +13216,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "罗马人观鸟授官 *inauguro*，后指就职与开始。"
   },
   {
     "id": "infant--laili",
@@ -12356,7 +13257,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *infans*“尚未说话的幼儿”。",
+    "links": [
+      {
+        "id": "infantry--lishi",
+        "type": "衍生",
+        "why": "步兵 infantry 得名于“小孩”"
+      }
     ]
   },
   {
@@ -12389,8 +13300,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "占星家把流行病归于星体 *influenza*（影响）。"
   },
   {
     "id": "insult--laili",
@@ -12425,8 +13338,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *insultare*“猛扑上去”，后转为言语羞辱。"
   },
   {
     "id": "intoxicate--laili",
@@ -12460,8 +13375,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *toxikon*（箭毒），演变为“使中毒”。"
   },
   {
     "id": "island--laili",
@@ -12500,8 +13417,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *igland* 仿 *isle* 硬加了不发音的 s。"
   },
   {
     "id": "jackanapes--laili",
@@ -12525,8 +13444,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "塞弗科公爵绰号 *Jack Napis*，徽章似拴猴锁链。"
   },
   {
     "id": "jade--laili",
@@ -12557,8 +13478,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "西班牙语 *piedra de ijada*“治肾病的石头”。"
   },
   {
     "id": "jalousie--laili",
@@ -12583,8 +13506,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "防人偷看妻子的百叶窗，*jalousie* 即“嫉妒”。"
   },
   {
     "id": "janizary--laili",
@@ -12608,8 +13533,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "土耳其“新军” *yenicheri* 被英语误读而成。"
   },
   {
     "id": "january--laili",
@@ -12640,8 +13567,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "两面门神 *Janus* 之月，与新年合在一起。"
   },
   {
     "id": "jeans--laili",
@@ -12674,8 +13603,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "热那亚 *Genoa* 产的斜纹布，缩成 *jean*。"
   },
   {
     "id": "jeep--laili",
@@ -12709,8 +13640,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*G.P.*（多功能车）的读音，加上大力水手的 *Jeep*。"
   },
   {
     "id": "jehovah--laili",
@@ -12744,8 +13677,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "学者误把 *YHWH* 配上 *Adhonai* 的元音来读。"
   },
   {
     "id": "jeopardy--laili",
@@ -12776,8 +13711,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *jeu parti*：胜负难定的棋局。"
   },
   {
     "id": "joke--laili",
@@ -12815,8 +13752,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *jocus* 源自最爱开玩笑的主神 Jove。"
   },
   {
     "id": "journey--laili",
@@ -12857,8 +13796,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *journee* 原指“一天的行程”。"
   },
   {
     "id": "jovial--laili",
@@ -12894,8 +13835,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "命属木星 *Jove* 的人，像他一样乐观快活。"
   },
   {
     "id": "juggernaut--laili",
@@ -12917,8 +13860,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "印度神像车 *Jagannath*，碾出“巨大力量”。"
   },
   {
     "id": "july--laili",
@@ -12950,8 +13895,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "以凯撒 *Julius Caesar* 命名，七月是他的生月。"
   },
   {
     "id": "june--laili",
@@ -12984,8 +13931,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "天后朱诺 *Juno* 的月份，罗马人爱在此婚嫁。"
   },
   {
     "id": "junket--laili",
@@ -13020,8 +13969,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *jonquette* 鱼篓装美食，后成公款吃喝。"
   },
   {
     "id": "kangaroo--laili",
@@ -13056,7 +14007,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "库克问名，土著答 *kangaroo*，或是“我不知道”。",
+    "links": [
+      {
+        "id": "kangaroo-court",
+        "type": "衍生",
+        "why": "kangaroo court 由 kangaroo 复合"
+      }
     ]
   },
   {
@@ -13093,8 +14054,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "波斯语 *khak* 是泥土，土黄布料便叫 khaki。"
   },
   {
     "id": "kibitz--laili",
@@ -13114,8 +14077,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "德语 *kiebitz* 是聒噪的田凫，喻多嘴旁观者。"
   },
   {
     "id": "kickshaw--laili",
@@ -13140,8 +14105,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *quelque choses* 被误拼，成了 kickshaw。"
   },
   {
     "id": "kidnap--laili",
@@ -13175,8 +14142,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*kid*（小孩）加 *nap*（偷），本指拐卖小孩。"
   },
   {
     "id": "kiwifruit--laili",
@@ -13207,8 +14176,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中国猕猴桃到新西兰，借几维鸟 *kiwi* 改名。"
   },
   {
     "id": "knave--laili",
@@ -13246,8 +14217,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语原指男孩，小厮出身的 *knave* 成了无赖。"
   },
   {
     "id": "lace--laili",
@@ -13279,7 +14252,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "中古时 *lace* 是捕猎索套，后成镂空花边。",
+    "links": [
+      {
+        "id": "necklace--laili",
+        "type": "衍生",
+        "why": "necklace 由 neck 加 lace 合成"
+      }
     ]
   },
   {
@@ -13316,8 +14299,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *hlaegdige* 原是“做面包的人”。"
   },
   {
     "id": "lampoon--laili",
@@ -13355,8 +14340,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法国人干杯喊 *lampons*，随编随唱挖苦人。"
   },
   {
     "id": "learn--laili",
@@ -13396,8 +14383,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *leornian*，中古时既指“学”也指“教”。"
   },
   {
     "id": "left--laili",
@@ -13434,8 +14423,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *lyft* 原意“无力的”，左手力气小。"
   },
   {
     "id": "legend--laili",
@@ -13469,8 +14460,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "圣徒传 *Legenda Sanctorum* 越写越玄成了传奇。"
   },
   {
     "id": "lent--laili",
@@ -13494,8 +14487,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *lencten* 原指“春季”，与 long 同源。"
   },
   {
     "id": "lesbian--laili",
@@ -13524,8 +14519,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "女诗人萨福居住的 *Lesbos* 岛，得名女同性恋。"
   },
   {
     "id": "lethal--laili",
@@ -13561,8 +14558,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "冥河 *Lethe* 令人忘却，lethal 变成“致死的”。"
   },
   {
     "id": "lewd--laili",
@@ -13595,8 +14594,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "*lewd* 原只是“非神职人员的”，后贬为淫荡。"
   },
   {
     "id": "libel--laili",
@@ -13635,8 +14636,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *liber*（书），攻讦小册子成了诽谤罪。"
   },
   {
     "id": "liberal--laili",
@@ -13675,8 +14678,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *liberalis* 是“非奴隶的”，转为开明。"
   },
   {
     "id": "limousine--laili",
@@ -13707,8 +14712,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "车形像 *Limousin* 牧羊人的斗篷，得名豪车。"
   },
   {
     "id": "livery--laili",
@@ -13743,8 +14750,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *livree*（配给），后专指仆人制服。"
   },
   {
     "id": "loo--laili",
@@ -13778,8 +14787,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：法语 *le lieu*，或倒夜壶喊 *Gardy loo*。"
   },
   {
     "id": "lord--laili",
@@ -13815,8 +14826,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *hlaford*，“掌管面包的人”即一家之主。"
   },
   {
     "id": "lounge--laili",
@@ -13852,8 +14865,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "圣徒 *Longinus* 被演成倚着长矛的懒汉。"
   },
   {
     "id": "lumber--laili",
@@ -13891,8 +14906,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "伦巴第人 *Lombard* 开当铺，杂物堆成 lumber。"
   },
   {
     "id": "lunatic--laili",
@@ -13931,8 +14948,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *lunaticus*：月亮 *Luna* 渐圆，病人发狂。"
   },
   {
     "id": "luncheon--laili",
@@ -13960,8 +14979,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "方言 *lunshin*（一块食物）配午酒，合成 luncheon。"
   },
   {
     "id": "lynch--laili",
@@ -13994,8 +15015,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "弗吉尼亚军官 Lynch 私设法庭，*lynch law* 得名。"
   },
   {
     "id": "macadam--laili",
@@ -14032,7 +15055,22 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "苏格兰工程师 *McAdam* 发明碎石路，以姓命名。",
+    "links": [
+      {
+        "id": "tarmac",
+        "type": "衍生",
+        "why": "tarmac 由 tar 加 macadam 缩合"
+      },
+      {
+        "id": "tarmac--lishi",
+        "type": "衍生",
+        "why": "tarmac 由 tar 加 macadam 缩合"
+      }
     ]
   },
   {
@@ -14068,8 +15106,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "墨西哥词 *macho* 原指雄性牲畜，后贬为大男子。"
   },
   {
     "id": "mafia--laili",
@@ -14103,8 +15143,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "西西里人逃进深山避难所 *mafia*，沦为土匪。"
   },
   {
     "id": "magazine--laili",
@@ -14140,8 +15182,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *makhazin*（仓库），从弹药库到杂志。"
   },
   {
     "id": "magnet--laili",
@@ -14179,8 +15223,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊 *Magnesia* 地区出磁石，故名 *magnes*。"
   },
   {
     "id": "mail--laili",
@@ -14218,8 +15264,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古德语 *malha* 原是旅行口粮袋，后指袋中邮件。"
   },
   {
     "id": "malaria--laili",
@@ -14251,8 +15299,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "意大利语 *mala aria*“坏空气”，误当瘴气致病。"
   },
   {
     "id": "mall--laili",
@@ -14283,8 +15333,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "击球游戏 *pall-mall* 的球场，后成街道商场。"
   },
   {
     "id": "mandarin--laili",
@@ -14321,8 +15373,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "葡萄牙人合 *mantri* 与 *mandar*，称中国官员。"
   },
   {
     "id": "maneuver--laili",
@@ -14361,8 +15415,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *manu operare*“用手做事”，后成调兵遣将。"
   },
   {
     "id": "marathon--laili",
@@ -14393,8 +15449,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "传令兵从 *Marathon* 跑到雅典报捷后累死。"
   },
   {
     "id": "march--laili",
@@ -14426,7 +15484,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "三月献给战神 *Mars*，祈求首战告捷。",
+    "links": [
+      {
+        "id": "martial",
+        "type": "同根",
+        "why": "都源自战神之名 *Mars*"
+      }
     ]
   },
   {
@@ -14461,8 +15529,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "并非“Marie malade”，实出葡萄牙语 *marmelada*。"
   },
   {
     "id": "marshal--laili",
@@ -14495,8 +15565,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古高地德语 *marahscalc*“马夫”，一路升为元帅。"
   },
   {
     "id": "martinet--laili",
@@ -14526,8 +15598,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "路易十四的严苛教官 *Martinet*，姓成了代名词。"
   },
   {
     "id": "mascot--laili",
@@ -14563,8 +15637,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "轻歌剧 *La Mascotte* 少女带来胜利，成了吉祥物。"
   },
   {
     "id": "masochism--laili",
@@ -14593,8 +15669,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "小说家 *Sacher-Masoch* 写受虐也自虐，得名受虐狂。"
   },
   {
     "id": "mass--laili",
@@ -14630,8 +15708,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "弥撒结束语 *Ite, missa est*，*missa* 变成 mass。"
   },
   {
     "id": "matinee--laili",
@@ -14664,8 +15744,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *matin*（早上），正餐前的表演叫 matinee。"
   },
   {
     "id": "maudlin--laili",
@@ -14704,8 +15786,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "终日垂泪的 *Magdalene*，名字变成“爱哭的”。"
   },
   {
     "id": "mausoleum--laili",
@@ -14740,8 +15824,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "王后为国王 *Mausolus* 建巨陵，遂称陵墓。"
   },
   {
     "id": "maverick--laili",
@@ -14777,8 +15863,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "律师 *Maverick* 的小牛没打烙印，四处游荡。"
   },
   {
     "id": "may--laili",
@@ -14813,8 +15901,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "罗马人为纪念女神 *Maia*，将五月取名 May。"
   },
   {
     "id": "mayday--laili",
@@ -14847,8 +15937,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *m'aider*（救救我）音近，定为求救信号。"
   },
   {
     "id": "meal--laili",
@@ -14888,8 +15980,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *meal* 原指“固定的进餐时间”。"
   },
   {
     "id": "mentor--laili",
@@ -14924,8 +16018,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "奥德修斯托孤的好友 *Mentor*，成了良师代名词。"
   },
   {
     "id": "mercy--laili",
@@ -14964,8 +16060,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *merx*（商品）衍出 *merces*，善行的报偿。"
   },
   {
     "id": "mesmerize--laili",
@@ -15000,8 +16098,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "医生 *Mesmer* 以“动物磁力”行医，姓成了催眠。"
   },
   {
     "id": "mess--laili",
@@ -15039,8 +16139,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *missus*“一道菜”，从食堂到一片狼藉。"
   },
   {
     "id": "migraine--laili",
@@ -15077,8 +16179,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *hemikrania*，原意是“半个头疼”。"
   },
   {
     "id": "milliner--laili",
@@ -15116,8 +16220,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "米兰 *Milan* 来的女帽商，被叫成 milliners。"
   },
   {
     "id": "miniature--laili",
@@ -15154,8 +16260,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "书卷用红颜料 *minium* 画小图，引申为微小。"
   },
   {
     "id": "mob--laili",
@@ -15193,8 +16301,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *mobile vulgus* 一缩再缩，成了 mob。"
   },
   {
     "id": "monday--laili",
@@ -15226,8 +16336,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *lunae dies* 月之日，古英语 *monandaeg*。"
   },
   {
     "id": "money--laili",
@@ -15268,8 +16380,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "警告女神 *Juno Moneta* 的神庙里设了铸币厂。"
   },
   {
     "id": "monster--laili",
@@ -15307,8 +16421,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *monstrum* 本是神灵发出的凶兆。"
   },
   {
     "id": "morphine--laili",
@@ -15342,8 +16458,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "以梦神 *Morpheus* 命名，取其麻醉镇痛。"
   },
   {
     "id": "mountebank--laili",
@@ -15362,8 +16480,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "郎中跳上桌子 *banca* 叫卖，“*Monta in banco*！”"
   },
   {
     "id": "mugwump--laili",
@@ -15389,8 +16509,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "印第安语 *mukquomp* 酋长，后成自负的骑墙派。"
   },
   {
     "id": "muscle--laili",
@@ -15424,8 +16546,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *musculus* 小老鼠，肌肉一动像鼠爬。"
   },
   {
     "id": "museum--laili",
@@ -15459,8 +16583,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "缪斯 *Muses* 的神庙 *mouseion*，成了博物馆。"
   },
   {
     "id": "music--laili",
@@ -15493,7 +16619,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊语 *mousike*“有关缪斯的”，专指音乐。",
+    "links": [
+      {
+        "id": "museum",
+        "type": "同根",
+        "why": "都源自缪斯女神 *Muses*"
+      }
     ]
   },
   {
@@ -15531,8 +16667,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "火枪以鸟命名：*mousquet* 在法语里意为雀鹰。"
   },
   {
     "id": "namby-pamby--laili",
@@ -15564,8 +16702,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "凯里戏仿菲利普斯童诗，题作 *Namby-Pamby*。"
   },
   {
     "id": "narcissism--laili",
@@ -15598,7 +16738,22 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "美少年 *Narcissus* 迷恋倒影，派生出自恋。",
+    "links": [
+      {
+        "id": "narcissus",
+        "type": "衍生",
+        "why": "narcissism 由 narcissus 派生"
+      },
+      {
+        "id": "echo",
+        "type": "同典故",
+        "why": "都出自 Echo 恋 Narcissus 的神话"
+      }
     ]
   },
   {
@@ -15629,8 +16784,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "希腊语 *naus*（船）生出 *nausia*，本指晕船。"
   },
   {
     "id": "necklace--laili",
@@ -15663,8 +16820,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*neck* 加 *lace*（细绳），领口镶边成了项链。"
   },
   {
     "id": "neighbor--laili",
@@ -15697,8 +16856,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*nigh*（附近）加 *boor*（庄稼汉），住附近的人。"
   },
   {
     "id": "nemesis--laili",
@@ -15731,8 +16892,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *nemein*“给予应得的”，报复女神之名。"
   },
   {
     "id": "nepotism--laili",
@@ -15765,8 +16928,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *nepos*（侄甥），教皇重用侄甥成裙带。"
   },
   {
     "id": "nice--laili",
@@ -15807,8 +16972,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *nescius*，从“无知的”一路褒成“美好”。"
   },
   {
     "id": "nickel--laili",
@@ -15842,8 +17009,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "德国矿工骂假铜是 *kupfernickel*“铜魔”。"
   },
   {
     "id": "nickname--laili",
@@ -15882,8 +17051,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*an ekename*“额外的名字”误分成 a nekename。"
   },
   {
     "id": "nicotine--laili",
@@ -15914,8 +17085,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "大使 *Jean Nicot* 把烟草种子带回法国。"
   },
   {
     "id": "nightmare--laili",
@@ -15944,8 +17117,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "夜里坐人身上的小妖 *mara*，成了噩梦。"
   },
   {
     "id": "noisome--laili",
@@ -15979,8 +17154,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*annoy* 缩成 *noy* 加 -some，与 noise 无关。"
   },
   {
     "id": "noon--laili",
@@ -16018,8 +17195,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *nona hora*，日出后第九小时成了中午。"
   },
   {
     "id": "nostrum--laili",
@@ -16056,8 +17235,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "瘟疫中骗子挂意大利语 *nostrum*“独家秘方”。"
   },
   {
     "id": "november--laili",
@@ -16090,8 +17271,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *novem*（九），提比略不肯以己命名。"
   },
   {
     "id": "numskull--laili",
@@ -16114,8 +17297,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*num*（被取走）加 *skull*，脑子被取走了。"
   },
   {
     "id": "october--laili",
@@ -16147,7 +17332,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *octo*（八），旧历第八月改历成十月。",
+    "links": [
+      {
+        "id": "octopus",
+        "type": "同根",
+        "why": "都源自拉丁语 *octo*（八）"
+      }
     ]
   },
   {
@@ -16178,8 +17373,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：*all korrek* 或 *old Kinderhook*。"
   },
   {
     "id": "old-nick--laili",
@@ -16209,8 +17406,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "马基雅维利之名 *Niccolo*，被拿来指魔鬼。"
   },
   {
     "id": "omelette--laili",
@@ -16246,8 +17445,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *lamella*（薄盘），煎蛋像只薄盘子。"
   },
   {
     "id": "orangutan--laili",
@@ -16281,8 +17482,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "马来语 *orang*（人）加 *hutan*（森林），野人。"
   },
   {
     "id": "ordeal--laili",
@@ -16317,8 +17520,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *ordal* 是烙铁沸水的“神明裁判”。"
   },
   {
     "id": "orient--laili",
@@ -16356,7 +17561,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *oriens*“升起的”，太阳升起处即东方。",
+    "links": [
+      {
+        "id": "orientation",
+        "type": "衍生",
+        "why": "orientation 由 orient 派生"
+      }
     ]
   },
   {
@@ -16391,8 +17606,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "*ordinary* 被吞掉 di 音，又沾上贬义。"
   },
   {
     "id": "oscar--laili",
@@ -16428,8 +17645,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "职员惊呼小金人像他舅舅 *Oscar*。"
   },
   {
     "id": "oscillate--laili",
@@ -16462,8 +17681,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "风中摇摆的酒神面像 *os*，引出 *oscillo* 摆动。"
   },
   {
     "id": "ostracism--laili",
@@ -16498,7 +17719,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "雅典人在陶片 *ostrakon* 上写名，投票放逐。",
+    "links": [
+      {
+        "id": "ostracize",
+        "type": "同根",
+        "why": "都源自希腊陶片 *ostrakon*"
+      }
     ]
   },
   {
@@ -16520,8 +17751,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "奥斯曼帝国 *Ottoman* 的软垫椅，简称 ottoman。"
   },
   {
     "id": "pagan--laili",
@@ -16560,8 +17793,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *paganus* 本是乡下人，未皈依成异教徒。"
   },
   {
     "id": "pal--laili",
@@ -16597,8 +17832,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "吉普赛语 *phal* 意为兄弟，英国人拼作 pal。"
   },
   {
     "id": "palace--laili",
@@ -16634,8 +17871,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "尼禄在 *Palatine Hill* 建皇宫，称 *palatium*。"
   },
   {
     "id": "palm--laili",
@@ -16675,8 +17914,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *palma* 是手掌，棕榈叶形似手掌。"
   },
   {
     "id": "pamphlet--laili",
@@ -16709,8 +17950,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法国流行的短情诗 *Pamphilus*，成了小册子。"
   },
   {
     "id": "pandemonium--laili",
@@ -16744,8 +17987,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "弥尔顿笔下群魔宫：*pan*（一切）加 *demonium*。"
   },
   {
     "id": "pander--laili",
@@ -16777,8 +18022,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "牵线人 *Pandarus*，经莎翁成了“拉皮条者”。"
   },
   {
     "id": "panhandle--laili",
@@ -16807,8 +18054,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "乞丐伸手像带柄 *handle* 的平锅 *pan*。"
   },
   {
     "id": "panic--laili",
@@ -16844,8 +18093,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "牧神 Pan 爱跳出吓人，法语 *panique* 即“Pan 引起的恐惧”。"
   },
   {
     "id": "panorama--laili",
@@ -16876,8 +18127,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "巴克的圆筒全景画，希腊语 *pan*（一切）加 *horama*（景象）。"
   },
   {
     "id": "pants--laili",
@@ -16911,8 +18164,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "意大利喜剧丑角 Pantaloun 的怪裤，缩成了 *pants*。"
   },
   {
     "id": "paparazzo--laili",
@@ -16943,7 +18198,17 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
+      "subtheme",
+      "keyline",
+      "links"
+    ],
+    "keyline": "费里尼电影里偷拍名人的记者 *Paparazzo*，本指嗡嗡蚊虫。",
+    "links": [
+      {
+        "id": "paparazzi",
+        "type": "衍生",
+        "why": "paparazzi 是 paparazzo 的复数"
+      }
     ]
   },
   {
@@ -16979,8 +18244,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古埃及纸莎草 *papyrus*，经法语 *papier* 变成 paper。"
   },
   {
     "id": "parachute--laili",
@@ -17014,8 +18281,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *para*（防）加 *chute*（降落），字面是“防降落”。"
   },
   {
     "id": "parasite--laili",
@@ -17054,8 +18323,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *parasitos*：在别人饭桌旁蹭吃喝的食客。"
   },
   {
     "id": "pariah--laili",
@@ -17087,8 +18358,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "泰米尔语 *paraiyar*（鼓手），被英国殖民者视为贱民。"
   },
   {
     "id": "park--laili",
@@ -17126,8 +18399,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *parc* 原是围起来供皇家狩猎的土地。"
   },
   {
     "id": "patrol--laili",
@@ -17164,8 +18439,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *patouiller*：夜巡卫兵在泥巴里蹒跚而行。"
   },
   {
     "id": "patter--laili",
@@ -17200,8 +18477,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "主祷文 *paternoster* 被念得不知所云，衍生出 patter。"
   },
   {
     "id": "pavilion--laili",
@@ -17237,8 +18516,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "篷布展开如蝴蝶，拉丁语 *papilio*（蝴蝶）借指帐篷。"
   },
   {
     "id": "pay--laili",
@@ -17277,8 +18558,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *pacare*（安抚）：还债安抚债主，成了“付款”。"
   },
   {
     "id": "pea--laili",
@@ -17313,8 +18596,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*pease* 被误当复数，砍掉 -se 逆生出单数 pea。"
   },
   {
     "id": "peach--laili",
@@ -17349,8 +18634,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "罗马人叫桃 *Persicum malum*（波斯果），简化成 peach。"
   },
   {
     "id": "peanut--laili",
@@ -17384,8 +18671,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "花生像带荚的豌豆 pea，于是得名 *peanut*。"
   },
   {
     "id": "peculiar--laili",
@@ -17420,8 +18709,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *pecu*（牛群）即私产，引申为独有、古怪。"
   },
   {
     "id": "pedagogue--laili",
@@ -17451,8 +18742,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *paidagogos*：领少主人上下学的奴隶。"
   },
   {
     "id": "pedigree--laili",
@@ -17483,8 +18776,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "家谱的箭形符号形似鹤爪 *pe de gru*，成了 pedigree。"
   },
   {
     "id": "pen--laili",
@@ -17518,8 +18813,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *penna*（羽毛）：欧洲人曾用羽毛蘸墨写字。"
   },
   {
     "id": "pencil--laili",
@@ -17557,8 +18854,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *peniculus*（小尾巴）：牛马尾毛做的画笔。"
   },
   {
     "id": "penguin--laili",
@@ -17593,8 +18892,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "威尔士语 *pen gwyn*（白头鸟），北方海鸟名移给企鹅。"
   },
   {
     "id": "peninsula--laili",
@@ -17630,8 +18931,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *paene*（几乎）加 *insula*（岛）：几乎是岛。"
   },
   {
     "id": "perfume--laili",
@@ -17669,8 +18972,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *per-*（通过）加 *fumus*（烟），原指烟熏消毒。"
   },
   {
     "id": "person--laili",
@@ -17707,8 +19012,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *persona* 原是演员换角色时戴的面具。"
   },
   {
     "id": "pester--laili",
@@ -17741,8 +19048,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *empestrer*（拴牲畜），受 pest 影响变成“纠缠”。"
   },
   {
     "id": "petticoat--laili",
@@ -17776,8 +19085,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*petti*（小的）加 coat，原是男人穿在里面的小上衣。"
   },
   {
     "id": "philistine--laili",
@@ -17813,8 +19124,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《圣经》里粗野好战的非利士人 *Philistines*，成了庸人。"
   },
   {
     "id": "piano--laili",
@@ -17845,8 +19158,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*piano e forte*（既柔和又有力）缩成了 piano。"
   },
   {
     "id": "picnic--laili",
@@ -17882,8 +19197,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *pique-nique* 原是每家自带一菜的聚餐。"
   },
   {
     "id": "pipsqueak--laili",
@@ -17920,8 +19237,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "挤苹果“直到果籽吱吱叫”，*pips squeak* 成了小人物。"
   },
   {
     "id": "poppycock--laili",
@@ -17958,8 +19277,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *pappekak* 原指稀大便，美语化成“废话”。"
   },
   {
     "id": "posh--laili",
@@ -17994,8 +19315,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：一说船舱缩写 POSH，一说盗贼俚语“钱”。"
   },
   {
     "id": "potato--laili",
@@ -18029,8 +19352,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "海地语 *batata* 本指甘薯，西班牙人错安到马铃薯上。"
   },
   {
     "id": "potpourri--laili",
@@ -18063,8 +19388,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *pot pourri* 原是肉菜混炖的一道菜。"
   },
   {
     "id": "powwow--laili",
@@ -18096,8 +19423,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿岗昆语 *powwow* 原指巫师，后指众人聚会商谈。"
   },
   {
     "id": "precipitate--laili",
@@ -18129,8 +19458,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *praecipittatio*：把罪犯从塔比亚崖头朝下推落。"
   },
   {
     "id": "precarious--laili",
@@ -18167,8 +19498,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *prex*（祷告）：靠祷告求来的，自然不可靠。"
   },
   {
     "id": "precocious--laili",
@@ -18205,8 +19538,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *praecoquere*（事先煮熟），指果实提早成熟。"
   },
   {
     "id": "prestige--laili",
@@ -18246,8 +19581,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *praestigiae* 原是“骗局”，后来转为“威望”。"
   },
   {
     "id": "priest--laili",
@@ -18288,8 +19625,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *presbuteros*（年长者）指神职，演变成 priest。"
   },
   {
     "id": "pretext--laili",
@@ -18320,8 +19659,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "罗马长袍前镶紫边 *toga praetexta*，引申为“借口”。"
   },
   {
     "id": "prevaricate--laili",
@@ -18358,8 +19699,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *praevaricator* 原指罗圈腿，走不了直线。"
   },
   {
     "id": "prize--laili",
@@ -18398,8 +19741,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古词 *pris* 一分为二：price 管价格，prize 管奖赏。"
   },
   {
     "id": "procrustean--laili",
@@ -18429,8 +19774,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "*Procrustes* 按床长截人拉人，喻削足适履。"
   },
   {
     "id": "profane--laili",
@@ -18462,8 +19809,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*pro-*（在前）加 *fanum*（庙），指庙外未入教者。"
   },
   {
     "id": "propaganda--laili",
@@ -18501,8 +19850,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *propagare* 原指插枝繁殖，后指撒播信仰。"
   },
   {
     "id": "protocol--laili",
@@ -18539,8 +19890,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *protokollon*：粘在书卷第一页的纸草。"
   },
   {
     "id": "prune--laili",
@@ -18569,8 +19922,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *prunum*（李子），法语形 prune 在英语指李子干。"
   },
   {
     "id": "pundit--laili",
@@ -18592,8 +19947,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "印度语 *pandit*（博学之士），后被戏称为“专家”。"
   },
   {
     "id": "puny--laili",
@@ -18630,8 +19987,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *puisne*（后出生的）：老二老三体弱，成了“弱小”。"
   },
   {
     "id": "pupil--laili",
@@ -18670,8 +20029,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *pupillus*（小男孩）是学生，*pupilla* 是瞳孔。"
   },
   {
     "id": "puppet--laili",
@@ -18712,8 +20073,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *pupa*（玩偶），经 *popet* 变成傀儡 puppet。"
   },
   {
     "id": "quack--laili",
@@ -18747,8 +20110,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "叫卖药膏的 *quacksalver* 像鸭子嘎嘎吹嘘，缩成 quack。"
   },
   {
     "id": "queue--laili",
@@ -18790,8 +20155,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cauda*（尾巴），引申为辫子，再到长队。"
   },
   {
     "id": "quibble--laili",
@@ -18828,8 +20195,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "律师在疑点旁标注拉丁语 *quibus*（哪一个？）。"
   },
   {
     "id": "quicksilver--laili",
@@ -18868,7 +20237,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "古英语 *cwicseolfor*：“活的银”，指流动的水银。",
+    "links": [
+      {
+        "id": "quick",
+        "type": "同根",
+        "why": "都源自古英语 *cwic*（活的）"
+      }
     ]
   },
   {
@@ -18907,8 +20286,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *quinta essentia*：气水火土之外的第五物质。"
   },
   {
     "id": "quisling--laili",
@@ -18939,8 +20320,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "挪威卖国贼奎斯林 *Quisling* 的姓成了“内奸”。"
   },
   {
     "id": "quorum--laili",
@@ -18962,8 +20345,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "委任治安法官的拉丁句里那个 *quorum*（of whom）。"
   },
   {
     "id": "quiz--laili",
@@ -18996,8 +20381,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "都柏林剧场经理打赌，满城墙写上无意义的 *quiz*。"
   },
   {
     "id": "racket--laili",
@@ -19032,8 +20419,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *rahat*（手掌）：球拍原是手掌的延伸。"
   },
   {
     "id": "ranch--laili",
@@ -19072,8 +20461,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *range*（一列）经西班牙语 *rancho* 成了牧场。"
   },
   {
     "id": "rankle--laili",
@@ -19110,8 +20501,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *dracunculus*（小毒蛇）：化脓伤口似小蛇。"
   },
   {
     "id": "rapture--laili",
@@ -19147,8 +20540,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *rapio*（掳获）：先知被“掳”入天国成狂喜。"
   },
   {
     "id": "rasher--laili",
@@ -19173,8 +20568,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：取自 rashly，或古词 *rash*（切），或 *rado*。"
   },
   {
     "id": "recalcitrant--laili",
@@ -19212,8 +20609,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *recalcitrare*（回踢）：驴马不听使唤。"
   },
   {
     "id": "recipe--laili",
@@ -19248,8 +20647,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *recipere* 的命令式“服用”，是药方第一个字。"
   },
   {
     "id": "reefer--laili",
@@ -19277,8 +20678,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "海军收帆的候补少尉 *reefer* 穿的短外套。"
   },
   {
     "id": "remorse--laili",
@@ -19315,8 +20718,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *remordere*：“再咬”一口，悔恨深深。"
   },
   {
     "id": "republic--laili",
@@ -19354,8 +20759,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *res*（事务）加 *publicus*（共同的）：众人之事。"
   },
   {
     "id": "retaliate--laili",
@@ -19394,8 +20801,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *retaliare*：以 *talis*（类似物）照样回敬。"
   },
   {
     "id": "rich--laili",
@@ -19432,8 +20841,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *rice* 指有权势，受法语 *riche* 影响只剩有钱。"
   },
   {
     "id": "riddle--laili",
@@ -19469,8 +20880,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *raedan* 本义“猜”，难猜之事叫 *raedel*。"
   },
   {
     "id": "riffraff--laili",
@@ -19507,8 +20920,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *rif et raf*（全部）压缩成贬义的乌合之众。"
   },
   {
     "id": "right--laili",
@@ -19549,8 +20964,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *riht*（正当），惯用右手的人觉得右即“正确”。"
   },
   {
     "id": "rigmarole--laili",
@@ -19581,8 +20998,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "苏格兰贵族向爱德华一世呈的效忠长卷 *Ragman Roll*。"
   },
   {
     "id": "rival--laili",
@@ -19618,8 +21037,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *rivalis*：住在河对岸、争水争鱼的人。"
   },
   {
     "id": "road--laili",
@@ -19655,8 +21076,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *rad* 原意是“骑马”，后泛指路。"
   },
   {
     "id": "roam--laili",
@@ -19696,8 +21119,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "词源不详，或与西班牙语 *romero*（漫游者）相关。"
   },
   {
     "id": "robe--laili",
@@ -19735,8 +21160,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语原意“战利品”：盗贼士兵最常抢走长袍。"
   },
   {
     "id": "robot--laili",
@@ -19769,8 +21196,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "恰彼克剧作 *R.U.R.* 据捷克语 *robota*（苦工）造词。"
   },
   {
     "id": "romance--laili",
@@ -19808,8 +21237,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法国人称本国俗语 *romanz*，用它写骑士传奇。"
   },
   {
     "id": "roorback--laili",
@@ -19830,8 +21261,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "1844 年大选捏造的德国男爵 *Roorback*，成了抹黑代名词。"
   },
   {
     "id": "rostrum--laili",
@@ -19866,8 +21299,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "战船喙形船首 *rostra*（鸟嘴）装饰罗马演讲台。"
   },
   {
     "id": "rubber--laili",
@@ -19898,8 +21333,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "普里斯利发现橡胶能擦铅笔字，名为 *rubber*（擦子）。"
   },
   {
     "id": "sabotage--laili",
@@ -19930,8 +21367,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法国小孩用木屐 *sabot* 踢出噪音捣乱，引申为破坏。"
   },
   {
     "id": "sacrament--laili",
@@ -19962,8 +21401,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "罗马军团出征的誓师 *sacramentum*，借指圣礼。"
   },
   {
     "id": "sacrilege--laili",
@@ -20002,8 +21443,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sacer*（神的）加 *legere*（偷取）：偷祭品。"
   },
   {
     "id": "sad--laili",
@@ -20041,8 +21484,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "盎格鲁撒克逊语 *saed* 原意是“吃饱的”“满足的”。"
   },
   {
     "id": "sadism--laili",
@@ -20072,8 +21517,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法国作家萨德 *Sade* 写性虐小说，名字造出 sadism。"
   },
   {
     "id": "salary--laili",
@@ -20112,8 +21559,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sal*（盐）：罗马军饷里的食盐叫 *salarium*。"
   },
   {
     "id": "salver--laili",
@@ -20142,8 +21591,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "西班牙语 *salva*：令仆人先尝毒，后指端菜的托盘。"
   },
   {
     "id": "sandwich--laili",
@@ -20177,8 +21628,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "第四代 Sandwich 伯爵嗜赌，边赌边吃夹肉面包。"
   },
   {
     "id": "sarcasm--laili",
@@ -20214,8 +21667,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *sarkazein*：像狗一样用牙撕咬。"
   },
   {
     "id": "sarcophagus--laili",
@@ -20246,8 +21701,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "希腊语 *sarcophagus*（吃肉的）：尸体放入即消失的石棺。"
   },
   {
     "id": "sardonic--laili",
@@ -20279,8 +21736,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "撒丁岛毒草 *herba Sardonia* 令人狂笑而死，状似嘲笑。"
   },
   {
     "id": "satellite--laili",
@@ -20315,8 +21774,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *satelles*（亲信），开普勒借指木星的卫星。"
   },
   {
     "id": "satin--laili",
@@ -20354,8 +21815,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *zaituni*（来自 *Zaitun*），即“泉州料”。"
   },
   {
     "id": "saturday--laili",
@@ -20388,8 +21851,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "罗马农神 *Saturn* 之日 *Saturni dies*。"
   },
   {
     "id": "savage--laili",
@@ -20425,8 +21890,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *silva*（森林）：林中长大的野东西。"
   },
   {
     "id": "scapegoat--laili",
@@ -20461,8 +21928,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "犹太赎罪日放逐荒野的负罪羊，背走众人之罪。"
   },
   {
     "id": "scavenger--laili",
@@ -20484,8 +21953,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "收外商摆摊税 *scawage* 的人兼管扫街，成了 scavenger。"
   },
   {
     "id": "scepter--laili",
@@ -20520,8 +21991,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *skeptron* 原是拐杖，代代相传成权威象征。"
   },
   {
     "id": "school--laili",
@@ -20559,7 +22032,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊语 *skhole*（闲暇）：古希腊人闲时听学者讲学。",
+    "links": [
+      {
+        "id": "scholar",
+        "type": "同根",
+        "why": "都源自希腊语 *skhole*（闲暇）"
+      }
     ]
   },
   {
@@ -20593,8 +22076,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "误读 *skirmish*（小冲突）而生出 scrimmage。"
   },
   {
     "id": "scruple--laili",
@@ -20632,8 +22117,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *scrupulus*：钻进凉鞋硌脚的尖石子。"
   },
   {
     "id": "second--laili",
@@ -20672,8 +22159,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *pars minuta secunda*：圆的第二次细分。"
   },
   {
     "id": "semester--laili",
@@ -20710,8 +22199,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sex*（六）加 *mensis*（月）：为期半年。"
   },
   {
     "id": "seminary--laili",
@@ -20745,8 +22236,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *seminarium* 原是培植树苗的园圃。"
   },
   {
     "id": "senate--laili",
@@ -20778,8 +22271,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *senex*（老的）：*senatus* 即长者议会。"
   },
   {
     "id": "september--laili",
@@ -20811,7 +22306,27 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "罗马旧历的 *septem*（七）月，改历后推成九月。",
+    "links": [
+      {
+        "id": "october",
+        "type": "同典故",
+        "why": "都是罗马旧历月名，改历后序数错位"
+      },
+      {
+        "id": "november",
+        "type": "同典故",
+        "why": "都是罗马旧历月名，改历后序数错位"
+      },
+      {
+        "id": "december",
+        "type": "同典故",
+        "why": "都是罗马旧历月名，改历后序数错位"
+      }
     ]
   },
   {
@@ -20840,8 +22355,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *saghri*：驴马臀皮，用来打磨金属。"
   },
   {
     "id": "shambles--laili",
@@ -20875,8 +22392,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*shamble* 原是肉案，复数指肉市、屠宰场，再到混乱。"
   },
   {
     "id": "sherry--laili",
@@ -20901,8 +22420,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "产地 *Xeres* 拼成 sherries，嫌像复数改作 sherry。"
   },
   {
     "id": "shibboleth--laili",
@@ -20933,8 +22454,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "以法莲人念不准 *shibboleth*，它成了辨敌口令。"
   },
   {
     "id": "shindig--laili",
@@ -20955,8 +22478,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "球戏 *shinty* 经 shindy 变 shindig，冲撞多成喧闹。"
   },
   {
     "id": "shrew--laili",
@@ -20985,7 +22510,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "鼩鼱 *shrew* 凶残好斗，被拿来喻指悍妇。",
+    "links": [
+      {
+        "id": "shrewd",
+        "type": "衍生",
+        "why": "shrewd 由 shrew 派生而来"
+      }
     ]
   },
   {
@@ -21022,8 +22557,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "梭子 *shuttle* 加雄禽 *cock*，羽毛球像鸟来回飞。"
   },
   {
     "id": "shyster--laili",
@@ -21058,8 +22595,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "德语俚语 *scheisse*（粪便）衍出骂讼棍的 shyster。"
   },
   {
     "id": "silhouette--laili",
@@ -21093,8 +22632,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "财政大臣 Silhouette 短命，廉价剪影借他名嘲讽。"
   },
   {
     "id": "silly--laili",
@@ -21134,8 +22675,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *salig* 本是“有福的”，傻人有傻福变“傻”。"
   },
   {
     "id": "sincere--laili",
@@ -21172,8 +22715,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sin cerae* 即“无蜡”的大理石，引申为真诚。"
   },
   {
     "id": "sinecure--laili",
@@ -21206,8 +22751,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sine cura*“不操心”，指拿薪不干活的闲职。"
   },
   {
     "id": "sinister--laili",
@@ -21240,8 +22787,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sinister* 本指“左”，随希腊人视左不祥。"
   },
   {
     "id": "siren--laili",
@@ -21276,8 +22825,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊女妖 *Siren* 以歌声诱船触礁，后指警报器。"
   },
   {
     "id": "sirloin--laili",
@@ -21306,8 +22857,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "国王把牛腰肉 *surloin* 封为爵士 *sir*，成了 sirloin。"
   },
   {
     "id": "size--laili",
@@ -21341,8 +22894,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法律用语 *assize* 被说成 a size，丢掉 a 成尺寸。"
   },
   {
     "id": "skirt--laili",
@@ -21379,8 +22934,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "日耳曼语 *skurtaz* 原是衬衣，只留下半截成裙子。"
   },
   {
     "id": "slander--laili",
@@ -21422,8 +22979,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *skandalon*（陷阱）辗转成口头诽谤。"
   },
   {
     "id": "slapstick--laili",
@@ -21454,8 +23013,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "闹剧里打人啪啪响的木棍 *slapstick*，代指闹剧。"
   },
   {
     "id": "slave--laili",
@@ -21491,8 +23052,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "斯拉夫俘虏 *Sclavus* 被罗马人转指“奴隶”。"
   },
   {
     "id": "slogan--laili",
@@ -21523,8 +23086,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "苏格兰高地人战前的呐喊 *sluaghghairm* 成了口号。"
   },
   {
     "id": "smog--laili",
@@ -21555,8 +23120,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*smoke* 加 *fog* 拼成 smog，指伦敦烟雾。"
   },
   {
     "id": "sneeze--laili",
@@ -21592,8 +23159,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *fneosan*，十五世纪才改头换面成 sneeze。"
   },
   {
     "id": "snob--laili",
@@ -21623,8 +23192,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "学籍标注 *s.nob*（非贵族），后指势利小人。"
   },
   {
     "id": "soccer--laili",
@@ -21655,8 +23226,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*association* 缩成 soc 加 -er，成了足球 soccer。"
   },
   {
     "id": "sock--laili",
@@ -21691,8 +23264,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "罗马丑角穿的软拖鞋 *soccus*，后转指短袜。"
   },
   {
     "id": "sofa--laili",
@@ -21734,8 +23309,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *suffah*（带垫长椅）传遍欧洲成 sofa。"
   },
   {
     "id": "sojourner--laili",
@@ -21770,8 +23347,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *sojorner*“不超过一天”，泛指旅居者。"
   },
   {
     "id": "soldier--laili",
@@ -21807,8 +23386,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "罗马军饷金币 *solidus*，领饷的人叫 soldier。"
   },
   {
     "id": "sophomore--laili",
@@ -21844,8 +23425,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*sophos*（聪明）加 *moros*（傻），卖弄聪明的二年级生。"
   },
   {
     "id": "spade--laili",
@@ -21881,8 +23464,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "意大利纸牌阔剑花色 *spade*，图案像铲成了黑桃。"
   },
   {
     "id": "speed--laili",
@@ -21916,8 +23501,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *sped* 原是“繁荣成功”，如今只剩“快速”。"
   },
   {
     "id": "spinster--laili",
@@ -21948,8 +23535,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "纺纱 *spinning* 的女子 spinster，后指老姑娘。"
   },
   {
     "id": "spruce--laili",
@@ -21982,8 +23571,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "普鲁士 *Pruce* 前加 s，普鲁士式华服成“漂亮”。"
   },
   {
     "id": "stamina--laili",
@@ -22021,8 +23612,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *stamen*（线）的复数，生命之线引申为耐力。"
   },
   {
     "id": "starve--laili",
@@ -22061,8 +23654,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *steorfan* 本是“死掉”，后专指饿死。"
   },
   {
     "id": "steadfast--laili",
@@ -22100,8 +23695,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*stead*（地方）加 *fast*（坚定），固定不动摇。"
   },
   {
     "id": "stentorian--laili",
@@ -22133,8 +23730,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "特洛伊战中传令兵 Stentor 一人声如五十人。"
   },
   {
     "id": "stepchild--laili",
@@ -22171,8 +23770,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *steop* 意为“丧亲”，stepchild 即失亲之子。"
   },
   {
     "id": "steward--laili",
@@ -22203,8 +23804,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "*stig*（猪圈）加 *weard*（管理者），主人信赖的管家。"
   },
   {
     "id": "stoic--laili",
@@ -22235,8 +23838,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "芝诺在雅典画廊 *stoa poikile* 讲学，学派名成坚忍。"
   },
   {
     "id": "story--laili",
@@ -22276,8 +23881,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "与 history 同出拉丁语 *historia*，经法语变 story。"
   },
   {
     "id": "succinct--laili",
@@ -22310,8 +23917,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "罗马人把长袍向上束起 *succingo*，引申为简洁。"
   },
   {
     "id": "suede--laili",
@@ -22345,8 +23954,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *gants de Suede*“瑞典手套”，后专指绒面皮。"
   },
   {
     "id": "sunbeam--laili",
@@ -22379,8 +23990,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "亚弗烈大王译 *columna lucis*，造出 sunne beam。"
   },
   {
     "id": "sunday--laili",
@@ -22416,8 +24029,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *dies solis*（太阳日）成古英语 *sunnandaeg*。"
   },
   {
     "id": "supercilious--laili",
@@ -22454,8 +24069,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *supercilium*（眉毛），挑眉鄙夷成傲慢。"
   },
   {
     "id": "surly--laili",
@@ -22491,8 +24108,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "原写 *sirly*，由 sir 派生，装爵爷架子变粗暴。"
   },
   {
     "id": "sycophant--laili",
@@ -22528,8 +24147,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "告发无花果私运的 *sykophantes*，后成谄媚者。"
   },
   {
     "id": "symposium--laili",
@@ -22569,8 +24190,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊宴后酒会 *symposion*，因柏拉图名篇成研讨会。"
   },
   {
     "id": "syphilis--laili",
@@ -22606,8 +24229,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "诗中牧羊人 Syphilus 首患此病，病以其名命名。"
   },
   {
     "id": "talent--laili",
@@ -22647,8 +24272,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊货币 *talanton*，经《马太福音》寓言转指才能。"
   },
   {
     "id": "tantalize--laili",
@@ -22677,8 +24304,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "Tantalus 罚站湖中，水果可望不可及成“逗引”。"
   },
   {
     "id": "tarantula--laili",
@@ -22707,8 +24336,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "塔伦托古称 *Tarentum*，当地毛蜘蛛叫 tarantula。"
   },
   {
     "id": "tariff--laili",
@@ -22748,8 +24379,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *tarif*（细账），过 Tarifa 港须缴关税。"
   },
   {
     "id": "tawdry--laili",
@@ -22785,8 +24418,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "集市叫卖 *St. Audrey's lace*，含糊缩成 tawdry。"
   },
   {
     "id": "tea--laili",
@@ -22823,8 +24458,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "荷兰人用闽南话 *te* 称茶，英语 tea 由此而来。"
   },
   {
     "id": "teetotaler--laili",
@@ -22849,8 +24486,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*total* 首字母 t 重复成 tee-，指绝对戒酒者。"
   },
   {
     "id": "tenderfoot--laili",
@@ -22874,8 +24513,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*tender* 加 *foot*“嫩脚”，原说马脚力差，后指新手。"
   },
   {
     "id": "tennis--laili",
@@ -22908,8 +24549,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法国人发球喊 *Tenez*（接住），英国人传成 tennis。"
   },
   {
     "id": "test--laili",
@@ -22950,8 +24593,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *testum*（陶器）指验金灰皿，后喻“测验”。"
   },
   {
     "id": "thesaurus--laili",
@@ -22989,8 +24634,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *thesauros*（宝藏），罗杰词典用它作书名。"
   },
   {
     "id": "thing--laili",
@@ -23028,8 +24675,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "日耳曼语 *ding* 原是“集会”，渐泛指一切事物。"
   },
   {
     "id": "thrill--laili",
@@ -23069,8 +24718,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *pyrel*（孔洞）带“刺”意，后指刺激兴奋。"
   },
   {
     "id": "thug--laili",
@@ -23108,8 +24759,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "印度谋杀教团，取兴都斯坦语 *thag*（贼）为名。"
   },
   {
     "id": "thursday--laili",
@@ -23142,8 +24795,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "北欧雷神 Thor 的日子，古英语作 *Purresdaeg*。"
   },
   {
     "id": "toady--laili",
@@ -23174,8 +24829,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "庸医托儿吞蟾蜍 *toad*，toadeater 缩成马屁精。"
   },
   {
     "id": "toast--laili",
@@ -23209,8 +24866,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "酒里泡香料烤面包 *toast*，后用来指祝酒。"
   },
   {
     "id": "toilet--laili",
@@ -23250,8 +24909,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *toilette*（小块布）由梳妆布转指洗手间。"
   },
   {
     "id": "tomato--laili",
@@ -23289,8 +24950,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "纳瓦特语 *tomatl* 经西班牙 tomate，英国人改成 -o。"
   },
   {
     "id": "torpedo--laili",
@@ -23321,8 +24984,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *torpere*（麻木）先名电鳐，后借给鱼雷。"
   },
   {
     "id": "town--laili",
@@ -23355,8 +25020,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *tun* 是围住房屋的墙，后指被围起的村镇。"
   },
   {
     "id": "tragedy--laili",
@@ -23391,8 +25058,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *tragodia* 字面是“山羊歌”，由来众说纷纭。"
   },
   {
     "id": "travel--laili",
@@ -23424,8 +25093,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "三柱刑具 *trepalium* 生出 travailler，旅行亦受苦。"
   },
   {
     "id": "treacle--laili",
@@ -23464,8 +25135,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "解毒药 *theriake* 太苦裹上糖蜜，后转指糖浆。"
   },
   {
     "id": "treason--laili",
@@ -23506,8 +25179,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *traditio*（传递）经法语 traison 成背叛。"
   },
   {
     "id": "tribulation--laili",
@@ -23543,8 +25218,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "罗马碾谷板 *tribulum*，被喻为基督徒受磨难。"
   },
   {
     "id": "trivial--laili",
@@ -23582,8 +25259,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *trivium* 是三岔路口或“三艺”，引申为琐碎。"
   },
   {
     "id": "trophy--laili",
@@ -23620,8 +25299,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊人挂战利品的纪念杆 *tropaion*，后成奖杯。"
   },
   {
     "id": "trousers--laili",
@@ -23662,8 +25343,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "爱尔兰盖尔语 *triubhas*（紧身短裤）演成 trousers。"
   },
   {
     "id": "tuesday--laili",
@@ -23697,8 +25380,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "北欧战神 Tyr 古英语作 *Tiw*，*Tiwesdaeg* 即星期二。"
   },
   {
     "id": "tulip--laili",
@@ -23735,8 +25420,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "花形像穆斯林头巾，波斯语 *dulband* 演成 tulip。"
   },
   {
     "id": "turkey--laili",
@@ -23767,8 +25454,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "火鸡被误当土耳其珠鸡 *turkey-cock*，简称 turkey。"
   },
   {
     "id": "turnpike--laili",
@@ -23802,8 +25491,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "路口插尖刺的路障，须 *turning the pike* 才能过。"
   },
   {
     "id": "tuxedo--laili",
@@ -23838,8 +25529,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "德拉瓦语“狼” *p'tuksit* 成地名，Tuxedo Park 出礼服。"
   },
   {
     "id": "twilight--laili",
@@ -23876,8 +25569,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*tween*（between）加 light，昼夜之间的微光。"
   },
   {
     "id": "typhoon--laili",
@@ -23912,8 +25607,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *tufan* 欧化后再按粤语 *taifung* 改拼。"
   },
   {
     "id": "umbrage--laili",
@@ -23952,7 +25649,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *umbra*（暗影）经法语 ombrage，转指不快。",
+    "links": [
+      {
+        "id": "umbrella--lishi",
+        "type": "同根",
+        "why": "都源自拉丁语 *umbra*（遮阴）"
+      }
     ]
   },
   {
@@ -23991,8 +25698,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *nonper*（非偶数）指第三人，误读成 umpire。"
   },
   {
     "id": "uncouth--laili",
@@ -24032,8 +25741,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *uncuth* 本义“不熟悉的”，陌生生厌成粗野。"
   },
   {
     "id": "undertaker--laili",
@@ -24066,8 +25777,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "“承办人” *undertaker* 讳言死事，成殡葬业者委婉语。"
   },
   {
     "id": "urchin--laili",
@@ -24106,8 +25819,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *herichun*（刺猬）喻小妖精，再指顽童。"
   },
   {
     "id": "utopia--laili",
@@ -24142,8 +25857,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "摩尔用希腊语 *ou*（无）加 *topos*（地方）造出乌托邦。"
   },
   {
     "id": "utter--laili",
@@ -24181,8 +25898,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *ut*（向外）的比较级，由“外面的”到“完全的”。"
   },
   {
     "id": "vaccine--laili",
@@ -24216,8 +25935,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *vacca*（母牛），詹纳的牛痘苗成了疫苗。"
   },
   {
     "id": "valentine--laili",
@@ -24247,8 +25968,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "教会把 Lupercalia 抽情人习俗提前一天，成情人节。"
   },
   {
     "id": "vandal--laili",
@@ -24289,8 +26012,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "汪达尔人 *Vandal* 洗劫罗马，名字成了破坏者。"
   },
   {
     "id": "vanilla--laili",
@@ -24324,8 +26049,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "西班牙语 *vaina*（荚）的指小词 *vainilla*，小荚香草。"
   },
   {
     "id": "vaudeville--laili",
@@ -24359,8 +26086,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "维尔山谷 *Vau de Vire* 的饮酒歌，演变成杂耍表演。"
   },
   {
     "id": "venom--laili",
@@ -24396,8 +26125,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *venenum*（魔法药草），远祖竟是“春药”。"
   },
   {
     "id": "villain--laili",
@@ -24434,8 +26165,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *villa*（庄园）里的雇工，被贵族贬成恶棍。"
   },
   {
     "id": "vine--laili",
@@ -24470,8 +26203,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *vinea* 经有 /v/ 音的法语传入，成 vine。"
   },
   {
     "id": "vinegar--laili",
@@ -24506,8 +26241,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *vyn egre* 即“酸酒”，酒放久了变醋。"
   },
   {
     "id": "vitamin--laili",
@@ -24537,8 +26274,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "芬克用 *vita*（生命）加 *amine*（胺）造词，后去掉 e。"
   },
   {
     "id": "volume--laili",
@@ -24571,8 +26310,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *volumen* 是卷轴书，大部头引申为“量”。"
   },
   {
     "id": "warlock--laili",
@@ -24607,8 +26348,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *waerloga* 是“背誓者”，由魔鬼转指男巫。"
   },
   {
     "id": "wednesday--laili",
@@ -24642,8 +26385,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *Wodnesdaeg*，即日耳曼神 Woden 之日。"
   },
   {
     "id": "weird--laili",
@@ -24679,8 +26424,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *wyrd* 是“命运”，《麦克白》女巫让它变怪。"
   },
   {
     "id": "welsh--laili",
@@ -24715,7 +26462,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "撒克逊人称凯尔特人 *wealh*（外国人），成了 Welsh。",
+    "links": [
+      {
+        "id": "walnut",
+        "type": "同根",
+        "why": "都含古英语 *wealh*（外国人）"
+      }
     ]
   },
   {
@@ -24749,7 +26506,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "盖尔语 *uisge beatha*“生命之水”，缩成 whisky。",
+    "links": [
+      {
+        "id": "whisky--lishi",
+        "type": "同根",
+        "why": "都源自盖尔语 *uisge beatha*"
+      }
     ]
   },
   {
@@ -24785,8 +26552,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "斯堪的纳维亚语 *vindauga* 由风加眼组成，即“风眼”。"
   },
   {
     "id": "wizard--laili",
@@ -24820,8 +26589,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*wise* 加贬义后缀 -ard，自作聪明者成了男巫。"
   },
   {
     "id": "woman--laili",
@@ -24859,8 +26630,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *wifmann*：*wif*（女）加中性的 *mann*（人）。"
   },
   {
     "id": "xmas--laili",
@@ -24896,8 +26669,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "X 是希腊语“基督”首字母，Xmas 即 Christmas。"
   },
   {
     "id": "yacht--laili",
@@ -24932,8 +26707,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "荷兰缉盗的 *jachtschip*（追击艇），送查理二世成游艇。"
   },
   {
     "id": "yahoo--laili",
@@ -24957,8 +26734,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "《格列佛游记》里贪婪野蛮的人形兽 *Yahoo*。"
   },
   {
     "id": "yankee--laili",
@@ -24985,8 +26764,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "众说纷纭，最可信是荷兰人绰号 *Jan Kaas*。"
   },
   {
     "id": "yardstick--laili",
@@ -25018,8 +26799,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*yard* 原是棍子，定长的棍成码尺，再成标准。"
   },
   {
     "id": "yen--laili",
@@ -25052,8 +26835,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "美国人借华工的“烟瘾” *yenyin*，喻指渴望嗜好。"
   },
   {
     "id": "yule--laili",
@@ -25078,7 +26863,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "古英语 *geol* 原指冬至前后的 12 天节庆，后指圣诞。",
+    "links": [
+      {
+        "id": "yuletide--lishi",
+        "type": "同根",
+        "why": "都源自古英语 *geol*（仲冬节期）"
+      }
     ]
   },
   {
@@ -25110,8 +26905,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "年轻都市专业人士缩写 *yup*，加上 hippie 的 -pie。"
   },
   {
     "id": "zenith--laili",
@@ -25151,8 +26948,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *samt*（道路）被误抄成 *zenit*，终成 zenith。"
   },
   {
     "id": "zest--laili",
@@ -25191,8 +26990,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *zeste* 本是给饮料添香的柠檬皮。"
   },
   {
     "id": "zodiac--laili",
@@ -25228,8 +27029,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "黄道星座多是动物，希腊人称之“兽带” *zoidiakos*。"
   },
   {
     "id": "zoo--laili",
@@ -25263,7 +27066,9 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "伦敦 *the Zoological Gardens*，一路缩略成 zoo。"
   }
 ]

@@ -18,8 +18,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "劳埃德船级认证里，*A-1* 表示船体与装备俱佳。"
   },
   {
     "id": "aardvark--lishi",
@@ -45,8 +47,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "南非荷兰语 *aard*（泥土）+ *vark*（猪），即土猪。"
   },
   {
     "id": "aback--lishi",
@@ -67,8 +71,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "狂风迎面压住船帆，船停不前，即 *taken aback*。"
   },
   {
     "id": "abacus--lishi",
@@ -93,8 +99,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *abax* 是铺着薄沙、算完可抹去的板。"
   },
   {
     "id": "abracadabra--lishi",
@@ -117,8 +125,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "诺斯替教派祈神时念的咒语 *abrasadabra*。"
   },
   {
     "id": "academy--lishi",
@@ -136,8 +146,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "柏拉图在雅典郊外树林办的学校叫 *Akademeia*。"
   },
   {
     "id": "achilles-heel--lishi",
@@ -158,8 +170,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "阿喀琉斯浸冥河时脚踵被母亲捏住，终中箭而亡。"
   },
   {
     "id": "acid-test--lishi",
@@ -182,8 +196,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "用硝酸验金：假金被腐蚀，真金完好无损。"
   },
   {
     "id": "add-insult-to-injury--lishi",
@@ -210,8 +226,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "秃汉打苍蝇反拍自己头，被讥既挨痛又受辱。"
   },
   {
     "id": "adder--lishi",
@@ -229,8 +247,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*a nadder* 被误分成 *an adder*，n 跑到了冠词上。"
   },
   {
     "id": "aegis--lishi",
@@ -256,7 +276,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "宙斯的神盾蒙着喂过他奶的山羊皮 *aegis*。",
+    "links": [
+      {
+        "id": "egis--laili",
+        "type": "同根",
+        "why": "egis 即拉丁拼法 aegis"
+      }
     ]
   },
   {
@@ -275,8 +305,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*math* 是割后的草，*aftermath* 本是二茬草。"
   },
   {
     "id": "agnostic--lishi",
@@ -300,8 +332,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "赫胥黎用希腊语 *a*（不）+ *gignōskein*（知道）造词。"
   },
   {
     "id": "agony--lishi",
@@ -323,7 +357,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊语 *agōnia* 原指竞技比赛，引申为艰难挣扎。",
+    "links": [
+      {
+        "id": "agony-column",
+        "type": "衍生",
+        "why": "agony column 由 agony 复合而成"
+      }
     ]
   },
   {
@@ -349,8 +393,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *ala* 指教堂侧厅，拼写受法语 *aile* 影响。"
   },
   {
     "id": "alarm--lishi",
@@ -377,8 +423,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "意大利语 *all’arme*：拿起武器，准备战斗！"
   },
   {
     "id": "be-all-things-to-all-men-or-people--lishi",
@@ -402,8 +450,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "圣保罗说：向什么样的人，我就做什么样的人。"
   },
   {
     "id": "alligator--lishi",
@@ -421,8 +471,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "西班牙人叫短吻鳄 *el lagarto*（蜥蜴），合成一词。"
   },
   {
     "id": "amazon--lishi",
@@ -440,8 +492,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "希腊神话的女战士族名，被西班牙人安到南美大河上。"
   },
   {
     "id": "ambition--lishi",
@@ -463,8 +517,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *ambitio* 原指候选人四处走动拉选票。"
   },
   {
     "id": "ambulance--lishi",
@@ -488,8 +544,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法军的“流动医院” *hôpital ambulant*，后成救护车。"
   },
   {
     "id": "amethyst--lishi",
@@ -514,8 +572,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *amethystos* 意为“不醉”，据说用它饮酒不醉。"
   },
   {
     "id": "ampersand--lishi",
@@ -539,8 +599,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "孩子背字母表把 & 念作 *and per se and*。"
   },
   {
     "id": "anorak--lishi",
@@ -566,8 +628,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "因纽特人的海豹皮外衣，后来喻指沉湎爱好的呆子。"
   },
   {
     "id": "antimacassar--lishi",
@@ -589,8 +653,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "套在椅背上，防 *macassar* 发油弄脏沙发的布套。"
   },
   {
     "id": "apocalypse--lishi",
@@ -612,8 +678,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *apokalypsis* 本是“揭开遮盖”，即启示。"
   },
   {
     "id": "apple-of-ones-eye--lishi",
@@ -634,8 +702,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "瞳孔圆如苹果，《圣经》以此喻上帝珍爱子民。"
   },
   {
     "id": "apple-pie-order--lishi",
@@ -663,8 +733,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法文 *nappe pliée*（折叠的餐巾）被讹成苹果派。"
   },
   {
     "id": "apricot--lishi",
@@ -694,8 +766,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *praecoquum*“早熟”，经阿拉伯语辗转入英语。"
   },
   {
     "id": "arena--lishi",
@@ -717,8 +791,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *arena* 是沙子，铺地吸角斗士的血。"
   },
   {
     "id": "arctic--lishi",
@@ -747,8 +823,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *arktos*（熊）指北天的大熊星座。"
   },
   {
     "id": "argosy--lishi",
@@ -772,8 +850,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉古萨港造的大商船，意大利语称 *ragusea*。"
   },
   {
     "id": "armageddon--lishi",
@@ -801,8 +881,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《启示录》的末日决战地，即米吉多山丘。"
   },
   {
     "id": "arrant--lishi",
@@ -823,8 +905,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*errant*（游荡）的变体，游荡劫匪成了“十足的”。"
   },
   {
     "id": "arrowroot--lishi",
@@ -846,8 +930,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "本土名 *aru-aru*，又像在说它能治毒箭伤。"
   },
   {
     "id": "arsenal--lishi",
@@ -876,8 +962,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "意大利语 *arsenale* 是造船修船处，特指威尼斯兵工厂。"
   },
   {
     "id": "artesian-well--lishi",
@@ -902,8 +990,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法国北部 *Arteis* 省这种自流井十分普遍。"
   },
   {
     "id": "the-ashes--lishi",
@@ -927,8 +1017,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "报纸戏称英国板球已死，骨灰运往澳大利亚。"
   },
   {
     "id": "asparagus--lishi",
@@ -950,8 +1042,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *asparagos* 被俗化成 *sparrow-grass*。"
   },
   {
     "id": "assassin--lishi",
@@ -976,8 +1070,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "刺客行刺前吸大麻，阿拉伯语称 *hashshāshin*。"
   },
   {
     "id": "atlas--lishi",
@@ -1002,7 +1098,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "墨卡托用巨神 *Atlas* 擎天图作地图册扉页。",
+    "links": [
+      {
+        "id": "atlantic",
+        "type": "同典故",
+        "why": "都得名于擎天巨神 *Atlas*"
+      }
     ]
   },
   {
@@ -1023,8 +1129,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*at one*（与上帝一致）成 atonement，再成 atone。"
   },
   {
     "id": "augur--lishi",
@@ -1044,7 +1152,22 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
+      "subtheme",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *augur* 是古罗马观察解读预兆的占卜官。",
+    "links": [
+      {
+        "id": "inaugurate--laili",
+        "type": "同根",
+        "why": "都源自拉丁语 augur（占卜师）"
+      },
+      {
+        "id": "inaugurate",
+        "type": "同根",
+        "why": "都源自拉丁语 *augur*（占卜官）"
+      }
     ]
   },
   {
@@ -1073,7 +1196,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *avis*（鸟）+ *specre*（看），观鸟定吉凶。",
+    "links": [
+      {
+        "id": "auspice",
+        "type": "同根",
+        "why": "都源自观鸟占卜者 *auspex*"
+      }
     ]
   },
   {
@@ -1098,8 +1231,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "形似睾丸的 *ahuacatl*，讹成西班牙语“律师” avocado。"
   },
   {
     "id": "axe--lishi",
@@ -1124,8 +1259,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "富兰克林故事：陌生人哄小孩转磨石替他磨斧。"
   },
   {
     "id": "babel--lishi",
@@ -1149,8 +1286,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "上帝让建巴别塔的人语言不通，只剩一片嘈杂。"
   },
   {
     "id": "babes-in-the-wood--lishi",
@@ -1170,8 +1309,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "16 世纪故事《林间孩童》：恶叔谋财，孩童死于林中。"
   },
   {
     "id": "bacon--lishi",
@@ -1195,8 +1336,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "集市上赢得抹油的猪带回家，*bring home the bacon*。"
   },
   {
     "id": "baffle--lishi",
@@ -1214,8 +1357,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "失德骑士被倒挂示众嘲笑，叫 *being baffled*。"
   },
   {
     "id": "bakers-dozen--lishi",
@@ -1237,8 +1382,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "面包师怕分量不足挨重罚，一打给 13 个。"
   },
   {
     "id": "the-balloon-goes-up--lishi",
@@ -1256,8 +1403,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "防空气球一升起，就意味着空袭将临。"
   },
   {
     "id": "ballot--lishi",
@@ -1280,7 +1429,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "意大利语 *ballotta*（小球），白球赞成黑球反对。",
+    "links": [
+      {
+        "id": "blackball",
+        "type": "同典故",
+        "why": "都出自投白球、黑球的秘密表决"
+      }
     ]
   },
   {
@@ -1303,8 +1462,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*ballpark* 是美式棒球场，同一场内即大致不差。"
   },
   {
     "id": "banal--lishi",
@@ -1329,8 +1490,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *ban* 是领主强征民众服兵役的号令。"
   },
   {
     "id": "bandy--lishi",
@@ -1354,8 +1517,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语原指早期网球里来回击球，后成你来我往的争吵。"
   },
   {
     "id": "bankrupt--lishi",
@@ -1377,8 +1542,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "放债者的条凳 *banca* 被拆掉，即 *bancarotta*。"
   },
   {
     "id": "bar--lishi",
@@ -1403,8 +1570,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "口头投票胜负已分，再喊也改变不了结果。"
   },
   {
     "id": "bark-up-the-wrong-tree--lishi",
@@ -1425,8 +1594,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "猎浣熊的狗对着空树狂吠，白费功夫。"
   },
   {
     "id": "barnacle--lishi",
@@ -1446,8 +1617,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "原指白颊黑雁，中世纪误以为藤壶能生出这种雁。"
   },
   {
     "id": "batty--lishi",
@@ -1469,8 +1642,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "钟声一响，钟楼蝙蝠乱飞：*bats in one’s belfry*。"
   },
   {
     "id": "be-all-and-end-all--lishi",
@@ -1499,8 +1674,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "出自《麦克白》：但愿这一刀就能“终结一切”。"
   },
   {
     "id": "bead--lishi",
@@ -1523,8 +1700,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语原义“祈祷”，因用念珠计祷文转指小珠。"
   },
   {
     "id": "beam--lishi",
@@ -1545,8 +1724,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "船的横梁竖了起来 *on its beam-ends*，船将倾覆。"
   },
   {
     "id": "beat-about-the-bush--lishi",
@@ -1564,8 +1745,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "打草人在灌木丛里乱打，猎人则直奔目标。"
   },
   {
     "id": "because-its-there--lishi",
@@ -1589,8 +1772,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "马洛里答记者为何登珠峰：“因为它就在那儿。”"
   },
   {
     "id": "bed--lishi",
@@ -1613,8 +1798,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "迷信“左凶右吉”：左腿先下床，一天都倒霉。"
   },
   {
     "id": "bedlam--lishi",
@@ -1636,7 +1823,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "伦敦伯利恒疯人院 *Bethlehem* 讹成 bedlam。",
+    "links": [
+      {
+        "id": "tomfoolery",
+        "type": "同典故",
+        "why": "都出自伦敦疯人院 Bedlam"
+      }
     ]
   },
   {
@@ -1665,8 +1862,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "蜜蜂困在帽子里，人只顾得上它，喻着了迷。"
   },
   {
     "id": "beefeater--lishi",
@@ -1689,8 +1888,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*beef* 象征优厚待遇，*eater* 是仆人，即皇家护卫。"
   },
   {
     "id": "before-you-can-say-jack-robinson--lishi",
@@ -1714,8 +1915,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "谢里丹痛斥腐败，“说出 Jack Robinson”直指财政大臣。"
   },
   {
     "id": "beggar--lishi",
@@ -1735,8 +1938,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "结巴兰伯特开创的修道会 *Beghards* 靠救济，成了乞丐。"
   },
   {
     "id": "beggar-description--lishi",
@@ -1776,8 +1981,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "莎翁笔下伊诺巴柏斯赞她：没有字眼可以形容。"
   },
   {
     "id": "belfry--lishi",
@@ -1799,8 +2006,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "中世纪法语 *berfrei* 原是攻城的移动冲击塔。"
   },
   {
     "id": "bell-book-and-candle--lishi",
@@ -1818,8 +2027,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "天主教逐出教门：鸣钟、掩卷、熄烛。"
   },
   {
     "id": "bell-the-cat--lishi",
@@ -1839,8 +2050,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "老鼠想给猫挂铃，却问：谁去给猫挂铃铛？"
   },
   {
     "id": "belt--lishi",
@@ -1866,8 +2079,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "昆斯伯里规则：击打对手腰带以下算犯规。"
   },
   {
     "id": "berserk--lishi",
@@ -1895,8 +2110,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古诺尔斯语 *berserkr*：身披熊皮、赤手冲阵的斗士。"
   },
   {
     "id": "best-bib-and-tucker--lishi",
@@ -1916,8 +2133,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "男戴围兜 *bib*、女配花边 *tucker*，盛装出席。"
   },
   {
     "id": "the-best-laid-schemes-of-mice-and-men--lishi",
@@ -1941,8 +2160,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "彭斯《致老鼠》：人鼠最如意的安排也常落空。"
   },
   {
     "id": "beware-the-greeks-bearing-gifts--lishi",
@@ -1964,7 +2185,22 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "维吉尔诗句，影射希腊人送的特洛伊木马。",
+    "links": [
+      {
+        "id": "greek-gift",
+        "type": "同典故",
+        "why": "都出自特洛伊战争中的木马计"
+      },
+      {
+        "id": "trojan-horse--lishi",
+        "type": "同典故",
+        "why": "都出自特洛伊战争中的木马计"
+      }
     ]
   },
   {
@@ -1987,8 +2223,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "大钟以督造专员本杰明·霍尔（Benjamin Hall）得名。"
   },
   {
     "id": "big-brother--lishi",
@@ -2011,8 +2249,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "奥威尔《一九八四》中无所不在的极权统治者。"
   },
   {
     "id": "bikini--lishi",
@@ -2035,8 +2275,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "新泳装轰动如比基尼岛原子弹试验，因此得名。"
   },
   {
     "id": "biro--lishi",
@@ -2061,8 +2303,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "匈牙利发明家比罗（Biró）的姓成了圆珠笔商标。"
   },
   {
     "id": "biscuit--lishi",
@@ -2086,8 +2330,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *bescuit*“烤两次”，远航不易变质。"
   },
   {
     "id": "bite-the-bullet--lishi",
@@ -2120,8 +2366,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "没有麻药时，伤兵咬住子弹熬过手术剧痛。"
   },
   {
     "id": "bitter--lishi",
@@ -2145,8 +2393,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "缆绳系在系缆柱 *bitt* 上，末端叫 *bitter end*。"
   },
   {
     "id": "black--lishi",
@@ -2175,8 +2425,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "亨利八世为没收隐修院，编了第一本 *black book*。"
   },
   {
     "id": "blackmail--lishi",
@@ -2194,8 +2446,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "苏格兰人向边境盗匪交的“黑租”，*mail* 即租金。"
   },
   {
     "id": "blarney--lishi",
@@ -2216,8 +2470,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "相传吻了布拉尼城堡的石头，就能花言巧语。"
   },
   {
     "id": "blaze-a-trail--lishi",
@@ -2235,8 +2491,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "探险者削树皮作记号 *blaze*，标出林中路径。"
   },
   {
     "id": "the-blind-leading-the-blind--lishi",
@@ -2257,8 +2515,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《马太福音》斥法利赛人：瞎子领瞎子，都掉坑里。"
   },
   {
     "id": "blitz--lishi",
@@ -2284,8 +2544,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "德语 *Blitz*（闪电）+ *Krieg*（战争），缩成 blitz。"
   },
   {
     "id": "blockbuster--lishi",
@@ -2305,8 +2567,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "二战时能炸平整个街区 *block* 的巨型炸弹。"
   },
   {
     "id": "bloody-but-unbowed--lishi",
@@ -2335,8 +2599,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "亨利诗《不可征服》：我满头鲜血，却头颅高昂。"
   },
   {
     "id": "bloomers--lishi",
@@ -2358,8 +2624,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "布鲁默夫人穿土耳其式肥裤登场，引发争议。"
   },
   {
     "id": "blow-hot-and-cold--lishi",
@@ -2377,8 +2645,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "伊索寓言：旅人既呵手取暖，又吹凉热汤。"
   },
   {
     "id": "blue--lishi",
@@ -2415,7 +2685,22 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "西班牙语 *sangre azul*：贵族肤白，血管看似泛蓝。",
+    "links": [
+      {
+        "id": "blue-blood",
+        "type": "同根",
+        "why": "都译自西班牙语 *sangre azul*"
+      },
+      {
+        "id": "blue-chip",
+        "type": "同典故",
+        "why": "都出自面值最高的蓝色筹码"
+      }
     ]
   },
   {
@@ -2437,8 +2722,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "伯吉斯把病恹恹的 Blurb 小姐印上书的护封。"
   },
   {
     "id": "board--lishi",
@@ -2463,7 +2750,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "打牌时手放在桌板上 *above the board*，以示无诈。",
+    "links": [
+      {
+        "id": "aboveboard",
+        "type": "同典故",
+        "why": "都出自赌徒把手放在桌面上"
+      }
     ]
   },
   {
@@ -2485,8 +2782,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "首相索尔兹伯里（Robert）屡屡提拔外甥贝尔福。"
   },
   {
     "id": "bohemian--lishi",
@@ -2509,8 +2808,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "波希米亚被当作吉卜赛人故乡，转指不羁文人。"
   },
   {
     "id": "a-bolt-from-the-blue--lishi",
@@ -2531,8 +2832,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*blue* 指晴天，晴天打雷自然令人震惊。"
   },
   {
     "id": "bone--lishi",
@@ -2558,8 +2861,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "两只狗常为一根骨头撕咬：*a bone to pick*。"
   },
   {
     "id": "bonfire--lishi",
@@ -2586,8 +2891,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中古英语 *bonefire*，原是焚烧骨头的火。"
   },
   {
     "id": "boogie--lishi",
@@ -2616,8 +2923,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "20 世纪初美国俚语 *boogie* 本指 party。"
   },
   {
     "id": "the-boot-is-on-the-other-foot--lishi",
@@ -2642,8 +2951,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "旧时鞋不分左右脚，不合脚就两只对调。"
   },
   {
     "id": "boot--lishi",
@@ -2678,8 +2989,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *bōt*（补救）与靴子无关，只留在 *to boot* 里。"
   },
   {
     "id": "born-with-a-silver-spoon-in-ones-mouth--lishi",
@@ -2699,8 +3012,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "受洗时教父母送婴儿银汤匙，象征天生富贵。"
   },
   {
     "id": "borstal--lishi",
@@ -2723,8 +3038,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "1902 年首所感化院建于肯特郡村庄 Borstal。"
   },
   {
     "id": "bottom-line--lishi",
@@ -2747,8 +3064,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "财务报表最后一行定盈亏，引申为事情关键。"
   },
   {
     "id": "boxing-day--lishi",
@@ -2766,8 +3085,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "圣斯蒂芬日开功德箱济贫，后为送圣诞礼盒。"
   },
   {
     "id": "boycott--lishi",
@@ -2788,8 +3109,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "管家 *Boycott* 拒绝减租，遭工人商人集体抵制。"
   },
   {
     "id": "brand-new--lishi",
@@ -2813,8 +3136,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*brand* 即火，刚从火中锻出的金属才叫全新。"
   },
   {
     "id": "brass-monkeys--lishi",
@@ -2836,8 +3161,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "军舰铜架“猴子”遇冷收缩，堆的炮弹滚落。"
   },
   {
     "id": "brass--lishi",
@@ -2858,8 +3185,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "柜台上钉的铜头钉 *brass tacks* 用来量布。"
   },
   {
     "id": "brave-new-world--lishi",
@@ -2887,8 +3216,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "出自《暴风雨》，经赫胥黎同名小说转为贬义。"
   },
   {
     "id": "breach--lishi",
@@ -2916,8 +3247,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《亨利五世》攻城呐喊：再向缺口冲去！"
   },
   {
     "id": "bread-and-circuses--lishi",
@@ -2942,8 +3275,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "尤维纳利斯讽罗马人：给面包和马戏就满足。"
   },
   {
     "id": "break-a-leg--lishi",
@@ -2961,8 +3296,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "演员迷信忌说好运，或源自鞠躬 *make a leg*。"
   },
   {
     "id": "bridegroom--lishi",
@@ -2986,7 +3323,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "古英语 *brȳd*（新娘）加 *guma*（男人），混成 groom。",
+    "links": [
+      {
+        "id": "groom--laili",
+        "type": "衍生",
+        "why": "groom 是 bridegroom 的简化"
+      }
     ]
   },
   {
@@ -3008,8 +3355,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "赌徒全押一局，输了就 *broke*（破产）。"
   },
   {
     "id": "browse--lishi",
@@ -3031,8 +3380,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *brost* 是鹿羊啃的嫩叶，引申为随意翻看。"
   },
   {
     "id": "buccaneer--lishi",
@@ -3057,8 +3408,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*boucan* 是熏肉木架，先指猎人后指海盗。"
   },
   {
     "id": "the-buck-stops-here--lishi",
@@ -3078,8 +3431,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "扑克发牌人前放鹿角柄刀，*pass the buck* 即推责。"
   },
   {
     "id": "buff--lishi",
@@ -3107,8 +3462,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "纽约消防员穿暗黄 *buff* 制服，热心者成爱好者。"
   },
   {
     "id": "bulldozer--lishi",
@@ -3130,8 +3487,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "放倒公牛 *bull* 的剂量 *doze*，原指恐吓。"
   },
   {
     "id": "bungalow--lishi",
@@ -3155,8 +3514,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "印地语 *bangl*，字面是孟加拉式的房子。"
   },
   {
     "id": "bunk--lishi",
@@ -3179,8 +3540,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "议员 Walker“为 *Buncombe* 而讲”，冗长讲话成废话。"
   },
   {
     "id": "burgle--lishi",
@@ -3201,8 +3564,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "从 *burglar* 去掉词尾逆构而成的动词。"
   },
   {
     "id": "burn-ones-boats-bridges--lishi",
@@ -3220,8 +3585,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "罗马将领入侵后烧船断后路，只能奋勇向前。"
   },
   {
     "id": "burton--lishi",
@@ -3248,8 +3615,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "“二战”称飞行员阵亡 *gone for a Burton*，或指去喝啤酒。"
   },
   {
     "id": "bury--lishi",
@@ -3277,8 +3646,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "印第安人埋下战斧 *hatchet*，以示休战和好。"
   },
   {
     "id": "busmans-holiday--lishi",
@@ -3300,8 +3671,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "马车夫休息日坐上自家车，看着马被善待。"
   },
   {
     "id": "butter-wouldnt-melt-in-someones-mouth--lishi",
@@ -3323,8 +3696,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "黄油再软，也化不在冷酷之人的嘴里。"
   },
   {
     "id": "butterfly--lishi",
@@ -3343,8 +3718,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "早写作 *butter-fly*，或因许多蝴蝶翅膀黄如黄油。"
   },
   {
     "id": "buttonhole--lishi",
@@ -3364,8 +3741,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "由 *buttonhold* 变来：揪住扣子不让人走。"
   },
   {
     "id": "buxom--lishi",
@@ -3391,8 +3770,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *būhsum* 原义顺从，后转指女性丰满。"
   },
   {
     "id": "by-and-large--lishi",
@@ -3410,8 +3791,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "水手行话：*by* 逆风、*large* 顺风，两头兼顾。"
   },
   {
     "id": "by-law--lishi",
@@ -3436,8 +3819,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古诺尔斯语 *bȳr*（城镇）加 *lög*（法规）。"
   },
   {
     "id": "cabal--lishi",
@@ -3461,8 +3846,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "查理二世五大臣姓氏首字母恰拼成 *cabal*。"
   },
   {
     "id": "cake--lishi",
@@ -3486,8 +3873,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "绕糕饼走步，步态最美者 *take the cake*。"
   },
   {
     "id": "calculate--lishi",
@@ -3511,8 +3900,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *calculus* 是算盘上移动的鹅卵石。"
   },
   {
     "id": "calendar--lishi",
@@ -3544,8 +3935,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *kalendae*（每月头一天）衍出账簿 *kalendarium*。"
   },
   {
     "id": "a-can-of-worms--lishi",
@@ -3566,8 +3959,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "钓鱼人打开虫饵罐，满罐虫子乱扭一团。"
   },
   {
     "id": "candidate--lishi",
@@ -3589,8 +3984,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "罗马候选人穿白袍，拉丁语 *candidus*（白色）。"
   },
   {
     "id": "candle--lishi",
@@ -3614,8 +4011,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "连给师傅举蜡烛都不配，自然比不上别人。"
   },
   {
     "id": "canter--lishi",
@@ -3633,8 +4032,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "朝圣者骑马去坎特伯雷，悠然慢行成 *canter*。"
   },
   {
     "id": "cappuccino--lishi",
@@ -3661,8 +4062,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "咖啡色如嘉布遣会 *Capuchin* 修士的棕袍。"
   },
   {
     "id": "a-card-up-ones-sleeve--lishi",
@@ -3683,8 +4086,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "赌徒袖里藏王牌，待时机出其不意。"
   },
   {
     "id": "cardigan--lishi",
@@ -3705,8 +4110,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "卡迪根伯爵率轻骑兵，克里米亚士兵穿上此衣。"
   },
   {
     "id": "carpetbagger--lishi",
@@ -3728,8 +4135,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "南北战争后北方政客提地毯包南下投机。"
   },
   {
     "id": "carry-coals-to-newcastle--lishi",
@@ -3752,8 +4161,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "纽卡斯尔盛产煤，往那运煤纯属多余。"
   },
   {
     "id": "cast-pearls-before-swine--lishi",
@@ -3778,8 +4189,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《马太福音》：不要把珍珠丢在猪面前。"
   },
   {
     "id": "cat--lishi",
@@ -3806,8 +4219,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "奸商袋里装猫冒充乳猪，放出猫才露馅。"
   },
   {
     "id": "catch-22--lishi",
@@ -3825,8 +4240,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "海勒同名小说：申请免飞反证神智正常。"
   },
   {
     "id": "catch-someone-red-handed--lishi",
@@ -3846,8 +4263,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "当场抓住凶手时，他手上血迹未干。"
   },
   {
     "id": "caviare-to-the-general--lishi",
@@ -3872,8 +4291,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《哈姆莱特》：好戏如鱼子酱，大众 *general* 不识味。"
   },
   {
     "id": "chance-ones-arm--lishi",
@@ -3894,8 +4315,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "士兵违规，是拿臂上的军衔徽章冒险。"
   },
   {
     "id": "chapel--lishi",
@@ -3923,8 +4346,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "圣玛尔定的斗篷 *cappa*，供奉之所成礼拜堂。"
   },
   {
     "id": "chauvinism--lishi",
@@ -3947,8 +4372,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "狂热崇拜拿破仑的士兵 Chauvin 成了笑柄。"
   },
   {
     "id": "cheat--lishi",
@@ -3966,8 +4393,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "管充公产业的 *escheator* 心狠手辣，被视作骗子。"
   },
   {
     "id": "cheek--lishi",
@@ -3990,8 +4419,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《马太福音》：有人打你右脸，连左脸也转过来。"
   },
   {
     "id": "cherry--lishi",
@@ -4015,8 +4446,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cerasum* 源自土耳其地名 Cerasus。"
   },
   {
     "id": "chess--lishi",
@@ -4043,8 +4476,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "波斯语 *shāh* 是国王，*shāh māt* 成了将死。"
   },
   {
     "id": "chickens--lishi",
@@ -4067,8 +4502,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "骚塞诗：诅咒像小鸡，总要回巢。"
   },
   {
     "id": "the-chiltern-hundreds--lishi",
@@ -4089,8 +4526,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "盗贼绝迹后，齐尔滕百户管官成了辞职挂名。"
   },
   {
     "id": "chip--lishi",
@@ -4115,8 +4554,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "19 世纪美国男孩肩放木片，叫对方敢就打掉。"
   },
   {
     "id": "chivvy--lishi",
@@ -4136,8 +4577,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "或出自民谣《切维山狩猎》，原指追猎呐喊。"
   },
   {
     "id": "chocolate--lishi",
@@ -4166,8 +4609,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "纳瓦特尔语 *chocolatl*，初入英语时是苦饮料。"
   },
   {
     "id": "chop-suey--lishi",
@@ -4189,8 +4634,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "粤语“杂碎” *shap sui*，其实是美国发明的菜。"
   },
   {
     "id": "chortle--lishi",
@@ -4208,8 +4655,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "卡罗尔把 *chuckle* 和 *snort* 压成一词。"
   },
   {
     "id": "claptrap--lishi",
@@ -4227,8 +4676,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "剧作家骗取掌声的伎俩，引申为空话。"
   },
   {
     "id": "clean--lishi",
@@ -4251,8 +4702,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "口哨必须干净才吹得响：*clean as a whistle*。"
   },
   {
     "id": "cloak-and-dagger--lishi",
@@ -4285,8 +4738,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语剑客戏“斗篷与剑”，剑到英语变匕首。"
   },
   {
     "id": "cloud--lishi",
@@ -4311,8 +4766,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "美国气象局第九层积雨云最高，离天堂最近。"
   },
   {
     "id": "cloud-cuckoo-land--lishi",
@@ -4330,8 +4787,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "阿里斯托芬《鸟》里鸟儿在空中筑的虚幻之城。"
   },
   {
     "id": "clue--lishi",
@@ -4349,7 +4808,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "阿德捏给忒修斯的线团 *clew*，引他走出迷宫。",
+    "links": [
+      {
+        "id": "labyrinth",
+        "type": "同典故",
+        "why": "都出自忒修斯闯克里特迷宫"
+      }
     ]
   },
   {
@@ -4378,8 +4847,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "匈牙利村庄 Kocs 产的马车 *kocsi szekér*。"
   },
   {
     "id": "the-coast-is-clear--lishi",
@@ -4399,8 +4870,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "走私者说海边没有海岸警卫，可以行动了。"
   },
   {
     "id": "cobalt--lishi",
@@ -4424,8 +4897,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "德语 *kobolt*（小妖精），传说在银矿里作祟。"
   },
   {
     "id": "a-cobbler-should-stick-to-his-last--lishi",
@@ -4450,8 +4925,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "画家阿佩利斯叫挑剔的鞋匠只管本行 *last*。"
   },
   {
     "id": "cock-and-bull-story--lishi",
@@ -4472,8 +4949,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "或源自伊索寓言里会说人话的公鸡和牛。"
   },
   {
     "id": "coconut--lishi",
@@ -4498,7 +4977,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "椰顶三个黑洞像鬼脸，葡语 *côco*（吓人的东西）。",
+    "links": [
+      {
+        "id": "coco",
+        "type": "同根",
+        "why": "都源自葡萄牙语 *côco*（鬼脸）"
+      }
     ]
   },
   {
@@ -4520,8 +5009,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "给久留的客人端上凉羊肩肉 *cold shoulder*。"
   },
   {
     "id": "companion--lishi",
@@ -4545,8 +5036,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cum*（一起）加 *panis*（面包）：同吃面包者。"
   },
   {
     "id": "complexion--lishi",
@@ -4568,7 +5061,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *complexio*，原指决定性情的四体液混合。",
+    "links": [
+      {
+        "id": "sanguine--lishi",
+        "type": "同典故",
+        "why": "都源于四种体液决定性情之说"
+      }
     ]
   },
   {
@@ -4592,8 +5095,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "诗人向王尔德诉苦遭“沉默阴谋”，王尔德劝他加入。"
   },
   {
     "id": "constable--lishi",
@@ -4619,8 +5124,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *comes stabuli*（马厩总管），后转执法。"
   },
   {
     "id": "cook-someones-goose--lishi",
@@ -4643,8 +5150,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "传说镇民挂鹅嘲敌，敌人烧城连鹅也煮了。"
   },
   {
     "id": "cop--lishi",
@@ -4672,8 +5181,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*copper* 的缩略，源自拉丁语 *capere*（抓住）。"
   },
   {
     "id": "cordial--lishi",
@@ -4700,8 +5211,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cor*（心脏），曾指刺激心脏的药饮。"
   },
   {
     "id": "cordon-bleu--lishi",
@@ -4725,8 +5238,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语“蓝绶带”，从最高勋章转指顶级厨艺。"
   },
   {
     "id": "corduroy--lishi",
@@ -4749,8 +5264,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "众说纷纭，最流行的是 *cord* 加 *duroy*。"
   },
   {
     "id": "corny--lishi",
@@ -4768,8 +5285,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*corn-fed* 的缩写：玉米带农夫的直白幽默。"
   },
   {
     "id": "the-corridors-of-power--lishi",
@@ -4789,8 +5308,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "斯诺 1963 年写威斯敏斯特生活的小说书名。"
   },
   {
     "id": "countdown--lishi",
@@ -4810,8 +5331,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "弗里茨·朗 1928 年科幻片首用倒数发射火箭。"
   },
   {
     "id": "coup-de-grace--lishi",
@@ -4831,8 +5354,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "法语“仁慈的一击”，让受刑死囚解脱。"
   },
   {
     "id": "cover-a-multitude-of-sins--lishi",
@@ -4852,8 +5377,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《彼得前书》：爱能遮掩许多的罪。"
   },
   {
     "id": "coward--lishi",
@@ -4875,8 +5402,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *cauda*（尾巴），或因害怕时夹起尾巴。"
   },
   {
     "id": "cowslip--lishi",
@@ -4898,8 +5427,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *cū*（牛）加 *slyppe*（糊状物），即牛粪。"
   },
   {
     "id": "cravat--lishi",
@@ -4923,8 +5454,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法国人学克罗地亚雇佣兵的领巾，叫 *cravate*。"
   },
   {
     "id": "crayfish--lishi",
@@ -4949,8 +5482,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *crevice* 的后半被改成了 *fish*。"
   },
   {
     "id": "creosote--lishi",
@@ -4974,8 +5509,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *kreas*（肉）加 *sōtēr*，原是肉类防腐剂。"
   },
   {
     "id": "cretin--lishi",
@@ -4998,8 +5535,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *Christianus*（基督徒），原称阿尔卑斯病患。"
   },
   {
     "id": "criss-cross--lishi",
@@ -5021,8 +5560,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "识字板字母前的十字 *Christ-cross*，变成 criss-cross。"
   },
   {
     "id": "crocodile-tears--lishi",
@@ -5040,8 +5581,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "传说鳄鱼假哭引路人上前，再一口吞下。"
   },
   {
     "id": "cross-the-rubicon--lishi",
@@ -5059,7 +5602,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "恺撒率军越过卢比肯河，内战再无退路。",
+    "links": [
+      {
+        "id": "the-die-is-cast--lishi",
+        "type": "同典故",
+        "why": "都出自恺撒渡卢比肯河"
+      }
     ]
   },
   {
@@ -5079,8 +5632,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "放羊娃屡喊“狼来了”，狼真来时无人信。"
   },
   {
     "id": "cuff--lishi",
@@ -5106,8 +5661,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "晚宴上把演讲要点速记在衬衫袖口上。"
   },
   {
     "id": "cupboard-love--lishi",
@@ -5127,8 +5684,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "小孩为橱柜里的好吃的，装作很爱父母。"
   },
   {
     "id": "curate--lishi",
@@ -5152,8 +5711,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "1895 年《笨拙周报》漫画：副牧师称臭蛋部分好。"
   },
   {
     "id": "curfew--lishi",
@@ -5175,8 +5736,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *covrefeu*：中世纪提醒熄火睡觉的钟声。"
   },
   {
     "id": "currant--lishi",
@@ -5202,8 +5765,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*raisins de Corauntz*：科林斯港来的葡萄干。"
   },
   {
     "id": "curry-favour--lishi",
@@ -5230,8 +5795,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*curry favel*：给狡猾栗马 Favel 刷毛讨好。"
   },
   {
     "id": "cut-the-gordian-knot--lishi",
@@ -5252,8 +5819,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "亚历山大一剑斩开戈耳迪国王的死结。"
   },
   {
     "id": "the-cut-of-someones-jib--lishi",
@@ -5271,8 +5840,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "船长凭三角帆 *jib* 的剪裁识别来船。"
   },
   {
     "id": "cut-someone-to-the-quick--lishi",
@@ -5297,7 +5868,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "古英语 *cwicu*（活着的），指甲下敏感的活肉。",
+    "links": [
+      {
+        "id": "quick",
+        "type": "同根",
+        "why": "都源自古英语 *cwicu*（活着的）"
+      }
     ]
   },
   {
@@ -5319,8 +5900,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "好莱坞剪辑从冗长场景直切追逐高潮。"
   },
   {
     "id": "cynic--lishi",
@@ -5343,8 +5926,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "犬儒学派举止如狗，希腊语 *kynikos*（像狗的）。"
   },
   {
     "id": "d-day--lishi",
@@ -5366,8 +5951,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "D 就是 *Day*，“二战”盟军登陆法国之日。"
   },
   {
     "id": "dachshund--lishi",
@@ -5395,8 +5982,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "德语 *Dachs*（獾）加 *Hund*（狗），钻穴驱獾。"
   },
   {
     "id": "daffodil--lishi",
@@ -5423,8 +6012,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *asphodelos* 变成 affodil，前面又误加了个 d。"
   },
   {
     "id": "daisy--lishi",
@@ -5446,8 +6037,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *dægesēage*“白天的眼睛”，夜合晨开。"
   },
   {
     "id": "damask--lishi",
@@ -5473,8 +6066,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "得名于大马士革 *Damascus*，那里原产这类提花丝织品。"
   },
   {
     "id": "damn-with-faint-praise--lishi",
@@ -5496,8 +6091,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "蒲柏讽刺艾迪生的诗句：寓贬于褒，冷眼赞同。"
   },
   {
     "id": "dandelion--lishi",
@@ -5521,8 +6118,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *dent de lion*“狮子的牙齿”，状其叶形。"
   },
   {
     "id": "a-daniel-come-to-judgment--lishi",
@@ -5548,8 +6147,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "丹尼尔智救苏珊娜，莎翁借来称颂明断的法官。"
   },
   {
     "id": "a-dark-horse--lishi",
@@ -5574,8 +6175,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "赛马时无人了解的黑马，结果却夺了冠。"
   },
   {
     "id": "davy-jones-locker--lishi",
@@ -5599,8 +6202,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "掌管海中恶灵的魔鬼 *Davy Jones*，来历众说纷纭。"
   },
   {
     "id": "days-of-wine-and-roses--lishi",
@@ -5630,8 +6235,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "出自道生诗句：美酒与玫瑰的日子不会长久。"
   },
   {
     "id": "dead--lishi",
@@ -5663,8 +6270,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "已灭绝的 *dodo*、被敲“死”的 *doornail*，都言彻底完了。"
   },
   {
     "id": "deadline--lishi",
@@ -5687,8 +6296,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "美国内战战俘营围栏边的界线，越线即格杀。"
   },
   {
     "id": "death--lishi",
@@ -5713,8 +6324,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "科弗代尔译《诗篇》：病人“临近死门” *death's door*。"
   },
   {
     "id": "debt--lishi",
@@ -5738,8 +6351,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *dette*，学者误以为源自 *debitum*，硬塞个 b。"
   },
   {
     "id": "decibel--lishi",
@@ -5761,8 +6376,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "十分之一贝尔 *bel*，单位得名于电话发明者贝尔。"
   },
   {
     "id": "decimate--lishi",
@@ -5787,7 +6404,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语 *decem*（十），罗马军队抽签处死十分之一。",
+    "links": [
+      {
+        "id": "dean",
+        "type": "同根",
+        "why": "都源自拉丁语 *decem*（十）"
+      }
     ]
   },
   {
@@ -5811,8 +6438,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*serge de Nîmes*，法国尼姆产的斜纹哔叽布。"
   },
   {
     "id": "derrick--lishi",
@@ -5835,8 +6464,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "刽子手德里克 Derrick 的姓先指绞架，后指起重机。"
   },
   {
     "id": "desultory--lishi",
@@ -5861,8 +6492,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "罗马马戏团里马间跳跃的 *desultor*，引申为不连贯。"
   },
   {
     "id": "deus-ex-machina--lishi",
@@ -5881,8 +6514,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "古剧陷入困局，用机器把“神”送上舞台来解围。"
   },
   {
     "id": "devil--lishi",
@@ -5917,8 +6552,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "devil 原是船体接缝，夹在它和深海之间进退两难。"
   },
   {
     "id": "dickens--lishi",
@@ -5945,8 +6582,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*dickens* 与狄更斯无关，是 devil 的委婉语。"
   },
   {
     "id": "the-die-is-cast--lishi",
@@ -5967,8 +6606,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "恺撒渡卢比孔河时说：骰子已经掷出。"
   },
   {
     "id": "diesel--lishi",
@@ -5991,8 +6632,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "以发明者鲁道夫·迪塞尔 Diesel 命名的内燃机。"
   },
   {
     "id": "dirge--lishi",
@@ -6014,8 +6657,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁葬礼颂歌首词 *dirige*，演变成挽歌 dirge。"
   },
   {
     "id": "dismal--lishi",
@@ -6037,8 +6682,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "中世纪拉丁语 *dies mali*“邪恶的日子”，历书上的凶日。"
   },
   {
     "id": "distaff--lishi",
@@ -6056,8 +6703,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "纺纱杆 *distaff* 是女人的活计，于是代指母系。"
   },
   {
     "id": "do-as-you-would-be-done-by--lishi",
@@ -6078,8 +6727,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "切斯特菲尔德伯爵写给儿子的信：以人之道待人。"
   },
   {
     "id": "dr-livingstone-i-presume--lishi",
@@ -6109,8 +6760,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "记者斯坦利在非洲找到利文斯通时的第一句话。"
   },
   {
     "id": "a-dog-in-the-manger--lishi",
@@ -6132,7 +6785,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "伊索寓言：狗占着马槽不吃草，也不让牛吃。",
+    "links": [
+      {
+        "id": "dog-days",
+        "type": "同根",
+        "why": "都源自拉丁语 *dies caniculares*"
+      }
     ]
   },
   {
@@ -6154,8 +6817,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*doldrums* 是赤道无风带，帆船在此停滞不前。"
   },
   {
     "id": "dollar--lishi",
@@ -6180,8 +6845,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "圣约阿希姆谷铸的银币 *thaler*，荷兰语变成 daler。"
   },
   {
     "id": "a-doubting-thomas--lishi",
@@ -6199,8 +6866,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "门徒多马 Thomas 不亲手摸到复活的耶稣就不信。"
   },
   {
     "id": "down-under--lishi",
@@ -6218,8 +6887,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "在地球仪上，澳新正好在英国的“下面”。"
   },
   {
     "id": "draconian--lishi",
@@ -6239,8 +6910,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "雅典立法者德拉科 Draco 的法律几乎一律判死刑。"
   },
   {
     "id": "dressed-to-the-nines--lishi",
@@ -6264,8 +6937,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "或由 *to then eyne*（打扮到眼睛）讹变成 nines。"
   },
   {
     "id": "a-drop-in-the-ocean-bucket--lishi",
@@ -6289,8 +6964,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《以赛亚书》：万国都像水桶里的一滴水。"
   },
   {
     "id": "drop--lishi",
@@ -6319,8 +6996,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "决斗时第三方把帽子往地下一扔，双方即开打。"
   },
   {
     "id": "duffel-coat--lishi",
@@ -6343,8 +7022,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "得名于安特卫普附近首产这种大衣的小镇 Duffel。"
   },
   {
     "id": "dunce--lishi",
@@ -6364,8 +7045,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "神学家邓斯·司各脱的信徒 *Dunses* 被讥守旧愚笨。"
   },
   {
     "id": "dungarees--lishi",
@@ -6390,8 +7073,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "孟买地名 Dungr 产的粗蓝布 *dungaree* 做成工作服。"
   },
   {
     "id": "the-dunkirk-spirit--lishi",
@@ -6411,8 +7096,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "1940 年敦刻尔克大撤退，绝境中不屈的勇气。"
   },
   {
     "id": "dutch--lishi",
@@ -6432,7 +7119,27 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "17 世纪英荷争霸，敌意在 *Dutch* 短语里留下贬义。",
+    "links": [
+      {
+        "id": "dutch-courage",
+        "type": "同典故",
+        "why": "都源于17世纪英荷贸易殖民之争"
+      },
+      {
+        "id": "dutch-treat",
+        "type": "同典故",
+        "why": "都源于17世纪英荷贸易殖民之争"
+      },
+      {
+        "id": "dutch-uncle",
+        "type": "同典故",
+        "why": "都源于17世纪英荷贸易殖民之争"
+      }
     ]
   },
   {
@@ -6451,8 +7158,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "羊毛织前先染才不掉色，喻信念根深蒂固。"
   },
   {
     "id": "earmark--lishi",
@@ -6473,8 +7182,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "牧人在牛羊耳朵上打记号，标明归属、防偷。"
   },
   {
     "id": "earwig--lishi",
@@ -6498,8 +7209,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *ēarwicga*“耳虫”，迷信它会钻进耳朵。"
   },
   {
     "id": "easel--lishi",
@@ -6521,8 +7234,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *ezel*（驴子），驮东西的驴成了画架。"
   },
   {
     "id": "easter--lishi",
@@ -6542,8 +7257,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "日耳曼黎明女神 *Eostre* 的春节，被借来庆祝复活。"
   },
   {
     "id": "eat-humble-pie--lishi",
@@ -6561,7 +7278,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "仆人吃的鹿下水馅饼 *umble pie*，混成了 humble。",
+    "links": [
+      {
+        "id": "humble-pie--laili",
+        "type": "同根",
+        "why": "都源自内脏 numbles"
+      }
     ]
   },
   {
@@ -6582,7 +7309,17 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
+      "subtheme",
+      "keyline",
+      "links"
+    ],
+    "keyline": "屋檐滴水处 *eavesdrop* 挨着窗户，正好偷听。",
+    "links": [
+      {
+        "id": "eavesdrop",
+        "type": "衍生",
+        "why": "eavesdropper 由 eavesdrop 派生"
+      }
     ]
   },
   {
@@ -6605,8 +7342,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *ex*（脱离）加 *kentron*（中心），偏离中心。"
   },
   {
     "id": "electricity--lishi",
@@ -6630,7 +7369,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "吉尔伯特据希腊语 *ēlektron*（琥珀）造出 electricity。",
+    "links": [
+      {
+        "id": "electric",
+        "type": "同根",
+        "why": "都源自希腊语 *ēlektron*（琥珀）"
+      }
     ]
   },
   {
@@ -6655,8 +7404,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "柯南道尔笔下的福尔摩斯只说过“*Elementary*”。"
   },
   {
     "id": "eleventh--lishi",
@@ -6681,7 +7432,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "《马太福音》寓言：第 11 小时才来的工人照领全薪。",
+    "links": [
+      {
+        "id": "eleventh-hour",
+        "type": "同典故",
+        "why": "都出自《马太福音》葡萄园雇工寓言"
+      }
     ]
   },
   {
@@ -6708,8 +7469,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "19 世纪账目用语 *make both ends meet*，收支相抵。"
   },
   {
     "id": "enthusiast--lishi",
@@ -6736,8 +7499,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *entheos*“神在其中”，原指神赋灵感的人。"
   },
   {
     "id": "envelope-push-the-envelope--lishi",
@@ -6760,8 +7525,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "航空术语 *envelope* 指飞机性能边界，经沃尔夫流行。"
   },
   {
     "id": "epsom-salts--lishi",
@@ -6781,8 +7548,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "得名于萨里郡温泉镇埃普索姆 Epsom 的矿泉水。"
   },
   {
     "id": "era--lishi",
@@ -6806,8 +7575,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *aera* 原指“数字”，后指开始计年的年份。"
   },
   {
     "id": "esquire--lishi",
@@ -6830,8 +7601,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *esquier*（持盾者），源自拉丁语 *scutum*（盾）。"
   },
   {
     "id": "etiquette--lishi",
@@ -6858,8 +7631,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *étiquette*（票），宫廷发给宾客的礼仪卡。"
   },
   {
     "id": "eureka--lishi",
@@ -6881,7 +7656,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "阿基米德在浴缸里悟出浮力，高喊 *heurēka*！",
+    "links": [
+      {
+        "id": "heuristic",
+        "type": "同根",
+        "why": "都源自希腊语 *heuriskein*（发现）"
+      }
     ]
   },
   {
@@ -6905,8 +7690,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *eschequier*（棋盘），国王在方格布上算账。"
   },
   {
     "id": "excruciating--lishi",
@@ -6930,8 +7717,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *excruciare*，源自 *crux*（十字架）之刑。"
   },
   {
     "id": "explode--lishi",
@@ -6953,8 +7742,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *ex-*（离开）加 *plaudere*（拍手），轰演员下台。"
   },
   {
     "id": "an-eye-for-an-eye--lishi",
@@ -6974,8 +7765,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《出埃及记》律法：以命偿命，以眼还眼。"
   },
   {
     "id": "face-the-music--lishi",
@@ -6994,8 +7787,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "士兵被逐出军队时伴着鼓声，只得“面对音乐”。"
   },
   {
     "id": "farce--lishi",
@@ -7017,8 +7812,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *farcire*（填充），礼拜中插入的短语演成闹剧。"
   },
   {
     "id": "fast--lishi",
@@ -7042,8 +7839,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "游乐场骗局：皮带看似钉牢 *fast*，实则是松的 *loose*。"
   },
   {
     "id": "a-feather-in-ones-cap--lishi",
@@ -7072,8 +7871,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "印第安勇士每杀一敌，头饰上就添一根羽毛。"
   },
   {
     "id": "fell--lishi",
@@ -7109,8 +7910,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*fell* 不是 fall，而是中世纪英语 *fel*（残酷致命）。"
   },
   {
     "id": "female--lishi",
@@ -7136,8 +7939,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *femina* 的指小词 *femmella*，与 male 无关。"
   },
   {
     "id": "ferret--lishi",
@@ -7161,8 +7966,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁词根 *furo*（小偷），雪貂就是“小毛贼”。"
   },
   {
     "id": "fiddle-while-rome-burns--lishi",
@@ -7180,8 +7987,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "公元 64 年罗马大火，尼禄皇帝仍在弹琴高歌。"
   },
   {
     "id": "fifth-column--lishi",
@@ -7207,8 +8016,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "西班牙内战，马德里城内暗中里应外合的“第五纵队”。"
   },
   {
     "id": "filibuster--lishi",
@@ -7233,8 +8044,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "西班牙语 *filibustero*（海盗），转指议会拖延战术。"
   },
   {
     "id": "a-fine-kettle-of-fish--lishi",
@@ -7252,8 +8065,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "边境河畔用锅煮大马哈鱼野炊，锅翻了一团糟。"
   },
   {
     "id": "flagstone--lishi",
@@ -7275,8 +8090,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古诺尔斯语 *flaga*（石板），与旗帜毫无关系。"
   },
   {
     "id": "flak--lishi",
@@ -7297,8 +8114,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "德语防空炮 *Fliegerabwehrkanone* 的缩写，喻猛烈批评。"
   },
   {
     "id": "a-flash-in-the-pan--lishi",
@@ -7319,8 +8138,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "燧发枪药池里火光一闪，子弹却没打出去。"
   },
   {
     "id": "a-fly-in-the-ointment--lishi",
@@ -7343,8 +8164,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《传道书》：死苍蝇使作香的膏油发出臭气。"
   },
   {
     "id": "foolscap--lishi",
@@ -7364,7 +8187,17 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
+      "subtheme",
+      "keyline",
+      "links"
+    ],
+    "keyline": "纸上曾印着小丑 *fool* 的头和帽子 *cap* 的水印。",
+    "links": [
+      {
+        "id": "fool",
+        "type": "衍生",
+        "why": "foolscap 由 fool 加 cap 构成"
+      }
     ]
   },
   {
@@ -7392,8 +8225,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "罗马皇帝尤里安说：即便一只脚踏进坟墓也要学。"
   },
   {
     "id": "forlorn-hope--lishi",
@@ -7418,8 +8253,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *verloren hoop* 原指打头阵的敢死小队。"
   },
   {
     "id": "foxglove--lishi",
@@ -7437,8 +8274,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "花似小手套，或由 *folk's glove*（仙女的手套）而来。"
   },
   {
     "id": "freelance--lishi",
@@ -7456,8 +8295,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "中世纪雇佣兵是“自由的长矛 *lance*”，谁出钱为谁战。"
   },
   {
     "id": "galore--lishi",
@@ -7484,8 +8325,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "爱尔兰盖尔语 *go leór*（充足），17 世纪随移民入英语。"
   },
   {
     "id": "the-game-isnt-worth-the-candle--lishi",
@@ -7504,8 +8347,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "点蜡烛赌博，输了钱的人连蜡烛钱都白搭。"
   },
   {
     "id": "gamut--lishi",
@@ -7532,8 +8377,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "桂多音阶最低音 *gamma* 加首音 *ut*，缩成 gamut。"
   },
   {
     "id": "garlic--lishi",
@@ -7555,8 +8402,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *gārlēac*：矛 *gār* 加葱 *lēac*，叶如矛头。"
   },
   {
     "id": "gauntlet--lishi",
@@ -7585,8 +8434,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "骑士扔下铁手套 *gauntlet* 即挑战，拾起即应战。"
   },
   {
     "id": "gazette--lishi",
@@ -7610,8 +8461,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "或源自威尼斯买报用的小铜币 *gazeta*，说法不一。"
   },
   {
     "id": "ghost--lishi",
@@ -7635,8 +8488,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《约伯记》：人死时灵魂 *ghost* 离开躯体。"
   },
   {
     "id": "gift--lishi",
@@ -7666,7 +8521,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "马是送的就别看牙口：察看马龄对赠礼者失礼。",
+    "links": [
+      {
+        "id": "long-in-the-tooth--lishi",
+        "type": "同典故",
+        "why": "都源自看马牙判断马龄的做法"
+      }
     ]
   },
   {
@@ -7701,8 +8566,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "误引莎翁《约翰王》“给百合涂彩”，喻多此一举。"
   },
   {
     "id": "glitters--lishi",
@@ -7745,8 +8612,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《威尼斯商人》金盒字条：闪光的不全是黄金。"
   },
   {
     "id": "goat--lishi",
@@ -7768,8 +8637,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "赛前偷走安抚赛马的山羊，马就焦躁落败。"
   },
   {
     "id": "gobsmacked--lishi",
@@ -7798,8 +8669,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "盖尔语 *gob*（嘴）像挨了一巴掌，惊得说不出话。"
   },
   {
     "id": "gooseberry--lishi",
@@ -7825,8 +8698,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "由古法语 *groseille* 演变而来，goose 来历不明。"
   },
   {
     "id": "gorilla--lishi",
@@ -7851,8 +8726,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "迦太基人汉诺记下西非多毛部落之名 *Gorillae*。"
   },
   {
     "id": "gossamer--lishi",
@@ -7870,8 +8747,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "中世纪英语 *gosesomer*“鹅之夏”，晴秋里飘蛛丝。"
   },
   {
     "id": "gossip--lishi",
@@ -7899,8 +8778,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *godsibb* 原指教父母，后成了闲言碎语。"
   },
   {
     "id": "grace--lishi",
@@ -7924,8 +8805,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "殉教者布拉德福德见死囚叹：若非神恩，我亦如此。"
   },
   {
     "id": "greek--lishi",
@@ -7956,8 +8839,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《裘力斯·凯撒》里西塞罗说希腊语，卡斯卡没听懂。"
   },
   {
     "id": "the-green-eyed-monster--lishi",
@@ -7985,8 +8870,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《奥赛罗》：嫉妒是戏弄猎物的绿眼妖魔。"
   },
   {
     "id": "grin-like-a-cheshire-cat--lishi",
@@ -8005,8 +8892,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "或因柴郡人仿猫咧嘴笑的样子做奶酪，并非卡罗尔首创。"
   },
   {
     "id": "grist--lishi",
@@ -8034,8 +8923,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *grist* 是磨坊里待碾的谷物，入磨皆有用。"
   },
   {
     "id": "guerrilla--lishi",
@@ -8058,8 +8949,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "西班牙语，原指半岛战争中抵抗拿破仑的非正规战。"
   },
   {
     "id": "gypsy--lishi",
@@ -8082,8 +8975,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "16 世纪误以为他们来自埃及，*Egyptians* 缩成 gypsy。"
   },
   {
     "id": "haggis--lishi",
@@ -8110,8 +9005,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "苏格兰羊杂布丁，名字或与表“劈、剁”的 *haguer* 有关。"
   },
   {
     "id": "ha-ha--lishi",
@@ -8133,8 +9030,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "人们意外滚落这道暗墙时惊呼“Ha-ha!”，因此得名。"
   },
   {
     "id": "halcyon--lishi",
@@ -8156,7 +9055,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊语 *halkyōn*（翠鸟）冬至前后在平静海上筑巢。",
+    "links": [
+      {
+        "id": "halcyon-days",
+        "type": "同根",
+        "why": "都源自希腊语“翠鸟” *halkyōn*"
+      }
     ]
   },
   {
@@ -8181,8 +9090,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "伦敦金匠公会 Goldsmiths Hall 在金银器上打的印记。"
   },
   {
     "id": "hamburger--lishi",
@@ -8203,8 +9114,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "得名于德国城市汉堡 Hamburg，与火腿 ham 无关。"
   },
   {
     "id": "hammer-and-tongs--lishi",
@@ -8227,8 +9140,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "铁匠用钳 *tongs* 夹铁、用锤 *hammer* 猛敲，叮当作响。"
   },
   {
     "id": "hangnail--lishi",
@@ -8252,8 +9167,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *angnægl*（疼痛+指甲），ang 被误作 hang。"
   },
   {
     "id": "harbinger--lishi",
@@ -8279,8 +9196,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *herbergere* 原是给士兵安排住宿的人。"
   },
   {
     "id": "havoc--lishi",
@@ -8317,8 +9236,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "诺曼法语 *havok* 是入侵者大肆屠杀的号令。"
   },
   {
     "id": "haywire--lishi",
@@ -8342,8 +9263,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "捆干草 *hay* 的铁丝一剪断就四处乱飞。"
   },
   {
     "id": "hell--lishi",
@@ -8369,8 +9292,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "出自弥尔顿《失乐园》，加百列奚落撒旦之语。"
   },
   {
     "id": "helpmate--lishi",
@@ -8391,7 +9316,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "《创世记》*help meet*（合适的帮手）误写而成。",
+    "links": [
+      {
+        "id": "helpmeet--laili",
+        "type": "同典故",
+        "why": "都出自《创世记》上帝为亚当造帮手"
+      }
     ]
   },
   {
@@ -8416,8 +9351,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "耶稣登山宝训：点灯不放在斗 *bushel* 底下。"
   },
   {
     "id": "hobnob--lishi",
@@ -8438,8 +9375,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "源自 *hab nab*（不论得失），原指轮流请酒。"
   },
   {
     "id": "hobsons-choice--lishi",
@@ -8459,8 +9398,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "剑桥马夫霍布森只准租离门最近的那匹马。"
   },
   {
     "id": "hog--lishi",
@@ -8486,8 +9427,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "一说先令旧称 *hog*，花光整个 hog 即挥霍。"
   },
   {
     "id": "hoist-by-ones-own-petard--lishi",
@@ -8518,8 +9461,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中世纪炸城门的 *petard* 常把放置者一同炸飞。"
   },
   {
     "id": "holocaust--lishi",
@@ -8544,8 +9489,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *holokaustos*（整个被火烧）原指燔祭。"
   },
   {
     "id": "honeymoon--lishi",
@@ -8565,8 +9512,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：婚后喝 30 天蜂蜜酒，或月有盈亏。"
   },
   {
     "id": "hook-line-and-sinker--lishi",
@@ -8587,8 +9536,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "饿鱼连鱼钩、钓线带沉子一口吞下。"
   },
   {
     "id": "hooray--lishi",
@@ -8608,8 +9559,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "16 世纪水手拉绳鼓劲喊 *huzza*，演成 hurrah。"
   },
   {
     "id": "horns--lishi",
@@ -8630,8 +9583,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "两难像动物的两只角，抓哪只都会被甩飞。"
   },
   {
     "id": "horoscope--lishi",
@@ -8653,8 +9608,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *hora*（时刻）加 *skopeein*（观察）。"
   },
   {
     "id": "hue-and-cry--lishi",
@@ -8682,8 +9639,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "诺曼法语 *hu et cri*：追疑犯时的警告惊叫。"
   },
   {
     "id": "husband--lishi",
@@ -8707,8 +9666,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古诺尔斯语 *hūs*（房子）加 *bōndi*（一家之主）。"
   },
   {
     "id": "hustings--lishi",
@@ -8736,7 +9697,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "古诺尔斯语 *hūs*（房子）加 *thing*（集会）。",
+    "links": [
+      {
+        "id": "thing--laili",
+        "type": "同根",
+        "why": "都源自日耳曼语表“集会”的 thing"
+      }
     ]
   },
   {
@@ -8761,7 +9732,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊语 *hystera*（子宫），旧以为子宫失调致病。",
+    "links": [
+      {
+        "id": "hysterical",
+        "type": "同根",
+        "why": "都源自希腊语 *hystera*（子宫）"
+      }
     ]
   },
   {
@@ -8786,8 +9767,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *idiōtēs* 原指没有公职的门外汉。"
   },
   {
     "id": "ignoramus--lishi",
@@ -8807,7 +9790,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁语“我们不知道”，法庭驳回起诉的用语。",
+    "links": [
+      {
+        "id": "ignore",
+        "type": "同根",
+        "why": "都源自拉丁语“不知道”，用于法庭"
+      }
     ]
   },
   {
@@ -8839,8 +9832,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "出自格雷诗《伊顿远眺》：无知即福，聪明反愚。"
   },
   {
     "id": "imbecile--lishi",
@@ -8867,8 +9862,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *imbecillus* 本指“没有拐杖”支撑。"
   },
   {
     "id": "imp--lishi",
@@ -8892,8 +9889,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *imp* 原是树的嫩枝，后指小恶魔。"
   },
   {
     "id": "inch--lishi",
@@ -8920,8 +9919,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "原作 take an *ell*：让一寸，要一肘长。"
   },
   {
     "id": "infantry--lishi",
@@ -8948,8 +9949,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "意大利语 *infante*（青年、步兵），源自“不能说话”。"
   },
   {
     "id": "influenza--lishi",
@@ -8977,8 +9980,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "意大利人把 1743 年的疫病归于星体 *influenza*（影响）。"
   },
   {
     "id": "intelligentsia--lishi",
@@ -9003,8 +10008,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "源自拉丁语 *intelligentia*，经俄语借入英语。"
   },
   {
     "id": "iron--lishi",
@@ -9038,8 +10045,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "丘吉尔演说中的 *iron curtain* 原是剧院防火铁幕。"
   },
   {
     "id": "italic--lishi",
@@ -9063,7 +10072,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "威尼斯印刷商马努提乌斯创斜体，献给意大利。",
+    "links": [
+      {
+        "id": "italics",
+        "type": "同根",
+        "why": "都源自拉丁语 *Italicus*（意大利的）"
+      }
     ]
   },
   {
@@ -9089,8 +10108,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "旧时迷信手心发痒是进财之兆。"
   },
   {
     "id": "ivy-league--lishi",
@@ -9110,8 +10131,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "体育记者亚当斯讥讽爬满常春藤的名校球队。"
   },
   {
     "id": "jackpot--lishi",
@@ -9134,8 +10157,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "扑克里持两张 *jack* 才能拿走全部赌注 *pot*。"
   },
   {
     "id": "jam-tomorrow--lishi",
@@ -9155,8 +10180,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "卡罗尔《镜中世界》：明天昨天有果酱，今天没有。"
   },
   {
     "id": "jeep--lishi",
@@ -9176,8 +10203,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "或许来自 *GP*，因《大力水手》里的尤金吉普走红。"
   },
   {
     "id": "jekyll-and-hyde--lishi",
@@ -9195,8 +10224,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "史蒂文森小说：杰基尔服药化身恶人海德。"
   },
   {
     "id": "jeopardy--lishi",
@@ -9223,8 +10254,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古法语 *jeu parti* 原指难定输赢的棋局。"
   },
   {
     "id": "jerusalem-artichoke--lishi",
@@ -9246,8 +10279,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "与耶路撒冷无关，来自意大利语 *girasole*（向日葵）。"
   },
   {
     "id": "jobs-comforter--lishi",
@@ -9270,8 +10305,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "约伯的朋友越“安慰”，他越愁烦。"
   },
   {
     "id": "jodhpurs--lishi",
@@ -9294,8 +10331,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "印度城市焦特布尔 *Jodhpur* 的骑士穿这种马裤。"
   },
   {
     "id": "journal--lishi",
@@ -9319,8 +10358,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *dies*（天）：本是“每天”出版的刊物。"
   },
   {
     "id": "jumbo--lishi",
@@ -9344,8 +10385,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "伦敦动物园名象 *Jumbo* 被巴纳姆买走后更出名。"
   },
   {
     "id": "jump-on-the-bandwagon--lishi",
@@ -9364,8 +10407,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "美国竞选花车载乐队游街，支持者纷纷爬上。"
   },
   {
     "id": "kamikaze--lishi",
@@ -9388,8 +10433,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "日语“神风”：强风摧毁了入侵日本的蒙古舰队。"
   },
   {
     "id": "kangaroo--lishi",
@@ -9411,7 +10458,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "传说原住民答“不知道”，其实就是袋鼠本名。",
+    "links": [
+      {
+        "id": "kangaroo-court",
+        "type": "衍生",
+        "why": "kangaroo court 借袋鼠作比"
+      }
     ]
   },
   {
@@ -9441,8 +10498,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "闽南语“茄汁”经马来语 *kechap* 进入英语。"
   },
   {
     "id": "kick-the-bucket--lishi",
@@ -9460,8 +10519,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：猪踢横梁 *bucket*，或上吊者踢桶。"
   },
   {
     "id": "kidnap--lishi",
@@ -9483,8 +10544,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*nap kids*：偷英国小孩卖去美洲种植园。"
   },
   {
     "id": "kill-the-fatted-calf--lishi",
@@ -9509,8 +10572,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《路加福音》浪子回头，父亲宰肥牛犊庆祝。"
   },
   {
     "id": "kipper--lishi",
@@ -9533,8 +10598,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *cypera* 本指产卵期的雄鲑，色如铜棕。"
   },
   {
     "id": "knave--lishi",
@@ -9559,8 +10626,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *cnafa* 本指男仆、男孩，后成恶棍。"
   },
   {
     "id": "knickers--lishi",
@@ -9584,8 +10653,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "缩自 *knickerbockers*，源于欧文杜撰的尼克博克。"
   },
   {
     "id": "knickers-2--lishi",
@@ -9611,8 +10682,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "短裤卷成一团穿不上，人便心烦意乱。"
   },
   {
     "id": "knight--lishi",
@@ -9638,8 +10711,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语里 *knight* 原指“年轻人”“仆人”。"
   },
   {
     "id": "knock-into-a-cocked-hat--lishi",
@@ -9662,8 +10737,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "九柱戏只剩三根小柱，排成三角帽的形状。"
   },
   {
     "id": "know-the-ropes--lishi",
@@ -9686,8 +10763,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "老水手熟知帆船索具中的每一根桅绳。"
   },
   {
     "id": "knuckle-down--lishi",
@@ -9711,8 +10790,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*knuckle* 曾泛指关节；屈膝下跪即认输。"
   },
   {
     "id": "kowtow--lishi",
@@ -9732,8 +10813,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "出自中文“叩头”：跪地以头磕地表尊敬。"
   },
   {
     "id": "lackadaisical--lishi",
@@ -9753,8 +10836,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "感叹词 *alack the day* 变成 lackaday，唉声叹气。"
   },
   {
     "id": "laconic--lishi",
@@ -9772,8 +10857,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "拉科尼亚 *Laconia* 人回腓力二世一句“假如”。"
   },
   {
     "id": "a-lame-duck--lishi",
@@ -9796,8 +10883,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "一说伦敦证交所称赔光还不起债者 *lame duck*。"
   },
   {
     "id": "lampoon--lishi",
@@ -9823,8 +10912,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *lampons*（让我们喝）原是饮酒歌合唱句。"
   },
   {
     "id": "landlubber--lishi",
@@ -9842,8 +10933,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*land* 加 *lubber*（笨拙的人），并非 land lover。"
   },
   {
     "id": "laser--lishi",
@@ -9861,8 +10954,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "受激辐射光放大的英文全称首字母缩成。"
   },
   {
     "id": "laurel--lishi",
@@ -9890,7 +10985,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "希腊人授予诗人与竞技胜者的月桂花环。",
+    "links": [
+      {
+        "id": "poet-laureate--lishi",
+        "type": "同典故",
+        "why": "都出自授予诗人的月桂花环"
+      }
     ]
   },
   {
@@ -9914,8 +11019,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "霍布斯临终遗言：最终旅程是黑暗中的一大步。"
   },
   {
     "id": "leap-year--lishi",
@@ -9936,8 +11043,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "闰年里，同一日期的星期数要多跳一天。"
   },
   {
     "id": "leave-in-the-lurch--lishi",
@@ -9966,8 +11075,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中世纪法语 *lourche* 掷骰游戏里必输的选手。"
   },
   {
     "id": "leotard--lishi",
@@ -9985,8 +11096,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "法国空中秋千杂技员利欧达 *Léotard* 设计的。"
   },
   {
     "id": "leprechaun--lishi",
@@ -10008,8 +11121,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "中古爱尔兰语 *lū*（小）加 *corpān*（身体）。"
   },
   {
     "id": "the-letter-of-the-law--lishi",
@@ -10033,8 +11148,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《哥林多后书》：“字句叫人死，精意叫人活。”"
   },
   {
     "id": "lewd--lishi",
@@ -10058,8 +11175,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *læwede* 原指非神职的俗人，一路贬成下流。"
   },
   {
     "id": "libel--lishi",
@@ -10085,8 +11204,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *libellus*（小册子）：古罗马人发册子诋毁人。"
   },
   {
     "id": "lick-into-shape--lishi",
@@ -10111,8 +11232,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "古人相信小熊生下是肉团，靠父母舔出形状。"
   },
   {
     "id": "life-of-riley--lishi",
@@ -10138,8 +11261,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "一说源自喜剧歌曲《是雷利先生吗？》。"
   },
   {
     "id": "limbo--lishi",
@@ -10165,8 +11290,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *limbus*（边缘）：灵魂不上天堂不下地狱。"
   },
   {
     "id": "limelight--lishi",
@@ -10187,8 +11314,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "石灰 *lime* 放进氢氧焰发强光，后用于舞台。"
   },
   {
     "id": "limerick--lishi",
@@ -10212,8 +11341,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "或得名于聚会合唱的歌曲《来到利默里克》。"
   },
   {
     "id": "limey--lishi",
@@ -10233,8 +11364,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "英国海军发青柠汁防坏血病，被美国水手嘲笑。"
   },
   {
     "id": "limousine--lishi",
@@ -10258,8 +11391,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法国利穆赞 *Limousin* 人穿的连帽斗篷。"
   },
   {
     "id": "lions-share--lishi",
@@ -10280,8 +11415,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "伊索寓言：狮子分猎物，四份自取三份。"
   },
   {
     "id": "liquorice--lishi",
@@ -10306,8 +11443,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *glukus*（甜）加 *rhiza*（根），与 liquor 无关。"
   },
   {
     "id": "a-little-learning-is-a-dangerous-thing--lishi",
@@ -10331,8 +11470,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "出自蒲柏《论批评》：学识浅薄是件危险的事。"
   },
   {
     "id": "lock-stock-and-barrel--lishi",
@@ -10353,8 +11494,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "扳机、枪托、枪管凑成一支完整的枪。"
   },
   {
     "id": "loggerheads--lishi",
@@ -10375,8 +11518,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*loggerhead* 原是熔柏油掷向敌船的长柄铁球。"
   },
   {
     "id": "long-in-the-tooth--lishi",
@@ -10397,7 +11542,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "马越老牙根越露，牙齿显得越长。",
+    "links": [
+      {
+        "id": "straight-from-the-horses-mouth--lishi",
+        "type": "同典故",
+        "why": "都出自看马的牙齿辨马龄"
+      }
     ]
   },
   {
@@ -10420,8 +11575,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：法语 *le lieu*，或倒夜壶时喊 *gardez l'eau*。"
   },
   {
     "id": "loophole--lishi",
@@ -10439,8 +11596,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "中世纪城堡外窄内宽的箭窗 *loophole*。"
   },
   {
     "id": "loose--lishi",
@@ -10464,8 +11623,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "绳子没缚牢，末端就松开了。"
   },
   {
     "id": "lose-the-or-ones-thread--lishi",
@@ -10483,8 +11644,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "一说源自织缝用线，一说忒修斯靠线走出迷宫。"
   },
   {
     "id": "love--lishi",
@@ -10514,8 +11677,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "网球零分 *love* 或出自“不赌钱，只为兴趣玩”。"
   },
   {
     "id": "lunatic--lishi",
@@ -10537,8 +11702,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *luna*（月亮）：月越圆，疯子越狂。"
   },
   {
     "id": "mad--lishi",
@@ -10561,8 +11728,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "或源自 *mad as an atter*：被毒蛇咬后发疯。"
   },
   {
     "id": "madrigal--lishi",
@@ -10585,8 +11754,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "后期拉丁语 *matricalis*（母体的）：用母语唱的歌。"
   },
   {
     "id": "maelstrom--lishi",
@@ -10608,8 +11779,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *malen*（磨）加 *stroom*（流动），指挪威大漩涡。"
   },
   {
     "id": "magazine--lishi",
@@ -10633,8 +11806,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "阿拉伯语 *makhzan*（仓库）原是存弹药的地方。"
   },
   {
     "id": "magenta--lishi",
@@ -10654,8 +11829,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "染料得名于 1859 年血战之地、意大利小镇 *Magenta*。"
   },
   {
     "id": "malaria--lishi",
@@ -10682,8 +11859,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "意大利语 *mala aria*（不良空气），旧以为沼气致病。"
   },
   {
     "id": "manna--lishi",
@@ -10705,8 +11884,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希伯来语 *mān*（什么）：以色列人问“这是什么？”"
   },
   {
     "id": "manner--lishi",
@@ -10735,8 +11916,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "出自《哈姆莱特》*to the manner born*，并非 manor。"
   },
   {
     "id": "manure--lishi",
@@ -10759,8 +11942,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *manu operare*（用手工作），委婉指粪肥。"
   },
   {
     "id": "marathon--lishi",
@@ -10782,8 +11967,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "信使从马拉松跑到雅典报捷，力竭倒地而死。"
   },
   {
     "id": "margarine--lishi",
@@ -10807,8 +11994,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *margaron*（珍珠），指十七酸的珠光。"
   },
   {
     "id": "marmalade--lishi",
@@ -10835,8 +12024,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "葡萄牙语 *marmelada* 原是榅桲果酱。"
   },
   {
     "id": "maroon--lishi",
@@ -10863,8 +12054,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "美式西班牙语 *cimarrón*，指逃奴的偏远聚居地。"
   },
   {
     "id": "marshal--lishi",
@@ -10887,8 +12080,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古高地德语 *marahscalc*：马加仆人，原是马夫。"
   },
   {
     "id": "martyr--lishi",
@@ -10910,8 +12105,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *martys*（证人），指宁死不弃信仰的基督徒。"
   },
   {
     "id": "masterpiece--lishi",
@@ -10929,8 +12126,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "中世纪工匠为获大师名号交给行会评审的作品。"
   },
   {
     "id": "maundy-thursday--lishi",
@@ -10955,8 +12154,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *mandatum*（戒律）：耶稣赐门徒新戒律。"
   },
   {
     "id": "mausoleum--lishi",
@@ -10978,8 +12179,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "遗孀为卡里亚统治者摩索拉斯 *Mausolus* 建的陵墓。"
   },
   {
     "id": "mealy-mouthed--lishi",
@@ -11004,8 +12207,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "一说来自 *meal*（面粉），如德语“嘴里有面粉”。"
   },
   {
     "id": "meander--lishi",
@@ -11031,8 +12236,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "小亚细亚一条蜿蜒的河，希腊语叫 *Maiandros*。"
   },
   {
     "id": "meat--lishi",
@@ -11060,8 +12267,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *meat* 泛指一切食物，17 世纪才专指肉。"
   },
   {
     "id": "meet-ones-waterloo--lishi",
@@ -11082,8 +12291,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拿破仑 1815 年在滑铁卢惨败，四天后退位。"
   },
   {
     "id": "melodrama--lishi",
@@ -11106,8 +12317,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *melos*（歌曲）加法语 *drame*，原是带歌的戏。"
   },
   {
     "id": "mercurial--lishi",
@@ -11125,7 +12338,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "源自神祇 *Mercury*，水星下出生的人被认为善变。",
+    "links": [
+      {
+        "id": "mercury",
+        "type": "衍生",
+        "why": "mercurial 由 *Mercury* 派生"
+      }
     ]
   },
   {
@@ -11150,8 +12373,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "奥地利催眠师 *Mesmer* 用磁铁催眠，名字成了动词。"
   },
   {
     "id": "mews--lishi",
@@ -11176,8 +12401,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "换毛鹰笼 *mew* 原址建起皇家马厩，后指马车房小街。"
   },
   {
     "id": "midwife--lishi",
@@ -11202,8 +12429,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *mid*（与）加 *wif*（女人）：陪产的人。"
   },
   {
     "id": "migraine--lishi",
@@ -11227,8 +12456,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *hēmikrania*“半个头骨”，痛在头的一侧。"
   },
   {
     "id": "mile--lishi",
@@ -11252,7 +12483,17 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "罗马 *mille passus*“一千步”，进古英语成 *mīl*。",
+    "links": [
+      {
+        "id": "milestone",
+        "type": "同根",
+        "why": "都源自拉丁语 *mille*（一千）"
+      }
     ]
   },
   {
@@ -11273,8 +12514,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "16 世纪米兰来的奢侈品商 *Milaner*，后专做女帽。"
   },
   {
     "id": "millstone-around-ones-neck--lishi",
@@ -11297,8 +12540,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《马太福音》：把大磨石拴在颈项上扔进海里。"
   },
   {
     "id": "mind-ones-ps-and-qs--lishi",
@@ -11318,8 +12563,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "孩童学写字难分 *p* 和 *q*，引申为谨言慎行。"
   },
   {
     "id": "miniature--lishi",
@@ -11346,8 +12593,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁 *minium*（朱砂）写手稿，误混 *minor* 成“小”。"
   },
   {
     "id": "minion--lishi",
@@ -11371,8 +12620,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *mignon*（亲爱的），宠臣渐渐沦为奴才。"
   },
   {
     "id": "mint--lishi",
@@ -11394,7 +12645,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "朱诺 *Moneta* 神庙里铸钱，造币厂随之得名。",
+    "links": [
+      {
+        "id": "money",
+        "type": "同根",
+        "why": "都源自朱诺称号 *Moneta*"
+      }
     ]
   },
   {
@@ -11415,8 +12676,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "拉丁 *minutus*（小），早期会议记录用小字写。"
   },
   {
     "id": "mob--lishi",
@@ -11436,8 +12699,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁 *mobile vulgus* 缩为 *mobile*，再成 *mob*。"
   },
   {
     "id": "moment-of-truth--lishi",
@@ -11461,8 +12726,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "西班牙斗牛士最终一剑刺死牛的那一刻。"
   },
   {
     "id": "moot--lishi",
@@ -11489,8 +12756,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *mōt* 是讨论法律政务的会议。"
   },
   {
     "id": "moron--lishi",
@@ -11516,8 +12785,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *mōros*（愚蠢），1910 年曾是智商术语。"
   },
   {
     "id": "mountain--lishi",
@@ -11545,8 +12816,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "鼹鼠丘堆成山，英语首见于 1570 年《殉道者名录》。"
   },
   {
     "id": "mulligatawny--lishi",
@@ -11567,8 +12840,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "泰米尔语 *milaku*（胡椒）加 *tanni*（水）。"
   },
   {
     "id": "mumbo-jumbo--lishi",
@@ -11593,8 +12868,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "曼丁哥部落神 *Mama Dyumbo*，扮神吓女人成了胡话。"
   },
   {
     "id": "munro--lishi",
@@ -11614,8 +12891,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "芒罗爵士 1891 年列出苏格兰三千英尺山峰表。"
   },
   {
     "id": "muscle--lishi",
@@ -11640,7 +12919,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁 *musculus*“小老鼠”，肌肉动起来像鼠窜。",
+    "links": [
+      {
+        "id": "mouse",
+        "type": "同根",
+        "why": "*musculus* 即拉丁语“小老鼠”"
+      }
     ]
   },
   {
@@ -11661,8 +12950,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "亚历山大的 *Mouseion*“缪斯神庙”，第一座博物馆。"
   },
   {
     "id": "mushroom--lishi",
@@ -11688,8 +12979,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *mousseron* 被凑成顺耳的 mush 加 room。"
   },
   {
     "id": "nail--lishi",
@@ -11713,8 +13006,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "中世纪商人门前的柱子 *nail*，钱放上面当场两清。"
   },
   {
     "id": "navvy--lishi",
@@ -11734,8 +13029,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*navigator* 的缩写，原指 18 世纪挖运河的工人。"
   },
   {
     "id": "neighbour--lishi",
@@ -11758,8 +13055,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *nēah*（近）加 *gebūr*（住户）：近旁的农夫。"
   },
   {
     "id": "nepotism--lishi",
@@ -11782,8 +13081,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *nepos*（侄孙），教皇偏袒“侄子”私生子。"
   },
   {
     "id": "nest-egg--lishi",
@@ -11803,8 +13104,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "农民在鸡窝里放瓷蛋，引母鸡多下蛋。"
   },
   {
     "id": "never-never-land--lishi",
@@ -11825,8 +13128,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "昆士兰北部荒地去了回不来，经《彼得·潘》流行。"
   },
   {
     "id": "new--lishi",
@@ -11852,8 +13157,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*turn over a new leaf* 的 leaf 是书页，翻页重来。"
   },
   {
     "id": "news--lishi",
@@ -11877,8 +13184,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *noveles*“新事物”，并非指南针 N-E-W-S。"
   },
   {
     "id": "nice--lishi",
@@ -11904,8 +13213,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁 *nescius*（无知的），从“愚蠢”变成“美好”。"
   },
   {
     "id": "nick--lishi",
@@ -11926,8 +13237,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "符木上的刻痕 *nick*，终场前刻下制胜一分。"
   },
   {
     "id": "nightmare--lishi",
@@ -11953,8 +13266,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *mare* 是睡梦中压在人身上的恶魔。"
   },
   {
     "id": "a-nine-days-wonder--lishi",
@@ -11972,8 +13287,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "幼猫幼犬出生头 9 天看不见，奇迹只有 9 天。"
   },
   {
     "id": "noisome--lishi",
@@ -11997,8 +13314,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "中古英语 *noy*（烦恼）加 -some，与 noise 无关。"
   },
   {
     "id": "nose--lishi",
@@ -12021,8 +13340,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "早期广播监制手指放鼻边，示意“准时开播”。"
   },
   {
     "id": "notch--lishi",
@@ -12049,8 +13370,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*an otch* 被误分成 *a notch*，意为刻痕。"
   },
   {
     "id": "nutshell-in-a-nutshell--lishi",
@@ -12071,8 +13394,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "普林尼说《伊利亚特》抄本小到能塞进核桃壳。"
   },
   {
     "id": "oaf--lishi",
@@ -12096,8 +13421,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古诺尔斯语 *alfr*（精灵），仙女偷换留下的笨孩。"
   },
   {
     "id": "ogre--lishi",
@@ -12122,8 +13449,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "佩罗童话里的食人巨人 *ogre*，12 世纪法语已有。"
   },
   {
     "id": "ok--lishi",
@@ -12148,8 +13477,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：*oll korrect* 或 Old Kinderhook 缩写。"
   },
   {
     "id": "ombudsman--lishi",
@@ -12173,8 +13504,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "瑞典语“专员”，1809 年后又有“代表”之义。"
   },
   {
     "id": "onomatopoeia--lishi",
@@ -12205,8 +13538,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *onoma*（名称）加 *poiein*（制作）。"
   },
   {
     "id": "orc--lishi",
@@ -12230,8 +13565,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "托尔金笔下 *orc*，古英语义为食人魔，或指 *Orcus*。"
   },
   {
     "id": "orgy--lishi",
@@ -12254,8 +13591,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "本是崇拜狄俄尼索斯等神的秘密酒歌舞仪式。"
   },
   {
     "id": "osprey--lishi",
@@ -12281,8 +13620,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁 *ossifraga*“碎骨者”，其实是胡兀鹫的绝活。"
   },
   {
     "id": "over-the-moon--lishi",
@@ -12316,8 +13657,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "童谣里母牛跳过月亮，形容欣喜若狂。"
   },
   {
     "id": "over-the-top--lishi",
@@ -12338,8 +13681,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "一战士兵跳出战壕冲锋，最极端的军事行动。"
   },
   {
     "id": "ostracize--lishi",
@@ -12366,8 +13711,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "雅典人把要放逐者的名字写在陶片 *ostrakon* 上。"
   },
   {
     "id": "ozone--lishi",
@@ -12391,8 +13738,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *ozein*（发臭），1840 年舒贝因命名。"
   },
   {
     "id": "pacific-ocean--lishi",
@@ -12416,8 +13765,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "麦哲伦穿过海峡见海面平静，取拉丁 *pacificus*。"
   },
   {
     "id": "paddle-ones-own-canoe--lishi",
@@ -12440,8 +13791,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "海地语 *canoa* 是独木舟，林肯常用喻自食其力。"
   },
   {
     "id": "pagan--lishi",
@@ -12463,8 +13816,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *paganus*（村民），基督徒借来称非信徒。"
   },
   {
     "id": "paint-the-town-red--lishi",
@@ -12489,8 +13844,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "19 世纪说法，可能源自城镇的红灯区。"
   },
   {
     "id": "pale--lishi",
@@ -12520,8 +13877,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁 *palus*（木桩）圈出都柏林英辖区，界外即野蛮。"
   },
   {
     "id": "palindrome--lishi",
@@ -12553,8 +13912,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *palindromos*“再跑回来”，顺读倒读都一样。"
   },
   {
     "id": "pallbearer--lishi",
@@ -12578,8 +13939,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *pallium* 是罗马男子的披布，覆棺由人牵角。"
   },
   {
     "id": "pamphlet--lishi",
@@ -12601,8 +13964,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "12 世纪拉丁情诗主角 *Pamphilus*，名字成了小册子。"
   },
   {
     "id": "pan-out--lishi",
@@ -12623,8 +13988,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "淘金者用浅盘 *pan* 冲土，看能不能淘出金子。"
   },
   {
     "id": "pandemonium--lishi",
@@ -12651,8 +14018,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "弥尔顿造词：*pan-*（全）加 *daimōn*，地狱首府名。"
   },
   {
     "id": "panoply--lishi",
@@ -12681,8 +14050,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *pan-*（所有）加 *hopla*（武器）：全副甲胄。"
   },
   {
     "id": "pansy--lishi",
@@ -12706,8 +14077,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *pensée*（思想），花瓣像一张沉思的脸。"
   },
   {
     "id": "pantechnicon--lishi",
@@ -12729,8 +14102,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "伦敦艺术品楼 *Pantechnicon* 改作家具仓库得名。"
   },
   {
     "id": "pantomime--lishi",
@@ -12755,8 +14130,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *pan-*（全）加 *mimos*，一人分饰众角的哑剧。"
   },
   {
     "id": "paraphernalia--lishi",
@@ -12781,8 +14158,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *parapherna*：新娘嫁妆之外带来的私物。"
   },
   {
     "id": "parasite--lishi",
@@ -12806,8 +14185,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *parasitos*：在别人餐桌上吃饭的人。"
   },
   {
     "id": "parchment--lishi",
@@ -12833,8 +14214,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "帕加马 *Pergamon* 因埃及禁售纸草，首创羊皮纸。"
   },
   {
     "id": "parlour--lishi",
@@ -12856,7 +14239,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "古法语 *parleur*，修道院里专供谈话的房间。",
+    "links": [
+      {
+        "id": "parliament",
+        "type": "同根",
+        "why": "都源自法语“说话” *parler*"
+      }
     ]
   },
   {
@@ -12877,8 +14270,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "原为 *Parthian shot*，安息骑兵退却时的回马箭。"
   },
   {
     "id": "pay-through-the-nose--lishi",
@@ -12905,8 +14300,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "众说纷纭：俚语 *rhino*、“放血”，或丹麦人割鼻。"
   },
   {
     "id": "pecking-order--lishi",
@@ -12927,8 +14324,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "鸡群的“啄序”：高位的鸟随意欺负低位的鸟。"
   },
   {
     "id": "pedigree--lishi",
@@ -12953,8 +14352,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "族谱分支像鹤爪，法语 *pie de grue*“鹤足”。"
   },
   {
     "id": "peg--lishi",
@@ -12975,8 +14376,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "钉旗的 *peg* 越高越尊，降一两格即煞威风。"
   },
   {
     "id": "penguin--lishi",
@@ -13000,8 +14403,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "威尔士语 *pen gwyn*“白头”，原指大海雀。"
   },
   {
     "id": "perk--lishi",
@@ -13021,8 +14426,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*perquisite* 的缩略，原指非继承得来的房产。"
   },
   {
     "id": "person--lishi",
@@ -13044,8 +14451,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *persona* 本是戏剧演员戴的面具。"
   },
   {
     "id": "pickaxe--lishi",
@@ -13068,8 +14477,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古法语 *picois* 被改成顺耳的 pick 加 axe。"
   },
   {
     "id": "pickle--lishi",
@@ -13099,8 +14510,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "荷兰语 *in de pekel zitten*：坐在腌菜盐水里。"
   },
   {
     "id": "pidgin--lishi",
@@ -13124,7 +14537,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "可能是中国人把 *business* 念走了音。",
+    "links": [
+      {
+        "id": "business",
+        "type": "衍生",
+        "why": "pidgin 或为 business 的误读"
+      }
     ]
   },
   {
@@ -13152,8 +14575,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "乔·希尔 1906 年的歌讽刺：死后才有天上馅饼。"
   },
   {
     "id": "a-pig-in-a-poke--lishi",
@@ -13171,7 +14596,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "骗子把猫装进袋里冒充乳猪卖，买家不验货。",
+    "links": [
+      {
+        "id": "cat--lishi",
+        "type": "同典故",
+        "why": "都出自袋中装猫冒充乳猪的骗局"
+      }
     ]
   },
   {
@@ -13196,8 +14631,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "旧时类似壁球的球赛，球先打 post 再打 pillar。"
   },
   {
     "id": "pin-money--lishi",
@@ -13221,8 +14658,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "针价昂贵，妻子每年要一笔专款买针。"
   },
   {
     "id": "piranha--lishi",
@@ -13246,8 +14685,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "图皮语 *pirá*（鱼）加 *sainha*（牙齿）。"
   },
   {
     "id": "plain--lishi",
@@ -13271,8 +14712,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*pikestaff* 原是 *packstaff*，挑行李的棍磨得平滑。"
   },
   {
     "id": "plain-sailing--lishi",
@@ -13296,8 +14739,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "原为航海术 *plane sailing*，把地球当平面算。"
   },
   {
     "id": "platonic--lishi",
@@ -13324,7 +14769,17 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "源自柏拉图 *Platōn*，《会饮篇》谈无性之爱。",
+    "links": [
+      {
+        "id": "platonic-love",
+        "type": "同典故",
+        "why": "都出自柏拉图论纯精神之爱"
+      }
     ]
   },
   {
@@ -13351,7 +14806,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "拉丁 *laurus*（月桂），阿波罗把月桂授予诗人。",
+    "links": [
+      {
+        "id": "laurel",
+        "type": "同根",
+        "why": "都源自拉丁语 *laurus*（月桂）"
+      }
     ]
   },
   {
@@ -13376,8 +14841,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "可能是法语 *pol*（公鸡）加 cat：像偷鸡的猫。"
   },
   {
     "id": "pommy--lishi",
@@ -13397,8 +14864,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "更可信：源自石榴 *pomegranate*，非囚衣 P.O.M.E.。"
   },
   {
     "id": "pooh-pooh--lishi",
@@ -13425,8 +14894,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "《哈姆莱特》里的“呸” *puh*，17 世纪叠成 pooh-pooh。"
   },
   {
     "id": "posh--lishi",
@@ -13448,8 +14919,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "更可信：吉卜赛俚语 *posh*（钱），非 port out 传说。"
   },
   {
     "id": "possum--lishi",
@@ -13476,8 +14949,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿尔贡金语 *opassom*（白色动物），负鼠遇险装死。"
   },
   {
     "id": "pot--lishi",
@@ -13504,8 +14979,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "锅和壶都被火熏黑，锅却嫌壶黑。"
   },
   {
     "id": "potato--lishi",
@@ -13532,8 +15009,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "泰诺语 *batata* 原指红薯，被西班牙人张冠李戴。"
   },
   {
     "id": "pound--lishi",
@@ -13555,8 +15034,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《威尼斯商人》里夏洛克要割安东尼奥一磅肉。"
   },
   {
     "id": "the-powers-that-be--lishi",
@@ -13579,8 +15060,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "钦定版《罗马书》：掌权的都是神所设立的。"
   },
   {
     "id": "powwow--lishi",
@@ -13604,8 +15087,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "阿尔贡金语 *powwow* 原指巫医，后来成了会议。"
   },
   {
     "id": "precarious--lishi",
@@ -13632,8 +15117,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *prex*（祈祷），靠乞求得来，自然不牢靠。"
   },
   {
     "id": "precocious--lishi",
@@ -13655,8 +15142,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *prae*（之前）加 *coquere*（煮熟）：早熟。"
   },
   {
     "id": "prestige--lishi",
@@ -13682,8 +15171,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *praestigiae*（魔术把戏），从幻觉到声望。"
   },
   {
     "id": "prevaricate--lishi",
@@ -13707,8 +15198,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁 *praevaricare*（走路歪斜），歪到含糊其辞。"
   },
   {
     "id": "primrose-path--lishi",
@@ -13731,8 +15224,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《哈姆莱特》里的“莲馨花道路”，原指享乐放纵。"
   },
   {
     "id": "proletariat--lishi",
@@ -13756,8 +15251,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *proles*（后代），罗马底层只能为城邦添丁。"
   },
   {
     "id": "propaganda--lishi",
@@ -13778,8 +15275,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "1622 年教皇设的传道会 *de propaganda fide*。"
   },
   {
     "id": "protocol--lishi",
@@ -13803,8 +15302,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *prōtokollon*：粘在手稿前的第一页。"
   },
   {
     "id": "punch--lishi",
@@ -13828,8 +15329,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "印地语 *pac*（五），据说原饮品由五种成分调成。"
   },
   {
     "id": "puny--lishi",
@@ -13857,8 +15360,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *puisne*“后出生的”，头胎后的孩子被认为孱弱。"
   },
   {
     "id": "pupil--lishi",
@@ -13883,8 +15388,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁 *pupilla*（小女孩），眼中映出缩小的人影。"
   },
   {
     "id": "pyjamas--lishi",
@@ -13909,8 +15416,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "乌尔都、波斯语 *pāy*（腿）加 *jāma*，原只指裤子。"
   },
   {
     "id": "python--lishi",
@@ -13928,8 +15437,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "阿波罗杀死守卫德尔斐的巨蟒 *Pythōn*。"
   },
   {
     "id": "pythonesque--lishi",
@@ -13949,8 +15460,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "源自 BBC 喜剧 *Monty Python*，与巨蟒皮同无关。"
   },
   {
     "id": "quaker--lishi",
@@ -13975,8 +15488,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "福克斯叫法官 *quake*，法官讥称他“贵格”。"
   },
   {
     "id": "quarantine--lishi",
@@ -14002,8 +15517,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "意大利语 *quarantina*（40 天）：上岸前隔离 40 天。"
   },
   {
     "id": "queue--lishi",
@@ -14028,8 +15545,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *queue*（尾巴），源自拉丁语 *cauda*。"
   },
   {
     "id": "quiche--lishi",
@@ -14055,8 +15574,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "德语 *Kuchen*（蛋糕）经洛林方言成了法式馅饼。"
   },
   {
     "id": "quiz--lishi",
@@ -14077,8 +15598,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "都柏林剧院经理戴利打赌，满城墙上写 *quiz*。"
   },
   {
     "id": "rack--lishi",
@@ -14105,8 +15628,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*rack* 不是刑具，是 *wrack*（毁坏之物）的变体。"
   },
   {
     "id": "rain-cats-and-dogs--lishi",
@@ -14132,8 +15657,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "一说暴雨淹死猫狗，尸体像随雨从天而降。"
   },
   {
     "id": "read-the-riot-act--lishi",
@@ -14156,8 +15683,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "1715 年《取缔闹事法》：官员宣读后驱散聚众。"
   },
   {
     "id": "reason--lishi",
@@ -14189,8 +15718,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "误用丁尼生《轻骑兵的冲锋》“无人发问”一句。"
   },
   {
     "id": "recipe--lishi",
@@ -14216,8 +15747,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *recipe*（拿）原是药方开头第一个词。"
   },
   {
     "id": "red-herring--lishi",
@@ -14251,8 +15784,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "熏鲱鱼气味浓烈，用来引开追狐的猎犬。"
   },
   {
     "id": "rhinoceros--lishi",
@@ -14277,8 +15812,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *rhis*（鼻）加 *keras*（角）：鼻上长角。"
   },
   {
     "id": "rickshaw--lishi",
@@ -14304,8 +15841,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "日语 *jinrikisha*：人＋力＋车，即人力车。"
   },
   {
     "id": "ride-roughshod--lishi",
@@ -14326,8 +15865,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "马蹄钉上尖锐突出的铁，战马踏敌，引申为横暴。"
   },
   {
     "id": "riding--lishi",
@@ -14352,8 +15893,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古诺尔斯语 *thrithjungr*：丹麦人把约克郡一分为三。"
   },
   {
     "id": "riff-raff--lishi",
@@ -14377,8 +15920,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "中古法语 *rif et raf*（全部），后转指社会渣滓。"
   },
   {
     "id": "rigmarole--lishi",
@@ -14401,8 +15946,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "苏格兰贵族的效忠书 *Ragman Roll* 走样成此词。"
   },
   {
     "id": "ring-the-changes--lishi",
@@ -14423,8 +15970,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "教堂敲钟变换次序，12 口钟能敲上 38 年。"
   },
   {
     "id": "rival--lishi",
@@ -14447,8 +15996,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *rivalis*：共用一条河的邻居争成对手。"
   },
   {
     "id": "robot--lishi",
@@ -14469,8 +16020,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "恰彼克剧作借捷克语 *robota*（劳役）命名机器人。"
   },
   {
     "id": "room--lishi",
@@ -14491,8 +16044,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "九尾鞭 *cat* 在狭窄舱底抡不开，只能上甲板打。"
   },
   {
     "id": "roses-all-the-way--lishi",
@@ -14517,8 +16072,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "出自勃朗宁诗《爱国者》“一路蔷薇”。"
   },
   {
     "id": "rostrum--lishi",
@@ -14544,8 +16101,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *rostrum*（鸟喙）：缴获的船首装饰讲坛。"
   },
   {
     "id": "round-robin--lishi",
@@ -14569,8 +16128,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *ruban rond*（环形丝带）：环签请愿免追责。"
   },
   {
     "id": "rub--lishi",
@@ -14607,8 +16168,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "出自《哈姆莱特》独白“*there's the rub*”。"
   },
   {
     "id": "rule-of-thumb--lishi",
@@ -14629,8 +16192,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "酿酒师拇指试温，或拇指末节可量一英寸。"
   },
   {
     "id": "rule-the-roost--lishi",
@@ -14650,8 +16215,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "公鸡称霸鸡窝；旧作 *rule the roast*，主人切烤肉。"
   },
   {
     "id": "russian-roulette--lishi",
@@ -14675,8 +16242,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "沙皇军官左轮只装一弹，转轮后朝头扣扳机。"
   },
   {
     "id": "sabotage--lishi",
@@ -14700,8 +16269,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *sabot*（木屐）：农民穿木屐踩踏地主庄稼。"
   },
   {
     "id": "sack--lishi",
@@ -14725,8 +16296,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "老板递给工人一个袋子，让他装上工具走人。"
   },
   {
     "id": "sacrament--lishi",
@@ -14748,8 +16321,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sacramentum*：罗马士兵战前的效忠宣誓。"
   },
   {
     "id": "sacred-cow--lishi",
@@ -14772,8 +16347,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "源于印度教敬牛：牛不可宰杀食用。"
   },
   {
     "id": "salad-days--lishi",
@@ -14798,8 +16375,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "克莉奥佩特拉忆 *salad days*：年轻识浅之时。"
   },
   {
     "id": "salary--lishi",
@@ -14821,8 +16400,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *salarium*（盐）：罗马军饷里发盐。"
   },
   {
     "id": "the-salt-of-the-earth--lishi",
@@ -14842,8 +16423,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "耶稣登山宝训：“你们是世上的盐”。"
   },
   {
     "id": "salver--lishi",
@@ -14866,8 +16449,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "西班牙语 *salva*：王室品验师验毒用的托盘。"
   },
   {
     "id": "samaritan--lishi",
@@ -14891,8 +16476,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "耶稣寓言里无名的撒玛利亚人救助了伤者。"
   },
   {
     "id": "sandwich--lishi",
@@ -14910,8 +16497,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "桑德维奇侯爵嗜赌不离桌，叫人用面包夹牛肉。"
   },
   {
     "id": "sanguine--lishi",
@@ -14936,8 +16525,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sanguis*（血）：血液主导体液，性情乐观。"
   },
   {
     "id": "sardonic--lishi",
@@ -14962,8 +16553,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *sardonios*：撒丁岛苦草，误食者狂笑抽搐。"
   },
   {
     "id": "satellite--lishi",
@@ -14982,8 +16575,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *satelles*（随从）：绕着大天体转的跟班。"
   },
   {
     "id": "saxophone--lishi",
@@ -15005,8 +16600,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "比利时乐器商 Adolphe Sax 于 19 世纪 40 年代所创。"
   },
   {
     "id": "scapegoat--lishi",
@@ -15028,7 +16625,17 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
+      "langs",
+      "keyline",
+      "links"
+    ],
+    "keyline": "丁道尔误读希伯来语 *azāzēl*，译成“离开的山羊”。",
+    "links": [
+      {
+        "id": "escape",
+        "type": "衍生",
+        "why": "scapegoat 由 escape 和 goat 组成"
+      }
     ]
   },
   {
@@ -15055,8 +16662,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊语 *skepsis*（怀疑）经拉丁语、法语进入英语。"
   },
   {
     "id": "scot-free--lishi",
@@ -15084,8 +16693,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*scot* 是古时一种税，与苏格兰无关，即免税。"
   },
   {
     "id": "scratch--lishi",
@@ -15111,8 +16722,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "旧时拳赛每回合须回到场中划的 *scratch* 线。"
   },
   {
     "id": "scream-blue-murder--lishi",
@@ -15139,8 +16752,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *morbleu*（该死）被误译成 blue death。"
   },
   {
     "id": "sell-someone-down-the-river--lishi",
@@ -15165,8 +16780,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "奴隶主把奴隶卖到密西西比河下游的种植园。"
   },
   {
     "id": "send-someone-to-coventry--lishi",
@@ -15188,8 +16805,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "一说议会派把保皇派俘虏关进考文垂受排斥。"
   },
   {
     "id": "serendipity--lishi",
@@ -15209,8 +16828,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "沃尔浦尔据《锡兰三王子》造词，*Serendip* 即锡兰。"
   },
   {
     "id": "seventh--lishi",
@@ -15234,8 +16855,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "卡巴拉说天堂有七层，第七层最近上帝最幸福。"
   },
   {
     "id": "shambles--lishi",
@@ -15260,8 +16883,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *scamul*（凳子）：肉摊变屠宰场，一片狼藉。"
   },
   {
     "id": "shamefaced--lishi",
@@ -15287,8 +16912,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "原作 *shamefast*（被羞耻绑牢），-fast 换成 faced。"
   },
   {
     "id": "shankss-pony--lishi",
@@ -15315,8 +16942,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "把 *shank*（小腿）的复数戏作姓氏，腿就是马。"
   },
   {
     "id": "shelf--lishi",
@@ -15345,8 +16974,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *scylf*（横档），搁上架子即“暂缓考虑”。"
   },
   {
     "id": "sherry--lishi",
@@ -15369,8 +17000,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "西班牙赫雷斯旧称 *Xeres*，*sherries* 被误当复数。"
   },
   {
     "id": "shibboleth--lishi",
@@ -15393,8 +17026,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "以法莲人念不准希伯来语 *shibboleth*，过河被杀。"
   },
   {
     "id": "ship--lishi",
@@ -15424,8 +17059,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "出自朗费罗诗：夜里擦肩而过、互致信号的船。"
   },
   {
     "id": "shipshape-and-bristol-fashion--lishi",
@@ -15443,8 +17080,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "布里斯托尔港以井然有序著称，船只整整齐齐。"
   },
   {
     "id": "short--lishi",
@@ -15469,8 +17108,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "死囚行刑前只得一次简短忏悔 *shrift*。"
   },
   {
     "id": "show-a-leg--lishi",
@@ -15488,8 +17129,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "水手长喊“伸出腿”：女人腿续睡，男人腿起床。"
   },
   {
     "id": "shrapnel--lishi",
@@ -15510,8 +17153,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "英国炮兵军官 Henry Shrapnel 设计的弹丸炮弹。"
   },
   {
     "id": "sideburns--lishi",
@@ -15532,8 +17177,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "伯恩赛德将军的 *burnsides* 胡子，颠倒成 sideburns。"
   },
   {
     "id": "silhouette--lishi",
@@ -15554,8 +17201,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "财务大臣西卢埃特厉行节俭，*à la silhouette* 成“便宜”。"
   },
   {
     "id": "silly--lishi",
@@ -15580,8 +17229,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *sælig*（受祝福的）一路贬成“愚蠢的”。"
   },
   {
     "id": "sinecure--lishi",
@@ -15601,8 +17252,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sine cura*（无灵魂关怀）：只领薪的牧师职。"
   },
   {
     "id": "sinister--lishi",
@@ -15628,8 +17281,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sinister*（左边）：占卜时凶兆现于左方。"
   },
   {
     "id": "siren--lishi",
@@ -15648,8 +17303,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "希腊神话海妖塞壬以歌声诱水手触礁。"
   },
   {
     "id": "sirloin--lishi",
@@ -15675,8 +17332,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "法语 *surlonge*（腰上）；传说国王封它为 Sir Loin。"
   },
   {
     "id": "six--lishi",
@@ -15700,8 +17359,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "掷骰子硬要掷出 6 和 7，只有糊涂玩家才干。"
   },
   {
     "id": "skin--lishi",
@@ -15727,8 +17388,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "出自《约伯记》：“我只剩牙皮逃脱了”。"
   },
   {
     "id": "slapstick--lishi",
@@ -15746,8 +17409,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "两片铰链木板打人啪啪响，这道具叫 *slapstick*。"
   },
   {
     "id": "slave--lishi",
@@ -15771,8 +17436,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *sclava*（斯拉夫女奴）经法语 *esclave* 入英语。"
   },
   {
     "id": "sleuth--lishi",
@@ -15795,8 +17462,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*sleuth-hound*（追踪猎犬）的缩写，把侦探比作狗。"
   },
   {
     "id": "slipshod--lishi",
@@ -15818,8 +17487,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "16 世纪穿平跟便鞋上街，被斥为邋遢草率。"
   },
   {
     "id": "slogan--lishi",
@@ -15842,8 +17513,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "盖尔语 *sluagh-ghairm*（军队的呐喊）成了口号。"
   },
   {
     "id": "smog--lishi",
@@ -15865,8 +17538,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*smoke* 加 *fog*，德佛博士为伦敦烟雾造的词。"
   },
   {
     "id": "snob--lishi",
@@ -15886,8 +17561,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "原义是鞋匠，萨克雷《势利人脸谱》使其流行。"
   },
   {
     "id": "soap-opera--lishi",
@@ -15907,8 +17584,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "肥皂制造商率先在美国赞助这类连续剧，故名。"
   },
   {
     "id": "soccer--lishi",
@@ -15928,8 +17607,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "取 *association* 的 soc，加牛津俚语后缀 -er。"
   },
   {
     "id": "sock--lishi",
@@ -15950,8 +17631,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "留声机没有音量钮，往喇叭里塞一只袜子。"
   },
   {
     "id": "sour-grapes--lishi",
@@ -15972,8 +17655,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "伊索寓言：狐狸够不着葡萄，便说葡萄是酸的。"
   },
   {
     "id": "sow-the-dragons-teeth--lishi",
@@ -15998,8 +17683,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "卡德摩斯播下龙齿，长出武士互相残杀。"
   },
   {
     "id": "spam--lishi",
@@ -16019,8 +17706,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "一说源自《巨蟒剧团》：每道菜都硬塞 *Spam*。"
   },
   {
     "id": "span--lishi",
@@ -16045,8 +17734,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *spann*：手掌张开，拇指尖到小指尖的宽度。"
   },
   {
     "id": "spick-and-span--lishi",
@@ -16070,8 +17761,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古诺尔斯语 *spānnȳr*：像新刮木片一样崭新。"
   },
   {
     "id": "spike-someones-guns--lishi",
@@ -16089,8 +17782,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "往前膛炮点火孔钉入一根大钉，大炮即报废。"
   },
   {
     "id": "spill-the-beans--lishi",
@@ -16114,8 +17809,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古希腊社团黑白豆投票，罐翻豆洒即泄密。"
   },
   {
     "id": "spinster--lishi",
@@ -16135,8 +17832,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*spin* 加 -ster 原指纺线人，后专指未婚女性。"
   },
   {
     "id": "spitting-image--lishi",
@@ -16160,8 +17859,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "源自 *spit and image*，spit 可能缩自 *spirit*。"
   },
   {
     "id": "spoil-the-ship-for-a-haporth-of-tar--lishi",
@@ -16180,8 +17881,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*ship* 原是 *sheep*：舍不得半便士焦油治羊疮。"
   },
   {
     "id": "spoke--lishi",
@@ -16204,8 +17907,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "往实心车轮孔里插根 *spoke*，车就刹住了。"
   },
   {
     "id": "spree--lishi",
@@ -16228,8 +17933,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "暴力义可能源自苏格兰语 *spreath*（牛的袭击）。"
   },
   {
     "id": "square--lishi",
@@ -16253,8 +17960,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "方格游戏的起点 *square one*，退回就得从头来。"
   },
   {
     "id": "starboard--lishi",
@@ -16276,8 +17985,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *stēorbord*：维京人在船右侧装桨掌舵。"
   },
   {
     "id": "steal-someones-thunder--lishi",
@@ -16297,8 +18008,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "丹尼斯抖锡纸造雷声，竟被《麦克白》剧组偷用。"
   },
   {
     "id": "steeplechase--lishi",
@@ -16318,8 +18031,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "野外赛跑以远处可见的教堂尖塔 *steeple* 为终点。"
   },
   {
     "id": "step-up-to-the-plate--lishi",
@@ -16344,8 +18059,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "棒球击球手先踏上本垒板 *plate*，准备击球。"
   },
   {
     "id": "stepchild--lishi",
@@ -16370,8 +18087,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *stēop* 源自“剥夺”，原指失亲的孤儿。"
   },
   {
     "id": "sterling--lishi",
@@ -16394,8 +18113,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *steorling*：诺曼便士上铸着一颗小星星。"
   },
   {
     "id": "steward--lishi",
@@ -16417,8 +18138,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *stīweard*：守会堂 *stig* 的卫士 *weard*。"
   },
   {
     "id": "stoic--lishi",
@@ -16441,8 +18164,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "芝诺在雅典彩绘门廊 *Stoa Poikilē* 讲学而得名。"
   },
   {
     "id": "stop--lishi",
@@ -16468,8 +18193,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "风琴音栓 *stops* 全部拉出，音量最大。"
   },
   {
     "id": "straight-from-the-horses-mouth--lishi",
@@ -16489,8 +18216,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "看马牙辨马龄最可靠，消息直接来自马嘴。"
   },
   {
     "id": "the-straw-that-broke-the-camels-back--lishi",
@@ -16511,7 +18240,17 @@
     ],
     "auto": [
       "teaser",
-      "themes"
+      "themes",
+      "keyline",
+      "links"
+    ],
+    "keyline": "狄更斯《董贝父子》：最后一根草压垮骆驼。",
+    "links": [
+      {
+        "id": "last-straw",
+        "type": "衍生",
+        "why": "last straw 是本短语的缩写"
+      }
     ]
   },
   {
@@ -16533,8 +18272,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "铁烧热时最好塑形，铁匠要趁热锤打。"
   },
   {
     "id": "strontium--lishi",
@@ -16557,8 +18298,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "苏格兰村庄 *Strontian* 附近矿石里发现，故名。"
   },
   {
     "id": "suede--lishi",
@@ -16584,8 +18327,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "法语 *Suède* 即瑞典：*gants de Suède* 瑞典手套。"
   },
   {
     "id": "sure--lishi",
@@ -16611,8 +18356,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "*eggs is eggs* 实为数学“X 就是 X”，与鸡蛋无关。"
   },
   {
     "id": "swallow--lishi",
@@ -16639,8 +18386,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "亚里士多德“一燕不成春”：一只燕归不算夏至。"
   },
   {
     "id": "swan-song--lishi",
@@ -16658,8 +18407,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "古人误信天鹅临死会唱出动听的歌。"
   },
   {
     "id": "swap-horses-in-mid-stream--lishi",
@@ -16682,8 +18433,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "林肯 1864 年对支持者说：渡河中途别换马。"
   },
   {
     "id": "swashbuckling--lishi",
@@ -16705,8 +18458,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*swash*（打击）加 *buckler*（盾）：敲盾吓敌的人。"
   },
   {
     "id": "table--lishi",
@@ -16730,8 +18485,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "棋盘游戏轮流换边；一说源于可翻面的双面桌。"
   },
   {
     "id": "taboo--lishi",
@@ -16754,8 +18511,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "汤加语 *tabu*：神圣到不可触碰。"
   },
   {
     "id": "tail--lishi",
@@ -16782,8 +18541,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "受惊的狗把尾巴夹在两腿间，*tail* 喻垂头丧气。"
   },
   {
     "id": "talk-nineteen-to-the-dozen--lishi",
@@ -16813,8 +18574,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "康沃尔矿井蒸汽泵耗煤 12 蒲式耳抽水 19 000 加仑。"
   },
   {
     "id": "tally--lishi",
@@ -16841,8 +18604,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *talea* 嫩枝，刻痕木棍劈两半记账。"
   },
   {
     "id": "tantalize--lishi",
@@ -16860,8 +18625,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "坦塔罗斯 *Tantalus* 受罚，水果和池水永远够不着。"
   },
   {
     "id": "tarmac--lishi",
@@ -16884,8 +18651,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "马卡丹碎石路浇上柏油，*Tar Macadam* 缩成 *tarmac*。"
   },
   {
     "id": "tawdry--lishi",
@@ -16905,8 +18674,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*St Audrey's laces* 沦为廉价仿品，缩成 *tawdry*。"
   },
   {
     "id": "teddy-bear--lishi",
@@ -16927,8 +18698,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "老罗斯福“泰迪”拒射被绑小熊，玩具熊由此得名。"
   },
   {
     "id": "teetotal--lishi",
@@ -16948,7 +18721,17 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "特纳在 *total* 前加个 T 强调，喊出“绝对戒酒”。",
+    "links": [
+      {
+        "id": "teetotaler",
+        "type": "衍生",
+        "why": "teetotaler 由 teetotal 派生"
+      }
     ]
   },
   {
@@ -16975,8 +18758,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "新织布被拉幅钩 *tenterhooks* 绷紧，人也绷紧了。"
   },
   {
     "id": "throw-in-the-towel-sponge--lishi",
@@ -16997,8 +18782,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "拳击手的助手把毛巾扔进场内，就是认输。"
   },
   {
     "id": "tilt-at-windmills--lishi",
@@ -17016,8 +18803,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "堂吉诃德把风车当巨人，持矛冲锋却被甩落在地。"
   },
   {
     "id": "tinkers-cuss-dam--lishi",
@@ -17040,8 +18829,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "补锅匠 *tinker* 骂惯了，他的咒骂一文不值。"
   },
   {
     "id": "tip--lishi",
@@ -17066,8 +18857,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "17 世纪黑社会俚语 *tip* 义为 to give，成了小费。"
   },
   {
     "id": "tit-for-tat--lishi",
@@ -17092,8 +18885,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "16 世纪 *tip for tap*：你打我一下，我还你一下。"
   },
   {
     "id": "titanic--lishi",
@@ -17114,8 +18909,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "希腊神话巨神泰坦 *Titans* 体形巨大，力大无穷。"
   },
   {
     "id": "toady--lishi",
@@ -17133,8 +18930,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "江湖医生助手 *toadeater* 假吃毒蟾蜍，捧场卖药。"
   },
   {
     "id": "toast--lishi",
@@ -17154,8 +18953,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "旧时酒杯里放块 *toast* 改善口感，后指敬酒。"
   },
   {
     "id": "tommy--lishi",
@@ -17180,8 +18981,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "军方表格范例名 *Thomas Atkins*，吉卜林诗传开。"
   },
   {
     "id": "topsy--lishi",
@@ -17211,8 +19014,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《汤姆叔叔的小屋》里 Topsy 说自己是“长”出来的。"
   },
   {
     "id": "tory--lishi",
@@ -17237,8 +19042,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "爱尔兰盖尔语 *toraidhe* 指歹徒，后指保皇派。"
   },
   {
     "id": "tram--lishi",
@@ -17265,8 +19072,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "原是矿区轨道上运煤的手推车，与德语 *Traam* 有关。"
   },
   {
     "id": "treacle--lishi",
@@ -17289,8 +19098,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "希腊语 *thēr* 野兽，被咬要解毒剂，后成糖浆。"
   },
   {
     "id": "trip-the-light-fantastic--lishi",
@@ -17319,8 +19130,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "弥尔顿《欢乐颂》*light fantastic toe*，喻起舞。"
   },
   {
     "id": "trojan-horse--lishi",
@@ -17338,8 +19151,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "特洛伊人把藏着希腊战士的木马拉进了城。"
   },
   {
     "id": "troll--lishi",
@@ -17361,8 +19176,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "中世纪英语 *troll* 指寻找，又沾上北欧桥下巨怪。"
   },
   {
     "id": "tulip--lishi",
@@ -17388,8 +19205,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "土耳其语 *tulbend* 头巾，把花比作头巾，与荷兰无关。"
   },
   {
     "id": "tungsten--lishi",
@@ -17413,8 +19232,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "瑞典语 *tung*（重）加 *sten*（石头），重石即钨。"
   },
   {
     "id": "tycoon--lishi",
@@ -17434,8 +19255,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "日本幕府称号 *taikun* 源自汉语“大君”，后指大亨。"
   },
   {
     "id": "ultramarine--lishi",
@@ -17462,8 +19285,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *ultramarinus* 跨海而来，青金石产自亚洲。"
   },
   {
     "id": "umbrella--lishi",
@@ -17488,8 +19313,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *umbra* 遮阴，伞最初用来遮阳而非挡雨。"
   },
   {
     "id": "upstage--lishi",
@@ -17507,8 +19334,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "演员移到舞台后方 *upstage*，逼对手背对观众。"
   },
   {
     "id": "utopia--lishi",
@@ -17533,8 +19362,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "莫尔用希腊语 *ou*（不）加 *topos*（地方）造出乌托邦。"
   },
   {
     "id": "vaccine--lishi",
@@ -17558,8 +19389,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *vacca* 牛，詹纳发现牛痘可防天花。"
   },
   {
     "id": "vandal--lishi",
@@ -17582,8 +19415,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "日耳曼部落汪达尔人 *Vandals* 公元 455 年洗劫罗马。"
   },
   {
     "id": "vaudeville--lishi",
@@ -17607,8 +19442,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "维尔河之歌 *Vau-de-Vire* 讽刺诗，后成轻歌舞剧。"
   },
   {
     "id": "ventriloquism--lishi",
@@ -17630,8 +19467,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *venter* 腹 + *loqui* 说，以为声音出自肚子。"
   },
   {
     "id": "vermicelli--lishi",
@@ -17655,8 +19494,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "意大利语 *vermicello* 意为“小虫子”，细面条像虫。"
   },
   {
     "id": "villain--lishi",
@@ -17679,8 +19520,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "中世纪拉丁语 *villanus* 本是庄园工人，后成恶棍。"
   },
   {
     "id": "virago--lishi",
@@ -17708,8 +19551,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *vir* 男人，像男人的女勇士后成泼妇。"
   },
   {
     "id": "vitamin--lishi",
@@ -17731,8 +19576,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "冯克用 *vita*（生命）+ *amine*（氨）造词，后去掉 e。"
   },
   {
     "id": "viz--lishi",
@@ -17755,8 +19602,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *videlicet* 缩写，z 是僧侣写的数字 3。"
   },
   {
     "id": "vox-pop--lishi",
@@ -17783,8 +19632,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "拉丁语 *vox populi*“人民的声音”缩成 *vox pop*。"
   },
   {
     "id": "wagon--lishi",
@@ -17807,8 +19658,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "宁爬洒水车 *water-cart* 喝水也不碰烈酒，即戒酒。"
   },
   {
     "id": "wake--lishi",
@@ -17832,8 +19685,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "葬礼前夜守夜者通宵不睡，为刚去世的人守灵。"
   },
   {
     "id": "walnut--lishi",
@@ -17857,8 +19712,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "古英语 *wealh*（外国）+ *hnutu*（坚果），外国坚果。"
   },
   {
     "id": "warm-the-cockles-of-ones-heart--lishi",
@@ -17881,8 +19738,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "心腔被比作海扇壳 *cockles*，暖到内心深处。"
   },
   {
     "id": "warpath--lishi",
@@ -17910,8 +19769,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "北美印第安人出征踩出的小道 *warpath*。"
   },
   {
     "id": "warts-and-all--lishi",
@@ -17934,8 +19795,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "克伦威尔要画家连肉粒 *warts* 都照实画出来。"
   },
   {
     "id": "wash-ones-hands-of-something--lishi",
@@ -17959,8 +19822,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "彼拉多当众洗手，表示流耶稣的血罪不在他。"
   },
   {
     "id": "wedlock--lishi",
@@ -17984,8 +19849,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *wedd* 誓约加后缀 *-lāc*，与锁无关。"
   },
   {
     "id": "welsh-rabbit--lishi",
@@ -18005,8 +19872,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "穷人吃不起兔肉，干酪涂吐司戏称 *Welsh rabbit*。"
   },
   {
     "id": "whipping-boy--lishi",
@@ -18024,8 +19893,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "陪读平民男孩替王子挨打，如菲茨帕特里替爱德华。"
   },
   {
     "id": "whisky--lishi",
@@ -18052,8 +19923,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "苏格兰盖尔语 *uisge beatha*，义为“生命之水”。"
   },
   {
     "id": "whistle-blower--lishi",
@@ -18074,8 +19947,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "裁判吹哨叫停犯规，举报者吹哨揭露不法。"
   },
   {
     "id": "white-elephant--lishi",
@@ -18096,8 +19971,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "泰王把神圣白象赐给不满的朝臣，养到家道中落。"
   },
   {
     "id": "whitsun--lishi",
@@ -18121,8 +19998,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *hwīta sunnandæg* 洁白主日，受洗者穿白袍。"
   },
   {
     "id": "wig--lishi",
@@ -18148,7 +20027,17 @@
       "teaser",
       "themes",
       "langs",
-      "era"
+      "era",
+      "keyline",
+      "links"
+    ],
+    "keyline": "17 世纪 *periwig* 的缩写，源自意大利语 *parrucca*。",
+    "links": [
+      {
+        "id": "bigwig",
+        "type": "衍生",
+        "why": "bigwig 由 big + wig 复合"
+      }
     ]
   },
   {
@@ -18170,8 +20059,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "中世纪骑士随从立功受封，获赐镀金踢马刺 *spurs*。"
   },
   {
     "id": "wind--lishi",
@@ -18195,8 +20086,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "船靠近上风侧的船，帆里的风 *wind* 被抢走。"
   },
   {
     "id": "winkle--lishi",
@@ -18220,8 +20113,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "*periwinkle* 的缩写，螺肉难拉出，才有 *winkle out*。"
   },
   {
     "id": "a-wolf-in-sheeps-clothing--lishi",
@@ -18242,8 +20137,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《马太福音》耶稣警告：假先知披着羊皮，内里是狼。"
   },
   {
     "id": "woman--lishi",
@@ -18267,8 +20164,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古英语 *wīf*（女性）+ *mann*（人）合成 *wīfman*。"
   },
   {
     "id": "wood--lishi",
@@ -18297,8 +20196,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "说法有三：树中善灵、追逐游戏、耶稣十字架。"
   },
   {
     "id": "wool--lishi",
@@ -18322,8 +20223,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "*wool* 曾戏指假发，假发拉下遮眼便易受骗。"
   },
   {
     "id": "wool-gathering--lishi",
@@ -18341,8 +20244,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "孩子被派去篱笆上捡蹭落的羊毛，却四处游荡分心。"
   },
   {
     "id": "the-world-is-my-oyster--lishi",
@@ -18370,8 +20275,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "莎翁《温莎的风流娘儿们》：世界是我用剑撬的牡蛎。"
   },
   {
     "id": "the-writing-on-the-wall--lishi",
@@ -18392,8 +20299,10 @@
     ],
     "auto": [
       "teaser",
-      "themes"
-    ]
+      "themes",
+      "keyline"
+    ],
+    "keyline": "《但以理书》伯沙撒王宫墙现铭文，预告其垮台。"
   },
   {
     "id": "xmas--lishi",
@@ -18418,8 +20327,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "X 本是希腊字母 *chi*，Christ 希腊写法的首字母。"
   },
   {
     "id": "x-rated--lishi",
@@ -18444,8 +20355,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "旧电影分级 X 级仅限成人，后泛指色情。"
   },
   {
     "id": "x-ray-x--lishi",
@@ -18471,8 +20384,10 @@
       "themes",
       "subtheme",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "伦琴用 X 命名未知射线，译自德语 *X-Strahlen*。"
   },
   {
     "id": "yankee--lishi",
@@ -18492,8 +20407,10 @@
     "auto": [
       "teaser",
       "themes",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "荷兰移民给英语邻居起绰号 *Jan Kees*（John Cheese）。"
   },
   {
     "id": "ye--lishi",
@@ -18514,8 +20431,10 @@
     "auto": [
       "teaser",
       "themes",
-      "subtheme"
-    ]
+      "subtheme",
+      "keyline"
+    ],
+    "keyline": "古字母 Þ（th）被误认作 Y，*the* 成了 *ye*。"
   },
   {
     "id": "yellowhammer--lishi",
@@ -18539,8 +20458,10 @@
     "auto": [
       "teaser",
       "themes",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "*hammer* 与锤无关，源自古英语鸟名 *amore*。"
   },
   {
     "id": "yoga--lishi",
@@ -18564,8 +20485,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "梵语 *yoga* 义为“结合”，求与“至高存在”合一。"
   },
   {
     "id": "yuletide--lishi",
@@ -18590,8 +20513,10 @@
       "teaser",
       "themes",
       "subtheme",
-      "langs"
-    ]
+      "langs",
+      "keyline"
+    ],
+    "keyline": "古挪威语 *jól* 本是异教徒仲冬节，后指圣诞。"
   },
   {
     "id": "zany--lishi",
@@ -18616,8 +20541,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "即兴喜剧丑角赞尼 *Zanni*，即威尼斯版的 John。"
   },
   {
     "id": "zealot--lishi",
@@ -18642,8 +20569,10 @@
       "teaser",
       "themes",
       "langs",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "源自希腊语 *zēlōtēs*，特指反抗罗马的犹太奋锐党。"
   },
   {
     "id": "zombie--lishi",
@@ -18665,7 +20594,9 @@
       "teaser",
       "themes",
       "subtheme",
-      "era"
-    ]
+      "era",
+      "keyline"
+    ],
+    "keyline": "西非语 *zumbi* 意为魔力，指海地巫毒还魂尸。"
   }
 ]

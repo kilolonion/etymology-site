@@ -123,7 +123,9 @@ export async function viewEntry(id, query) {
 // ---------- 来源：原书 / AI 整理 / 编辑撰写，补写过的原书词条 ----------
 
 const FIELD_NAMES = { teaser: "钩子", keyline: "一句话记住", evolution: "词义演变", links: "词的关系", era: "年代", subtheme: "子专题", langs: "语源" };
-const AUTO_NAMES = { teaser: "钩子", themes: "专题", subtheme: "子专题", langs: "语源", era: "年代" };
+const AUTO_NAMES = { teaser: "钩子", themes: "专题", subtheme: "子专题", langs: "语源", era: "年代", keyline: "一句话记住", links: "词的关系" };
+/** auto 里由 AI 依据正文补写的字段；其余是按关键词归类的 */
+const AUTO_AI = new Set(["keyline", "links"]);
 const bookName = (e) => (e.bookInfo ? `《${e.bookInfo.short}》` : "原书");
 /** 书里的位置：有页码的写第几页 */
 const bookWhere = (e) => `${bookName(e)}${e.bookInfo?.pages && e.page ? `第 ${e.page} 页` : ""}`;
@@ -160,7 +162,8 @@ function sourceRows(e) {
   const patched = e.patched?.fields?.length
     ? `其中「${e.patched.fields.map((f) => FIELD_NAMES[f] ?? f).join("、")}」是${patchLabel(e.patched)}，<button data-action="src-info">看来源</button>。`
     : "";
-  const auto = e.auto?.length ? `「${e.auto.map((f) => AUTO_NAMES[f] ?? f).join("、")}」由程序归类，仅供参考。` : "";
+  const autoNote = (fields, how) => (fields.length ? `「${fields.map((f) => AUTO_NAMES[f] ?? f).join("、")}」${how}，仅供参考。` : "");
+  const auto = autoNote((e.auto ?? []).filter((f) => !AUTO_AI.has(f)), "由程序归类") + autoNote((e.auto ?? []).filter((f) => AUTO_AI.has(f)), "由 AI 依据原文补写");
   const note = e.bookInfo?.note ?? "正文、释义、例句照原书。";
   return `<div class="r"><span>出处</span><span>${bookWhere(e)}</span></div>
     ${e.bookInfo && (e.bookInfo.author || e.bookInfo.publisher) ? `<p class="src-note">${esc([e.bookInfo.author, e.bookInfo.publisher, e.bookInfo.year].filter(Boolean).join("，"))}</p>` : ""}
