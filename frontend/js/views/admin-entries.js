@@ -5,8 +5,8 @@
 // 从列表点进一份稿子时，把当时的列表冻结成这一轮的队列（存在 sessionStorage，刷新也还在），
 // 发布或跳过后自动打开队列里下一份没处理的；回到列表时顶上有“继续审核”。
 
-import { actions, api, empty, esc, fmtDay, icon, local, rich, toast } from "../lib.js?v=212dd6fbae";
-import { copy, redraw } from "./admin.js?v=212dd6fbae";
+import { actions, api, copy, empty, esc, fmtDay, icon, local, rich, toast } from "../lib.js?v=212dd6fbae";
+import { redraw } from "./admin.js?v=212dd6fbae";
 import { THEMES } from "../themes.js?v=212dd6fbae";
 
 const fresh = (p) => api(p, { fresh: true, detached: true });

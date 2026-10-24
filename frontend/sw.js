@@ -25,7 +25,7 @@ const NET_TIMEOUT = 4000;
 const FRESH_TIMEOUT = 12000;
 const HASHED = /[?&]v=[0-9a-f]{10}$/;
 // 管理、推送、邀请、登录态这些接口不缓存（auth / me 决定“是不是已登录”，不能拿旧的顶上）
-const NO_CACHE_API = /^\/api\/(admin|push|invites|login|logout|register|auth|me)(\/|\?|$)/;
+const NO_CACHE_API = /^\/api\/(admin|push|invites|login|logout|register|auth|me|feed)(\/|\?|$)/;
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) =>

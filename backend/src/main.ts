@@ -34,6 +34,7 @@ import {
   type MailKind,
 } from "./mail.ts";
 import { mailConfigInfo, mailConfigured } from "./smtp.ts";
+import { buildFeed, FEED_KINDS, feedUrl, newFeedKey, type FeedKind } from "./feed.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const PORT = Number(process.env.PORT ?? 8787);
@@ -114,6 +115,22 @@ app.on(["GET", "POST"], "/api/mail/unsubscribe", (c) => {
   }
   unsubscribe(uid, kind);
   return c.html(unsubPage({ site, title: "已退订", text: `以后不会再收到${what}了。` }));
+});
+
+// RSS：阅读器带不了 Cookie，凭订阅地址里的钥匙认人；只读，只有这个人自己的每日单词和日报。
+// private：Cloudflare 等中间缓存不存（每人内容不同、地址就是凭证）；noindex：万一地址被贴出去也别被收录
+app.get("/api/feed/:key/:file", (c) => {
+  const kind = c.req.param("file").replace(/\.xml$/, "") as FeedKind;
+  const u = FEED_KINDS.includes(kind) ? db.feedOwner(c.req.param("key")) : undefined;
+  if (!u) return c.text("没有这个订阅（地址不对，或已经重置、关闭）", 404);
+  if (!allow(`feed:${u.id}`, 30)) return c.text("拉取太频繁了，一分钟后再试", 429);
+  const site = mailSite(c);
+  const { xml, etag } = buildFeed(kind, u.id, site, feedUrl(site, c.req.param("key"), kind));
+  c.header("ETag", etag);
+  c.header("Cache-Control", "private, max-age=900");
+  c.header("X-Robots-Tag", "noindex, nofollow");
+  if (c.req.header("if-none-match") === etag) return c.body(null, 304);
+  return c.body(xml, 200, { "Content-Type": "application/rss+xml; charset=utf-8" });
 });
 
 // MCP：给别的 AI 程序用，凭令牌（Authorization: Bearer）而不是登录 Cookie
@@ -596,6 +613,24 @@ api.post("/me/mail/test", async (c) => {
     console.error("[mail] 测试信发送失败：", err);
     return c.json({ error: `没发出去：${(err as Error).message}` }, 502);
   }
+});
+
+// ---------- RSS 订阅：开 / 重置（换钥匙，旧地址作废）/ 关 ----------
+
+const feedState = (c: Context<AppEnv>) => {
+  const key = db.getFeedKey(uidOf(c));
+  const site = mailSite(c);
+  return { on: !!key, word: key ? feedUrl(site, key, "word") : null, paper: key ? feedUrl(site, key, "paper") : null };
+};
+
+api.get("/me/feed", (c) => c.json(feedState(c)));
+
+api.put("/me/feed", async (c) => {
+  const uid = uidOf(c);
+  const { on = true, reset = false } = await body<{ on?: boolean; reset?: boolean }>(c);
+  if (!on) db.setFeedKey(uid, null);
+  else if (reset || !db.getFeedKey(uid)) db.setFeedKey(uid, newFeedKey());
+  return c.json(feedState(c));
 });
 
 // ---------- 推送提醒（提醒时间每个用户一份，订阅按设备） ----------

@@ -1,7 +1,7 @@
 // 管理后台（仅管理员）：总览 / 成员 / 邀请 / 词条 / 工具 五个页签（词条页签在 admin-entries.js）。
 // 数据都来自 /api/admin/*。操作后只重画当前页签，不整页刷新。
 
-import { actions, api, empty, esc, fmtDay, icon, render, toast } from "../lib.js?v=212dd6fbae";
+import { actions, api, copy, empty, esc, fmtDay, icon, render, toast } from "../lib.js?v=212dd6fbae";
 import { entriesTab } from "./admin-entries.js?v=212dd6fbae";
 
 const day = (iso) => (iso ? fmtDay(iso.slice(0, 10), { weekday: false }) : "—");
@@ -597,37 +597,3 @@ actions["adm-backup"] = async (el) => {
     el.disabled = false;
   }
 };
-
-// ---------- 复制 ----------
-
-/**
- * 复制文本。Safari 在 await 之后可能已经没有“用户手势”，Clipboard API 会被拒；
- * 这时退回 execCommand，再不行就把页面上的文本选中，让人自己按 ⌘C。
- */
-export async function copy(text, done) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return toast(done);
-  } catch {}
-
-  const area = document.createElement("textarea");
-  area.value = text;
-  area.setAttribute("readonly", "");
-  area.style.cssText = "position:fixed;top:0;left:-9999px;opacity:0";
-  document.body.append(area);
-  area.select();
-  area.setSelectionRange(0, text.length);
-  let ok = false;
-  try {
-    ok = document.execCommand("copy");
-  } catch {}
-  area.remove();
-  if (ok) return toast(done);
-
-  const el = [...document.querySelectorAll("input[readonly], textarea.links")].find((i) => i.value === text);
-  if (el) {
-    el.focus();
-    el.select();
-  }
-  toast("已选中，按 ⌘C / Ctrl+C 复制");
-}
