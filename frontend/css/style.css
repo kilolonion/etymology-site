@@ -2854,7 +2854,10 @@ button.ae-chip { cursor: pointer; }
 @media (min-width: 900px) { .book-list { grid-template-columns: 1fr 1fr; } }
 
 /* 我的：书架下面的“我的词书”（桌面上和书架一起占左栏，填满菜单旁边的空白） */
-.me-main { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.me-main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; min-width: 0; }
+/* 书架里的书脊是一排不换行的 flex 项：不把这栏里卡片的自动最小宽度压成 0，
+   书架卡就会被书脊的 min-content 撑得比栏还宽，盖到右边的菜单上 */
+.me-main > * { min-width: 0; }
 .mybooks-card { padding: 18px 18px 16px; border-radius: 24px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
 .mb-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 2px 6px; }
 .mb-head h2 { margin: 0; font: 700 17px var(--serif-zh); letter-spacing: .08em; }
