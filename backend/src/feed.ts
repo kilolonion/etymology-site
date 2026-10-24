@@ -8,7 +8,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import * as db from "./db.ts";
 import { localDay, todayId, TZ } from "./daily.ts";
-import { books, getEntry, gist } from "./entries.ts";
+import { books, entryFor, gist } from "./entries.ts";
 import { cnDate, esc, plain, primary, reasonPlain, shortDate, weekday } from "./mail.ts";
 import { getOrBuildPaper, type PaperReason } from "./paper.ts";
 import type { FullEntry } from "./types.ts";
@@ -94,11 +94,14 @@ function wordHtml(site: string, e: FullEntry): string {
 }
 
 function wordFeed(uid: number, site: string, self: string): string {
+  const hide = db.getHideAi(uid);
+  const get = entryFor(hide); // 屏蔽 AI 内容的人，AI 补写的字段不出现在信里 / 订阅里
+  const visible = (e?: FullEntry) => !!e && !(hide && e.origin?.kind === "ai");
   const today = localDay();
   todayId(uid, today); // 今天的词第一次被要到时才锁定
   const days = db.allDaily(uid).filter((d) => d.day <= today);
   const items = days.slice(0, WORD_DAYS).flatMap((d, i): Item[] => {
-    const e = d.ids.map((id) => getEntry(id)).find(Boolean);
+    const e = d.ids.map((id) => get(id)).find(visible);
     if (!e) return [];
     const theme = primary(e);
     return [{
@@ -122,12 +125,15 @@ const why = (r: PaperReason | undefined) => {
 };
 
 function paperItem(uid: number, day: string, today: string, site: string): Item | undefined {
+  const hide = db.getHideAi(uid);
+  const get = entryFor(hide); // 屏蔽 AI 内容的人，AI 补写的字段不出现在信里 / 订阅里
+  const visible = (e?: FullEntry) => !!e && !(hide && e.origin?.kind === "ai");
   const p = getOrBuildPaper(uid, day, today);
   if (!p) return undefined;
-  const front = (db.getDaily(uid, day) ?? []).map((id) => getEntry(id)).find(Boolean);
-  const lead = getEntry(p.lead ?? "");
+  const front = (db.getDaily(uid, day) ?? []).map((id) => get(id)).find(visible);
+  const lead = visible(get(p.lead ?? "")) ? get(p.lead ?? "") : undefined;
   const sections = p.sections
-    .map((s) => ({ ...s, items: s.items.map((it) => ({ e: getEntry(it.id), reason: it.reason })).filter((it): it is { e: FullEntry; reason: PaperReason } => !!it.e) }))
+    .map((s) => ({ ...s, items: s.items.map((it) => ({ e: get(it.id), reason: it.reason })).filter((it): it is { e: FullEntry; reason: PaperReason } => visible(it.e)) }))
     .filter((s) => s.items.length);
   const all = [lead, ...sections.flatMap((s) => s.items.map((it) => it.e))].filter((e): e is FullEntry => !!e);
   if (!all.length && !front) return undefined;

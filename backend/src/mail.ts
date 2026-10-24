@@ -8,7 +8,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import * as db from "./db.ts";
 import { isDone, localDay, localTime, TZ, todayId } from "./daily.ts";
-import { getEntry, gist } from "./entries.ts";
+import { entryFor, gist } from "./entries.ts";
 import { getOrBuildPaper, type PaperReason } from "./paper.ts";
 import { checkTime } from "./push.ts";
 import { addrOf, isEmail, mailConfigured, sendMail, type Mail } from "./smtp.ts";
@@ -314,9 +314,12 @@ const textFooter = (x: Ctx) =>
 export type Composed = { subject: string; html: string; text: string };
 
 export function composeWord(uid: number, day: string, site: string): Composed | undefined {
+  const hide = db.getHideAi(uid);
+  const get = entryFor(hide); // 屏蔽 AI 内容的人，AI 补写的字段不出现在信里 / 订阅里
   const id = todayId(uid, day);
-  const e = getEntry(id ?? "");
-  if (!e) return undefined;
+  const e = get(id ?? "");
+  // 屏蔽 AI 内容时，今天锁定的词正好是 AI 整理的新词：这一封不发（不让 AI 正文进收件箱）
+  if (!e || (hide && e.origin?.kind === "ai")) return undefined;
   const x = ctxOf(site, uid, "word");
   const t = themeOf(e);
   x.colors.add(t.color);
@@ -326,7 +329,13 @@ export function composeWord(uid: number, day: string, site: string): Composed | 
   const tLine = mix(t.color, C.line, 0.28);
   const issue = db.allDaily(uid).filter((d) => d.day <= day).length;
   const paper = getOrBuildPaper(uid, day, day);
-  const more = paper ? paper.sections.reduce((n, s) => n + s.items.length, 0) + (paper.lead ? 1 : 0) : 0;
+  // 今天的日报还有几篇：旧缓存里可能有 AI 整理的新词，按当前设置数
+  const more = paper
+    ? [paper.lead, ...paper.sections.flatMap((s) => s.items.map((it) => it.id))].filter((x) => {
+        const item = x ? get(x) : undefined;
+        return !!item && !(hide && item.origin?.kind === "ai");
+      }).length
+    : 0;
 
   const body = `${masthead(x, { issue, day, title: "词源一日", sub: "A word, and its story, every day." })}
 ${kicker("今天的词", "Today’s Word")}
@@ -446,6 +455,9 @@ function grid(cells: string[]): string {
 }
 
 export function composePaper(uid: number, day: string, site: string): Composed | undefined {
+  const hide = db.getHideAi(uid);
+  const get = entryFor(hide);
+  const visible = (e?: FullEntry) => !!e && !(hide && e.origin?.kind === "ai");
   todayId(uid, day); // 今天的词要先锁定，日报才能避开它
   const p = getOrBuildPaper(uid, day, day);
   if (!p) return undefined;
@@ -453,10 +465,11 @@ export function composePaper(uid: number, day: string, site: string): Composed |
   const state = db.stateMap(uid);
   const read = (id: string) => !!state.get(id)?.read;
   const issue = db.allDaily(uid).filter((d) => d.day <= day).length;
-  const front = (db.getDaily(uid, day) ?? []).map((id) => getEntry(id)).find(Boolean);
-  const lead = getEntry(p.lead ?? "");
+  const front = (db.getDaily(uid, day) ?? []).map((id) => get(id)).find(visible);
+  const leadRaw = get(p.lead ?? "");
+  const lead = visible(leadRaw) ? leadRaw : undefined;
   const sections = p.sections
-    .map((s) => ({ ...s, items: s.items.map((it) => ({ e: getEntry(it.id), reason: it.reason })).filter((it): it is { e: FullEntry; reason: PaperReason } => !!it.e) }))
+    .map((s) => ({ ...s, items: s.items.map((it) => ({ e: get(it.id), reason: it.reason })).filter((it): it is { e: FullEntry; reason: PaperReason } => visible(it.e)) }))
     .filter((s) => s.items.length);
   const all = [lead, ...sections.flatMap((s) => s.items.map((it) => it.e))].filter((e): e is FullEntry => !!e);
   if (!all.length && !front) return undefined;

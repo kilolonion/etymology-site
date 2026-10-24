@@ -6,7 +6,7 @@ import { getOrBuildPaper } from "./paper.ts";
 import webpush from "web-push";
 import * as db from "./db.ts";
 import { isDone, localDay, localTime, streak, todayId, weekDays } from "./daily.ts";
-import { getEntry } from "./entries.ts";
+import { entryFor, getEntry } from "./entries.ts";
 
 /** 设定时间后多久之内还会补发（服务器重启、休眠后），超过就不发了 */
 const WINDOW_MINUTES = 120;
@@ -51,13 +51,21 @@ async function tick(): Promise<void> {
     if (diff < 0 || diff > WINDOW_MINUTES) continue;
     db.setLastPushDay(u.id, day);
     if (isDone(u.id, day)) continue;
-    const e = getEntry(todayId(u.id, day) ?? "");
-    if (!e) continue;
+    const hide = db.getHideAi(u.id);
+    const get = entryFor(hide);
+    const e = get(todayId(u.id, day) ?? "");
+    // 屏蔽 AI 内容的人：今天锁定的正好是 AI 整理的新词，就不推送（不让 AI 正文进通知栏）
+    if (!e || (hide && e.origin?.kind === "ai")) continue;
     // 提醒顺便说一声日报出了：今天的问题放在正文，点开进日报（头版就是今天的词）
     const p = getOrBuildPaper(u.id, day, day);
-    const n = p ? p.sections.reduce((a, x) => a + x.items.length, 0) + (p.lead ? 1 : 0) : 0;
+    const n = p
+      ? [p.lead, ...p.sections.flatMap((s) => s.items.map((it) => it.id))].filter((id) => {
+          const x = id ? get(id) : undefined;
+          return !!x && !(hide && x.origin?.kind === "ai");
+        }).length
+      : 0;
     const title = n ? `今日日报 · ${n} 篇` : "今天的问题";
-    await sendToUser(u.id, { title, body: e.teaser.replace(/\*/g, ""), url: n ? "/#/paper" : "/#/", tag: `daily-${day}` });
+    await sendToUser(u.id, { title, body: (e.teaser ?? "").replace(/\*/g, ""), url: n ? "/#/paper" : "/#/", tag: `daily-${day}` });
   }
   // 周日晚上：本周小结
   const week = weekDays(day);
@@ -73,7 +81,12 @@ async function tick(): Promise<void> {
 
 /** 本周小结：这周读了几个（不算手动标记的）、来得最多的语言、连续天数；一个没读就不发 */
 export function recapText(uid: number, monday: string, day: string): string {
-  const ids = db.readLog(uid).filter((r) => !r.manual && r.read_day >= monday && r.read_day <= day && getEntry(r.id)).map((r) => r.id);
+  const hide = db.getHideAi(uid);
+  const ids = db
+    .readLog(uid)
+    .filter((r) => !r.manual && r.read_day >= monday && r.read_day <= day && getEntry(r.id))
+    .filter((r) => !(hide && getEntry(r.id)!.origin?.kind === "ai")) // 屏蔽 AI 内容时不提读过的 AI 新词
+    .map((r) => r.id);
   const counted = ids.length;
   if (!counted) return "";
   const langs = new Map<string, number>();

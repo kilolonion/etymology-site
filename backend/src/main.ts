@@ -13,8 +13,8 @@ import {
   requireAdmin, requireAuth, resetPassword, type AppEnv,
 } from "./auth.ts";
 import {
-  bestStreak, futureAssigned, isDone, localDay, resurface, review, shiftDay, streak, todayId, todayProgress, todayReason, tomorrowId,
-  TZ, weekDays,
+  bestStreak, futureAssigned, isDone, localDay, relockHiddenAi, resurface, review, shiftDay, streak, todayId, todayProgress, todayReason,
+  tomorrowId, TZ, weekDays,
 } from "./daily.ts";
 import { bookPlan, recommend } from "./recommend.ts";
 import { getOrBuildPaper } from "./paper.ts";
@@ -23,8 +23,8 @@ import { entriesAdmin } from "./admin-entries.ts";
 import { initAuthoring, previewEntry, publicOrigin } from "./authoring.ts";
 import { mcp, tokensAdmin } from "./mcp.ts";
 import {
-  allSummaries, bookOrder, bookPos, books, findWord, getBook, getEntry, getRedirect, gist, kinOf, loadEntries, related, search,
-  summarize, themeGroups, totalCount, twinGroups, twinsOf, type Summary,
+  aiHiddenOf, allSummaries, bookOrder, bookPos, books, findWord, getBook, getEntry, getRedirect, gist, historySummaryFor, isAiLink, kinOf,
+  loadEntries, related, search, summarize, summaryFor, themeGroups, totalCount, twinGroups, twinsOf, withoutAi, type Summary,
 } from "./entries.ts";
 import type { Book } from "./types.ts";
 import type { FullEntry } from "./types.ts";
@@ -153,17 +153,36 @@ api.use(requireAuth);
 
 const uidOf = (c: Context<AppEnv>) => c.get("user").id;
 
+const hideAiOf = (uid: number) => db.getHideAi(uid);
+
 /** 给摘要附上当前用户的阅读 / 收藏状态 */
 function withState<T extends { id: string }>(uid: number, items: T[]) {
   const state = db.stateMap(uid);
   return items.map((s) => ({ ...s, read: !!state.get(s.id)?.read, starred: !!state.get(s.id)?.starred }));
 }
 
-const summariesOf = (ids: string[]): Summary[] =>
-  ids.flatMap((id) => {
-    const e = getEntry(id);
-    return e ? [summarize(e)] : [];
+/**
+ * 摘要：屏蔽 AI 内容的人，AI 整理的新词不出现在列表里，原书词条用去掉 AI 补写字段后的样子。
+ * history=true 用于书架 / 阅读记录 / 收藏：已经读过、收藏过的 AI 新词照常保留（内容仍按设置过滤）。
+ */
+const summariesOf = (uid: number, ids: string[], { history = false } = {}): Summary[] => {
+  const hide = hideAiOf(uid);
+  const fn = history ? historySummaryFor : summaryFor;
+  return ids.flatMap((id) => {
+    const s = fn(id, hide);
+    return s ? [s] : [];
   });
+};
+
+/** 取用户能看到的词条：屏蔽 AI 内容时 AI 整理的新词算看不到，原书词条用 withoutAi 之后的样子 */
+const visibleEntry = (uid: number, id?: string): FullEntry | undefined => {
+  if (!id) return undefined;
+  const raw = getEntry(id);
+  if (!raw) return undefined;
+  const hide = hideAiOf(uid);
+  if (hide && raw.origin?.kind === "ai") return undefined;
+  return hide ? withoutAi(raw) : raw;
+};
 
 /** 当前不该被推荐的词：今天的、已锁定的明日、以及额外指定的 */
 function busy(uid: number, day: string, ...more: string[]): Set<string> {
@@ -173,23 +192,46 @@ function busy(uid: number, day: string, ...more: string[]): Set<string> {
   return set;
 }
 
-/** 文章页的数据；preview 是后台预览的稿子（还没进索引） */
-function detail(uid: number, id: string, preview?: FullEntry) {
-  const e = preview ?? getEntry(id);
-  if (!e) return undefined;
+/** 文章页的数据；preview 是后台预览的稿子（还没进索引）；allowAi 是用户点了“仍然查看这一篇” */
+function detail(uid: number, id: string, preview?: FullEntry, allowAi = false) {
+  const raw = preview ?? getEntry(id);
+  if (!raw) return undefined;
+  const hideAi = !preview && hideAiOf(uid);
+  const hiddenAiEntry = hideAi && raw.origin?.kind === "ai";
+  // 整篇 AI 整理的新词：没点“仍然查看”时只给拦截页要用的字段，正文和摘要都不返回
+  if (hiddenAiEntry && !allowAi) {
+    const s = summarize(raw);
+    return {
+      id: raw.id, headword: raw.headword, ipa: raw.ipa, letter: s.letter, src: s.src ?? null,
+      aiGate: true, aiHidden: [], preview: false,
+      etymology: [], examples: [], teaser: "", meaning: "", pos: "",
+      seeAlso: [], kin: [], related: [], upNext: [], twins: [], bookInfo: null, bookNav: null,
+      ...db.getState(uid, id),
+    };
+  }
+  // 屏蔽 AI 内容：原书词条去掉 AI 补写的字段；整篇是 AI 整理的新词只在显式“仍然查看”时给全文
+  const e = hideAi && !hiddenAiEntry ? withoutAi(raw) : raw;
+  const aiHidden = hideAi && !raw.origin ? aiHiddenOf(raw) : [];
   const day = localDay();
-  const seeAlso = withState(uid, summariesOf(e.seeAlso ?? []));
+  const seeAlso = withState(uid, summariesOf(uid, e.seeAlso ?? []));
   // 书外整理的关系：同根 / 同典故 / 衍生，附上一句理由（预览时稿子里的关系还没进索引，自己补上）
   const kinAll = preview
     ? [...(preview.links ?? []), ...kinOf(id).filter((l) => !(preview.links ?? []).some((x) => x.id === l.id))]
     : kinOf(id);
-  const kin = kinAll.filter((l) => !(e.seeAlso ?? []).includes(l.id) && getEntry(l.id));
-  const kinSum = withState(uid, summariesOf(kin.map((l) => l.id))).map((s, i) => ({ ...s, rel: kin[i]!.type, why: kin[i]!.why }));
+  const kin = kinAll.filter(
+    (l) => !(e.seeAlso ?? []).includes(l.id) && getEntry(l.id) && !(hideAi && (isAiLink(id, l.id) || getEntry(l.id)?.origin?.kind === "ai")),
+  );
+  const kinSum = kin.flatMap((l) => {
+    const s = summariesOf(uid, [l.id])[0];
+    return s ? [{ ...s, rel: l.type, why: l.why }] : [];
+  });
   // 接着读：和这篇相关、又没读过的词
-  const upNext = recommend({ uid, day, seed: day + id, anchor: id, exclude: busy(uid, day, id), limit: 2 }).map((p) => ({
-    ...withState(uid, summariesOf([p.id]))[0]!,
-    reason: p.reason,
-  }));
+  const upNext = preview
+    ? []
+    : recommend({ uid, day, seed: day + id, anchor: id, exclude: busy(uid, day, id), limit: 2 }).flatMap((p) => {
+        const s = summariesOf(uid, [p.id])[0];
+        return s ? [{ ...s, reason: p.reason }] : [];
+      });
   return {
     ...e,
     ...db.getState(uid, id),
@@ -200,13 +242,16 @@ function detail(uid: number, id: string, preview?: FullEntry) {
     preview: !!preview,
     seeAlso,
     kin: kinSum,
-    related: withState(uid, related(id)),
-    upNext: preview ? [] : upNext,
+    related: withState(uid, related(id, 4, hideAi)),
+    upNext,
     // 出自哪本书（后台新增的词、稿子没有）；同一个词在别的书里怎么讲
     bookInfo: e.book ? bookMeta(getBook(e.book)) : null,
-    twins: preview ? [] : withState(uid, summariesOf(twinsOf(id))),
+    twins: preview ? [] : withState(uid, summariesOf(uid, twinsOf(id))),
     // 原书顺序里的第几篇、上一篇、下一篇
     bookNav: preview ? null : navOf(id),
+    // 屏蔽 AI 内容时：这篇去掉了哪些 AI 补写的字段；整篇是不是 AI 整理的
+    aiHidden,
+    aiGate: hiddenAiEntry,
   };
 }
 
@@ -233,7 +278,7 @@ function stats(uid: number) {
     if (s.read) read++;
     if (s.starred) starred++;
   }
-  return { total: totalCount(), read, starred, streak: streak(uid) };
+  return { total: totalCount(hideAiOf(uid)), read, starred, streak: streak(uid) };
 }
 
 api.get("/today", (c) => {
@@ -241,7 +286,8 @@ api.get("/today", (c) => {
   const day = localDay();
   const id = todayId(uid, day);
   const done = isDone(uid, day);
-  const tomorrow = done ? getEntry(tomorrowId(uid, day) ?? "") : undefined;
+  // 明日预告只给用户看得到的词：屏蔽 AI 内容时 AI 整理的新词不透露
+  const tomorrow = done ? visibleEntry(uid, tomorrowId(uid, day)) : undefined;
   return c.json({
     day,
     // 第几期：到今天为止有推送的天数
@@ -257,14 +303,17 @@ api.get("/today", (c) => {
     // 本周七天：每天推送的词（今天之后的不透露）
     week: weekDays(day).map((d) => {
       const wid = d <= day ? db.getDaily(uid, d)?.find((x) => getEntry(x)) : undefined;
-      return { day: d, entry: wid ? withState(uid, summariesOf([wid]))[0] : null };
+      return { day: d, entry: wid ? withState(uid, summariesOf(uid, [wid]))[0] ?? null : null };
     }),
     // 旧词重逢：按间隔重现一个以前读过的词
     resurface: (() => {
       const r = resurface(uid, day);
+      if (!r) return null;
+      const s = summariesOf(uid, [r.id])[0];
+      if (!s) return null; // 这个词按设置不该出现（AI 整理的新词）
       // reviewed：今天已经点过“记得 / 忘了”的结果，刷新后按钮也显示成点过的样子
-      const reviewed = r?.review?.lastDay === day ? (r.review.lastOk ? "ok" : "no") : null;
-      return r ? { ...withState(uid, summariesOf([r.id]))[0], ago: r.ago, stage: r.stage, reviewed, due: r.review?.dueDay ?? null } : null;
+      const reviewed = r.review?.lastDay === day ? (r.review.lastOk ? "ok" : "no") : null;
+      return { ...withState(uid, [s])[0], ago: r.ago, stage: r.stage, reviewed, due: r.review?.dueDay ?? null };
     })(),
   });
 });
@@ -279,25 +328,31 @@ api.get("/paper", (c) => {
   if (day === today) todayId(uid, day);
   const p = getOrBuildPaper(uid, day, today);
   if (!p) return c.json({ error: "那天没有日报" }, 404);
+  const hide = hideAiOf(uid);
   const state = db.stateMap(uid);
+  // 旧日报缓存可能是在开启屏蔽之前排的：展示时按当前设置过滤 AI 整理的新词，并重算篇数
   const item = (id: string, reason: unknown) => {
-    const s = withState(uid, summariesOf([id]))[0];
+    const s = summariesOf(uid, [id])[0];
     return s ? { ...s, reason } : null;
   };
   const sections = p.sections
     .map((s) => ({ ...s, items: s.items.map((it) => item(it.id, it.reason)).filter(Boolean) }))
     .filter((s) => s.items.length);
-  // 头条多给一段正文开头，版面上排成导语
-  const leadItem = p.lead ? item(p.lead, p.leadReason ?? null) : null;
-  const lead = leadItem ? { ...leadItem, gist: gist(getEntry(p.lead!)!, 140) } : null;
+  // 头条多给一段正文开头，版面上排成导语（AI 整理的新词不给头条）
+  const leadRaw = p.lead ? getEntry(p.lead) : undefined;
+  const leadEntry = leadRaw && !(hide && leadRaw.origin?.kind === "ai") ? (hide ? withoutAi(leadRaw) : leadRaw) : undefined;
+  const leadItem = leadEntry ? item(leadEntry.id, p.leadReason ?? null) : null;
+  const lead = leadItem ? { ...leadItem, gist: gist(leadEntry!, 140) } : null;
   const todayWordId = (db.getDaily(uid, day) ?? []).find((id) => getEntry(id));
-  const ids = [p.lead, ...p.sections.flatMap((s) => s.items.map((it) => it.id))].filter((x): x is string => !!x && !!getEntry(x));
+  const frontEntry = visibleEntry(uid, todayWordId);
+  const front = frontEntry ? withState(uid, [summarize(frontEntry)])[0] ?? null : null;
+  const ids = [lead?.id, ...sections.flatMap((s) => s.items.flatMap((it) => (it ? [it.id] : [])))].filter((x): x is string => !!x);
   return c.json({
     day,
     today: day === today,
     issue: db.allDaily(uid).filter((d) => d.day <= day).length,
     // 头版：主页上今天的那个词
-    front: todayWordId ? withState(uid, summariesOf([todayWordId]))[0] ?? null : null,
+    front,
     lead,
     sections,
     total: ids.length,
@@ -314,10 +369,11 @@ api.get("/next", (c) => {
   const skip = c.req.query("skip") ?? "";
   const top = recommend({ uid, day, seed: day + "discover", exclude: busy(uid, day, skip), limit: 6 });
   const p = c.req.query("shuffle") ? top[Math.floor(Math.random() * top.length)] : top[0];
-  return c.json({ entry: p ? { ...withState(uid, summariesOf([p.id]))[0], reason: p.reason } : null });
+  const s = p ? summariesOf(uid, [p.id])[0] : undefined;
+  return c.json({ entry: s ? { ...withState(uid, [s])[0], reason: p.reason } : null });
 });
 
-api.get("/entries", (c) => c.json(withState(uidOf(c), allSummaries())));
+api.get("/entries", (c) => c.json(withState(uidOf(c), allSummaries(hideAiOf(uidOf(c))))));
 
 api.get("/entries/:id", (c) => {
   const id = c.req.param("id");
@@ -328,7 +384,8 @@ api.get("/entries/:id", (c) => {
   }
   const r = getRedirect(id);
   if (r) return c.json({ redirect: r.redirect });
-  const d = detail(uidOf(c), id);
+  // ?ai=1 是用户明确点了“仍然查看这一篇”，只有这时才给 AI 整理的新词全文
+  const d = detail(uidOf(c), id, undefined, c.req.query("ai") === "1");
   return d ? c.json(d) : c.json({ error: "not found" }, 404);
 });
 
@@ -362,7 +419,7 @@ function finishInfo(uid: number, id: string, day: string) {
   const goal = db.getGoal(uid);
   const p = todayProgress(uid, goal, day);
   const isToday = todayId(uid, day) === id;
-  const t = isToday ? getEntry(tomorrowId(uid, day) ?? "") : undefined;
+  const t = isToday ? visibleEntry(uid, tomorrowId(uid, day)) : undefined;
   let rank = null;
   if (db.getOnBoard(uid)) {
     const rows = boardRows(uid, day, day);
@@ -400,12 +457,16 @@ api.post("/entries/:id/star", async (c) => {
   return c.json(db.getState(uid, id));
 });
 
-api.get("/search", (c) => c.json(withState(uidOf(c), search(c.req.query("q") ?? ""))));
+api.get("/search", (c) => {
+  const uid = uidOf(c);
+  return c.json(withState(uid, search(c.req.query("q") ?? "", 50, hideAiOf(uid))));
+});
 
 api.get("/themes", (c) => {
-  const state = db.stateMap(uidOf(c));
+  const uid = uidOf(c);
+  const state = db.stateMap(uid);
   return c.json(
-    themeGroups().map((g) => ({
+    themeGroups(hideAiOf(uid)).map((g) => ({
       theme: g.theme,
       count: g.ids.length,
       read: g.ids.filter((id) => state.get(id)?.read).length,
@@ -415,20 +476,21 @@ api.get("/themes", (c) => {
 });
 
 api.get("/themes/:name", (c) => {
+  const uid = uidOf(c);
   const name = c.req.param("name");
-  const g = themeGroups().find((x) => x.theme === name);
-  return g ? c.json(withState(uidOf(c), summariesOf(g.ids))) : c.json({ error: "not found" }, 404);
+  const g = themeGroups(hideAiOf(uid)).find((x) => x.theme === name);
+  return g ? c.json(withState(uid, summariesOf(uid, g.ids))) : c.json({ error: "not found" }, 404);
 });
 
-/** 收藏：附上收藏的日期 */
+/** 收藏：附上收藏的日期；已经收藏过的 AI 新词照常保留（历史），内容按设置过滤 */
 api.get("/starred", (c) => {
   const uid = uidOf(c);
   const log = db.starredLog(uid).filter((r) => getEntry(r.id));
   const when = new Map(log.map((r) => [r.id, localDay(new Date(r.starred_at))]));
-  return c.json(withState(uid, summariesOf(log.map((r) => r.id))).map((s) => ({ ...s, starredDay: when.get(s.id) })));
+  return c.json(withState(uid, summariesOf(uid, log.map((r) => r.id), { history: true })).map((s) => ({ ...s, starredDay: when.get(s.id) })));
 });
 
-/** 阅读记录：按阅读日期分组列出所有读过的词，并标出哪个是当天的推送 */
+/** 阅读记录：按阅读日期分组列出所有读过的词，并标出哪个是当天的推送；读过的 AI 新词照常保留（历史） */
 api.get("/history", (c) => {
   const uid = uidOf(c);
   const groups = new Map<string, string[]>();
@@ -440,7 +502,7 @@ api.get("/history", (c) => {
   return c.json(
     [...groups].sort(([a], [b]) => (a < b ? 1 : -1)).map(([day, ids]) => {
       const daily = new Set(db.getDaily(uid, day) ?? []);
-      return { day, entries: withState(uid, summariesOf(ids)).map((s) => ({ ...s, daily: daily.has(s.id) })) };
+      return { day, entries: withState(uid, summariesOf(uid, ids, { history: true })).map((s) => ({ ...s, daily: daily.has(s.id) })) };
     }),
   );
 });
@@ -462,10 +524,15 @@ api.get("/say", async (c) => {
   });
 });
 
-/** 词卡：点正文里的词弹出的小卡片 */
+/** 词卡：点正文里的词弹出的小卡片；屏蔽 AI 内容时 AI 整理的新词只给一个“已隐藏”的壳 */
 function card(uid: number, id: string) {
-  const e = getEntry(id);
-  if (!e) return undefined;
+  const raw = getEntry(id);
+  if (!raw) return undefined;
+  const hide = hideAiOf(uid);
+  if (hide && raw.origin?.kind === "ai") {
+    return { id: raw.id, headword: raw.headword, src: summarize(raw).src ?? null, aiGate: true as const };
+  }
+  const e = hide ? withoutAi(raw) : raw;
   return { ...withState(uid, [summarize(e)])[0]!, gist: gist(e) };
 }
 
@@ -534,7 +601,7 @@ api.get("/shelf", (c) => {
   const start = shiftDay(weekDays(day)[0]!, -7 * 25);
   const footprints = [...byDay]
     .filter(([d]) => d >= start)
-    .map(([d, ids]) => ({ day: d, n: ids.length, entry: summariesOf(ids.slice(-1))[0] }));
+    .map(([d, ids]) => ({ day: d, n: ids.length, entry: summariesOf(uid, ids.slice(-1), { history: true })[0] }));
 
   const state = db.stateMap(uid);
   const langs = new Map<string, number>();
@@ -542,9 +609,10 @@ api.get("/shelf", (c) => {
 
   return c.json({
     stats: { ...stats(uid), best: bestStreak(uid) },
-    shelf: withState(uid, summariesOf(log.slice(0, 40).map((r) => r.id))),
+    // 书架、足迹都是历史：读过的 AI 新词照常保留（内容按设置过滤）
+    shelf: withState(uid, summariesOf(uid, log.slice(0, 40).map((r) => r.id), { history: true })),
     footprints: { start, today: day, days: footprints },
-    themes: themeGroups().map((g) => ({
+    themes: themeGroups(hideAiOf(uid)).map((g) => ({
       theme: g.theme,
       count: g.ids.length,
       read: g.ids.filter((id) => state.get(id)?.read).length,
@@ -555,7 +623,21 @@ api.get("/shelf", (c) => {
 
 // ---------- 账号 ----------
 
-api.get("/me", (c) => c.json({ ...c.get("user"), onBoard: db.getOnBoard(uidOf(c)), goal: db.getGoal(uidOf(c)) }));
+api.get("/me", (c) => c.json({ ...c.get("user"), onBoard: db.getOnBoard(uidOf(c)), goal: db.getGoal(uidOf(c)), hideAi: db.getHideAi(uidOf(c)) }));
+
+/** 屏蔽 AI 内容：AI 整理的新词不出现、不推送，原书词条里 AI 补写的字段不显示 */
+api.put("/me/hide-ai", async (c) => {
+  const { on } = await body<{ on?: boolean }>(c);
+  if (typeof on !== "boolean") return c.json({ error: "格式不对" }, 400);
+  const uid = uidOf(c);
+  db.setHideAi(uid, on);
+  if (on) {
+    // 已经锁定的今天 / 明天如果正好是 AI 整理的新词（还没读），换掉；当天日报缓存也重新排
+    relockHiddenAi(uid);
+    db.deletePaper(uid, localDay());
+  }
+  return c.json({ hideAi: on });
+});
 
 /** 每日目标：常用档位之外也可以自己填，1–50 之间的整数 */
 api.put("/me/goal", async (c) => {
@@ -620,7 +702,7 @@ const booksState = (uid: number) => {
     };
   });
   const on = list.filter((b) => b.level > 0);
-  return { auto: prefs.auto, mixed: on.length === list.length && on.every((b) => b.level === on[0]!.level), twins: twinGroups().length, books: list };
+  return { auto: prefs.auto, mixed: on.length === list.length && on.every((b) => b.level === on[0]!.level), twins: twinGroups(hideAiOf(uid)).length, books: list };
 };
 
 api.get("/books", (c) => c.json(booksState(uidOf(c))));
@@ -683,11 +765,12 @@ api.get("/books/:id", (c) => {
   return c.json({ ...head, chapters });
 });
 
-/** 几本书都讲过的词 */
+/** 几本书都讲过的词；屏蔽 AI 内容时不算 AI 整理的新词 */
 api.get("/compare", (c) => {
-  const state = db.stateMap(uidOf(c));
+  const uid = uidOf(c);
+  const state = db.stateMap(uid);
   return c.json(
-    twinGroups().map((ids) => {
+    twinGroups(hideAiOf(uid)).map((ids) => {
       const es = ids.map((id) => getEntry(id)!);
       return {
         id: ids[0],
@@ -700,14 +783,19 @@ api.get("/compare", (c) => {
   );
 });
 
-/** 同一个词在几本书里的讲法，并排看 */
+/** 同一个词在几本书里的讲法，并排看；屏蔽 AI 内容时不并排 AI 整理的新词 */
 api.get("/compare/:id", (c) => {
   const uid = uidOf(c);
   const id = c.req.param("id");
   const e = getEntry(id);
   if (!e) return c.json({ error: "not found" }, 404);
+  const hide = hideAiOf(uid);
+  if (hide && e.origin?.kind === "ai") return c.json({ error: "not found" }, 404);
   const rank = (x: FullEntry) => books().findIndex((b) => b.id === x.book);
-  const group = [e, ...twinsOf(id).map((x) => getEntry(x)!)].sort((a, b) => rank(a) - rank(b));
+  const group = [e, ...twinsOf(id).map((x) => getEntry(x)!)]
+    .filter((x) => !(hide && x.origin?.kind === "ai"))
+    .sort((a, b) => rank(a) - rank(b))
+    .map((x) => (hide ? withoutAi(x) : x));
   const state = db.stateMap(uid);
   return c.json({
     headword: e.headword,
@@ -835,10 +923,10 @@ api.post("/push/unsubscribe", async (c) => {
 
 api.post("/push/test", async (c) => {
   const uid = uidOf(c);
-  const e = getEntry(todayId(uid) ?? "");
+  const e = visibleEntry(uid, todayId(uid) ?? "");
   const sent = await sendToUser(uid, {
     title: "提醒已开启",
-    body: e?.teaser.replace(/\*/g, "") ?? "每天这个时间，给你一个单词的故事。",
+    body: e?.teaser?.replace(/\*/g, "") || "每天这个时间，给你一个单词的故事。",
     url: "/#/",
   });
   return c.json({ sent });
@@ -1023,6 +1111,8 @@ admin.post("/today-word", async (c) => {
   db.tx(() => {
     for (const u of targets) {
       if (u.todayId === e.id) continue;
+      // 用户屏蔽了 AI 内容：不把 AI 整理的新词硬塞成他的今日词
+      if (e.origin?.kind === "ai" && db.getHideAi(u.id)) { skipped++; continue; }
       const readNew = db.getState(u.id, e.id).read;
       const future = futureAssigned(u.id, day).has(e.id);
       if (readNew || future) { skipped++; continue; } // 读过的、已排到以后的，换了会重复

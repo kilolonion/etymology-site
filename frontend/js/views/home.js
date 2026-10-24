@@ -215,6 +215,15 @@ function wToday() {
   const { t } = ctx;
   const e = t.entry;
   if (!e) return quiet("今天的词", "词库里还没有词条", "today");
+  // 今天的词是 AI 整理的、用户又屏蔽了 AI 内容：不显示任何正文，只给说明和两个出口
+  if (e.aiGate) {
+    return `<div class="w-body w-card w-quiet w-ai-gate"><div class="q-in">
+      <span class="q-ic">${icon("spark")}</span>
+      <div><h2>今天的词 · 已屏蔽 AI 内容</h2>
+      <p>今天的词是 AI 整理的，已按你的设置隐藏。</p>
+      <div class="acts"><a class="btn sm" href="#/w/${esc(e.id)}?ai=1">仍然查看</a><a class="btn sm ghost" href="#/me">去改设置</a></div></div>
+    </div></div>`;
+  }
   const theme = primaryTheme(e);
   const why = t.done ? "" : reasonText(t.reason);
   const line = t.done && e.keyline ? `<p class="w-q key"><small>一句话记住</small>${rich(e.keyline)}</p>` : `<p class="w-q">${rich(e.teaser)}</p>`;
@@ -244,9 +253,10 @@ function wSearch() {
 function wTomorrow() {
   const { t } = ctx;
   const open = t.done && t.tomorrow;
+  const teaser = t.tomorrow?.teaser ? rich(t.tomorrow.teaser) : "这一篇已按你的设置隐藏";
   const inner = `<span class="flap" aria-hidden="true"></span><span class="wax">源</span>
     <div class="note"><p class="label">明日预告${open ? "" : ` · 未拆封`}</p>
-    <p class="q">${open ? rich(t.tomorrow.teaser) : "读完今天的词，这封信就能拆开"}</p></div>`;
+    <p class="q">${open ? teaser : "读完今天的词，这封信就能拆开"}</p></div>`;
   return open
     ? `<a class="w-body w-letter" href="#/w/${esc(t.tomorrow.id)}" title="等不及？点开提前读">${inner}</a>`
     : `<div class="w-body w-letter locked">${inner}</div>`;
@@ -502,6 +512,7 @@ function kinMap(e, kin, tall = false) {
 function wKin(size) {
   const e = ctx.t.entry;
   if (!e) return quiet("今天这个词的亲戚", "", "users");
+  if (e.aiGate) return quiet("今天这个词的亲戚", "今天的词是 AI 整理的，已按你的设置隐藏", "users");
   const kin = [...e.kin, ...e.seeAlso.map((x) => ({ ...x, rel: "参见" }))];
   // 书里记下的亲戚只有一两个时，接着放“相关的词”（同专题、同语源），格子不至于空一半
   const near = (e.related ?? []).filter((r) => r.id !== e.id && !kin.some((k) => k.id === r.id)).map((x) => ({ ...x, rel: "相关" }));

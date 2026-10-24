@@ -32,6 +32,8 @@ export type Summary = {
   redirect?: string;
   /** 不在书里的词：ai = AI 整理待核对，ai-ok = AI 整理已核对，edit = 编辑撰写；原书词条没有这个字段 */
   src?: Src;
+  /** 原书词条里由 AI 补写的字段（导入后批量补的 keyline / links，后台 AI 补写的字段）；用户屏蔽 AI 内容时去掉 */
+  ai?: string[];
 };
 
 export type Src = "ai" | "ai-ok" | "edit";
@@ -63,6 +65,10 @@ type Index = {
   order: Map<string, string[]>;
   /** 词条在自己那本书里排第几（从 0 数） */
   pos: Map<string, number>;
+  /** 由 AI 补写的关系（两个 id 排序后用 | 连起来） */
+  aiLinks: Set<string>;
+  /** 原书词条里由 AI 补写的标量字段（keyline 等；links 单独用 aiLinks 标） */
+  aiFields: Map<string, Set<string>>;
 };
 
 const ORDER_SALT = process.env.ORDER_SALT ?? "etymology-daily";
@@ -164,13 +170,42 @@ export function rebuild(): void {
   const rotation = new Set([...full.values()].filter((e) => !e.origin || (!!e.origin.checked && ov.aiInDaily)).map((e) => e.id));
   const key = (id: string) => hashHex(ORDER_SALT + id);
   const dailyOrder = [...rotation].sort((a, b) => (key(a) < key(b) ? -1 : 1));
+  // 原书里的本来样子（不含后台补写）：判断某个字段/关系是不是 AI 补写时要用它
+  const baseById = new Map<string, FullEntry>();
+  for (const e of base) if (!isRedirect(e)) baseById.set(e.id, e);
+
   const kin = new Map<string, Link[]>();
+  const aiLinks = new Set<string>();
+  const aiFields = new Map<string, Set<string>>();
   const push = (from: string, l: Link) => {
     if (!full.has(l.id)) return;
     if (!kin.has(from)) kin.set(from, []);
     if (!kin.get(from)!.some((x) => x.id === l.id)) kin.get(from)!.push(l);
   };
   for (const e of full.values()) {
+    const fields = new Set<string>();
+    if (e.origin?.kind === "ai") {
+      // 整篇 AI 整理的新词：它的关系也都是 AI 的
+      for (const l of e.links ?? []) aiLinks.add(pairKey(e.id, l.id));
+    } else {
+      const raw = baseById.get(e.id);
+      const patch = e.origin ? undefined : ov.patches.get(e.id);
+      if (raw) {
+        const baseAuto = new Set(raw.auto ?? []);
+        // 导入时 AI 批量补的字段（keyline 等）
+        for (const f of baseAuto) if (AUTO_AI.has(f) && f !== "links") fields.add(f);
+        // 后台补写：AI 写的算 AI；人工写的覆盖掉原书的 AI 版本，就不算 AI 了
+        for (const f of Object.keys(patch?.fields ?? {})) {
+          if (f === "links") continue;
+          if (patch!.origin.kind === "ai") fields.add(f);
+          else fields.delete(f);
+        }
+        // 关系是追加不是替换：原书数据里的 AI 关系 + 这次 AI 追加的都算 AI，人工追加的除外
+        if (baseAuto.has("links")) for (const l of raw.links ?? []) aiLinks.add(pairKey(e.id, l.id));
+        if (patch?.origin.kind === "ai") for (const l of patch.fields.links ?? []) aiLinks.add(pairKey(e.id, l.id));
+      }
+    }
+    aiFields.set(e.id, fields);
     for (const l of e.links ?? []) {
       push(e.id, l);
       push(l.id, { ...l, id: e.id });
@@ -203,14 +238,15 @@ export function rebuild(): void {
     list.push(e.id);
     order.set(e.book, list);
   }
-  index = { all, full, redirects, dailyOrder, rotation, kin, words, twins, order, pos };
+  index = { all, full, redirects, dailyOrder, rotation, kin, words, twins, order, pos, aiLinks, aiFields };
 }
 
 export const getEntry = (id: string) => index.full.get(id);
 export const allFull = () => [...index.full.values()];
 export const getRedirect = (id: string) => index.redirects.get(id);
 export const dailyOrder = () => index.dailyOrder;
-export const totalCount = () => index.full.size;
+export const totalCount = (hideAi = false) =>
+  hideAi ? [...index.full.values()].filter((e) => e.origin?.kind !== "ai").length : index.full.size;
 /** 能不能进每日推送、“接着读”、随手翻一页 */
 export const inRotation = (id: string) => index.rotation.has(id);
 /** 同一个词在别的书里的版本（不含自己），按书目顺序 */
@@ -218,6 +254,86 @@ export const twinsOf = (id: string): string[] => {
   const e = index.full.get(id);
   return e ? (index.twins.get(headKey(e.headword)) ?? []).filter((x) => x !== id) : [];
 };
+const pairKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
+/** 这条关系是不是 AI 补写的 */
+export const isAiLink = (a: string, b: string) => index.aiLinks.has(pairKey(a, b));
+
+/** 导入后由 AI 批量补写、记在 auto 里的字段 */
+const AUTO_AI = new Set(["keyline", "links"]);
+/** 其中会出现在列表摘要里、需要单独处理的标量字段（links 走关系表） */
+const AUTO_AI_FIELDS = new Set([...AUTO_AI].filter((f) => f !== "links"));
+
+/** 原书词条里由 AI 补写的标量字段（列表/文章要藏掉的） */
+export function aiFieldsOf(e: FullEntry): string[] {
+  const known = index?.aiFields.get(e.id);
+  if (known) return [...known];
+  // 不在索引里的词条（后台预览等）没有 provenance，退回按数据里的标记粗算
+  const out = new Set((e.auto ?? []).filter((f) => AUTO_AI_FIELDS.has(f)));
+  if (e.patched?.origin.kind === "ai") for (const f of e.patched.fields) if (AUTO_AI_FIELDS.has(f)) out.add(f);
+  return [...out];
+}
+
+/** 原书词条里被 AI 补写、用户又屏蔽了的内容（字段名 + links），给文章页“已隐藏什么”用 */
+export function aiHiddenOf(e: FullEntry): string[] {
+  if (e.origin) return [];
+  const out = aiFieldsOf(e);
+  if ((e.links ?? []).some((l) => isAiLink(e.id, l.id))) out.push("links");
+  return out;
+}
+
+/**
+ * 屏蔽 AI 内容时看到的原书词条：
+ * - auto 里由 AI 批量补的 keyline 等字段去掉；
+ * - 后台 AI 补写的字段：原书本来就有（且不是 AI 生成的）就换回原书内容，否则去掉；
+ * - AI 补写的关系去掉，人工补写的关系保留；
+ * - 整篇是 AI 整理的新词不在这里处理（列表里不出现，文章页另做拦截）。
+ */
+export function withoutAi(e: FullEntry): FullEntry {
+  if (e.origin) return e;
+  const fields = aiFieldsOf(e);
+  const hiddenLinks = new Set((e.links ?? []).filter((l) => isAiLink(e.id, l.id)).map((l) => l.id));
+  if (!fields.length && !hiddenLinks.size) return e;
+  const orig = bookEntry(e.id) as Record<string, unknown> | undefined;
+  const origAuto = new Set((orig?.auto as string[] | undefined) ?? []);
+  const out: Record<string, unknown> = { ...e };
+  for (const f of fields) {
+    const patchedByAi = e.patched?.origin.kind === "ai" && e.patched.fields.includes(f);
+    // 原书里这一项要是本来就有、而且不是 AI 生成的，才换回原书内容；否则整项去掉
+    const restorable = patchedByAi && orig && f in orig && !(origAuto.has(f) && AUTO_AI.has(f));
+    if (restorable) out[f] = orig![f];
+    else delete out[f];
+  }
+  if (hiddenLinks.size) {
+    const kept = (e.links ?? []).filter((l) => !hiddenLinks.has(l.id));
+    if (kept.length) out.links = kept;
+    else delete out.links;
+  }
+  if (e.patched?.origin.kind === "ai") delete out.patched;
+  out.auto = (e.auto ?? []).filter((f) => !AUTO_AI.has(f));
+  return out as FullEntry;
+}
+
+/** 按用户设置取词条：屏蔽 AI 内容时给 withoutAi 之后的样子（AI 新词原样返回，由调用方决定过滤/拦截） */
+export const entryFor = (hideAi: boolean) => (id: string): FullEntry | undefined => {
+  const e = index.full.get(id);
+  return e && hideAi ? withoutAi(e) : e;
+};
+
+/** 列表摘要：屏蔽 AI 内容时 AI 整理的新词不出现，原书词条用 withoutAi 之后的样子 */
+export function summaryFor(id: string, hideAi = false): Summary | undefined {
+  const e = index.full.get(id);
+  if (!e) return undefined;
+  if (hideAi && e.origin?.kind === "ai") return undefined;
+  return summarize(hideAi ? withoutAi(e) : e);
+}
+
+/** 历史（书架 / 阅读记录 / 收藏）摘要：读过的 AI 新词照常保留，原书词条的 AI 补写字段仍然藏掉 */
+export function historySummaryFor(id: string, hideAi = false): Summary | undefined {
+  const e = index.full.get(id);
+  if (!e) return undefined;
+  return summarize(hideAi && !e.origin ? withoutAi(e) : e);
+}
+
 /** 一本书按原书顺序的词条 id */
 export const bookOrder = (book: string): string[] => index.order.get(book) ?? [];
 /** 词条在原书里的位置：第几篇（从 0 数）、全书几篇 */
@@ -226,9 +342,10 @@ export function bookPos(id: string): { book: string; i: number; n: number } | un
   const i = index.pos.get(id);
   return e?.book && i !== undefined ? { book: e.book, i, n: index.order.get(e.book)?.length ?? 0 } : undefined;
 }
-/** 几本书都讲过的词：每组按书目顺序，组按词头字母 */
-export const twinGroups = (): string[][] =>
+/** 几本书都讲过的词：每组按书目顺序，组按词头字母；hideAi 时不算 AI 整理的新词 */
+export const twinGroups = (hideAi = false): string[][] =>
   [...index.twins.values()]
+    .map((ids) => (hideAi ? ids.filter((id) => index.full.get(id)?.origin?.kind !== "ai") : ids))
     .filter((ids) => ids.length > 1)
     .sort((a, b) => cmpHead(index.full.get(a[0]!)!.headword, index.full.get(b[0]!)!.headword));
 /** 是不是书里的词条（任何一本，含跳转词条）；后台新增的词不是 */
@@ -272,6 +389,7 @@ export function summarize(e: RawEntry): Summary {
   if (isRedirect(e)) {
     return { id: e.id, book: e.book, seal: sealOf(e.book), headword: e.headword, ipa: e.ipa, letter, page: e.page, redirect: e.redirect };
   }
+  const ai = aiHiddenOf(e);
   return {
     id: e.id,
     book: e.book,
@@ -290,6 +408,7 @@ export function summarize(e: RawEntry): Summary {
     letter,
     page: e.page,
     src: srcOf(e.origin),
+    ai: ai.length ? ai : undefined,
   };
 }
 
@@ -303,48 +422,60 @@ const routeOf = (langs?: string[]) =>
     ? [...langs].sort((a, b) => (LANG_ORDER.indexOf(a) + 1 || 99) - (LANG_ORDER.indexOf(b) + 1 || 99))
     : undefined;
 
-/** 全部词条摘要，按词头字母（只有一本书时按书中顺序） */
-export const allSummaries = () => index.all.map(summarize);
+/** 全部词条摘要，按词头字母（只有一本书时按书中顺序）；hideAi 时去掉 AI 整理的新词和 AI 补写字段 */
+export const allSummaries = (hideAi = false) =>
+  index.all.flatMap((e) => {
+    if (isRedirect(e)) return [summarize(e)];
+    if (hideAi && e.origin?.kind === "ai") return [];
+    return [summarize(hideAi ? withoutAi(e) : e)];
+  });
 
 const VAGUE_THEMES = new Set(["人名", "地名"]);
 
-/** 同题材的其他词条，主题材相同的排前面 */
-export function related(id: string, limit = 4): Summary[] {
+/** 同题材的其他词条，主题材相同的排前面；hideAi 时不算 AI 整理的新词、不算 AI 补写的字段 */
+export function related(id: string, limit = 4, hideAi = false): Summary[] {
   const e = getEntry(id);
   if (!e) return [];
+  const self = hideAi ? withoutAi(e) : e;
   const scored: { score: number; e: FullEntry }[] = [];
   for (const other of index.full.values()) {
     if (other.id === id) continue;
+    if (hideAi && other.origin?.kind === "ai") continue;
     let score = 0;
-    if (other.themes[0] === e.themes[0]) score += 2;
-    if (e.subtheme && other.subtheme === e.subtheme) score += 2;
-    score += other.themes.filter((t) => e.themes.includes(t) && !VAGUE_THEMES.has(t)).length;
+    if (other.themes[0] === self.themes[0]) score += 2;
+    if (self.subtheme && other.subtheme === self.subtheme) score += 2;
+    score += other.themes.filter((t) => self.themes.includes(t) && !VAGUE_THEMES.has(t)).length;
     if (score) scored.push({ score, e: other });
   }
   return scored
     .sort((a, b) => b.score - a.score || (hashHex(id + a.e.id) < hashHex(id + b.e.id) ? -1 : 1))
     .slice(0, limit)
-    .map((x) => summarize(x.e));
+    .map((x) => summarize(hideAi ? withoutAi(x.e) : x.e));
 }
 
-/** 每个题材下的词条 id，按书中顺序；只返回有词条的题材 */
-export function themeGroups(): { theme: string; ids: string[] }[] {
+/** 每个题材下的词条 id，按书中顺序；只返回有词条的题材；hideAi 时不算 AI 整理的新词 */
+export function themeGroups(hideAi = false): { theme: string; ids: string[] }[] {
   return THEMES.map((theme) => ({
     theme,
-    ids: [...index.full.values()].filter((e) => e.themes.includes(theme)).map((e) => e.id),
+    ids: [...index.full.values()]
+      .filter((e) => (!hideAi || e.origin?.kind !== "ai") && e.themes.includes(theme))
+      .map((e) => e.id),
   })).filter((g) => g.ids.length);
 }
 
 export type SearchHit = Summary & { snippet?: string };
 
-export function search(q: string, limit = 50): SearchHit[] {
+export function search(q: string, limit = 50, hideAi = false): SearchHit[] {
   const needle = q.trim().toLowerCase();
   if (!needle) return [];
   const hits: { score: number; hit: SearchHit }[] = [];
 
   for (const e of index.all) {
-    const head = e.headword.toLowerCase();
-    const names = [head, ...(isRedirect(e) ? [] : [...(e.variants ?? []), ...(e.phrases ?? []).map((p) => p.replace(/\s+[\u3400-\u9fff].*$/, ""))].map((v) => v.toLowerCase()))];
+    // 屏蔽 AI 内容的人：AI 整理的新词不搜出来；原书词条按去掉 AI 补写字段后的样子搜
+    if (hideAi && !isRedirect(e) && e.origin?.kind === "ai") continue;
+    const shown: RawEntry = hideAi && !isRedirect(e) ? withoutAi(e) : e;
+    const head = shown.headword.toLowerCase();
+    const names = [head, ...(isRedirect(shown) ? [] : [...(shown.variants ?? []), ...(shown.phrases ?? []).map((p) => p.replace(/\s+[\u3400-\u9fff].*$/, ""))].map((v) => v.toLowerCase()))];
     let score = 0;
     let snippet: string | undefined;
 
@@ -352,10 +483,10 @@ export function search(q: string, limit = 50): SearchHit[] {
     else if (names.some((n) => n.startsWith(needle))) score = 80;
     else if (names.some((n) => n.includes(needle))) score = 60;
 
-    if (!isRedirect(e)) {
-      if (!score && e.meaning.toLowerCase().includes(needle)) score = 50;
+    if (!isRedirect(shown)) {
+      if (!score && shown.meaning.toLowerCase().includes(needle)) score = 50;
       if (!score) {
-        const body = [e.keyline ?? "", ...e.etymology, ...e.examples.flatMap((x) => [x.en, x.zh])].map((p) =>
+        const body = [shown.keyline ?? "", ...shown.etymology, ...shown.examples.flatMap((x) => [x.en, x.zh])].map((p) =>
           p.replace(/\*/g, ""),
         );
         const para = body.find((p) => p.toLowerCase().includes(needle));
@@ -367,8 +498,9 @@ export function search(q: string, limit = 50): SearchHit[] {
         }
       }
     }
-    if (score) hits.push({ score, hit: { ...summarize(e), snippet } });
+    if (score) hits.push({ score, hit: { ...summarize(shown), snippet } });
   }
+  // 先按分数过滤再截断：hideAi 时 AI 新词的命中不会占掉名额
   return hits
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)

@@ -32,14 +32,30 @@ export async function viewEntry(id, query) {
   page = new AbortController();
   const sig = page.signal;
   const draft = !!query?.get("draft");
+  // ?ai=1 是拦截页上“仍然查看这一篇”：要把这个意思带到接口上，服务端才给 AI 新词全文
+  const allowAi = !draft && query?.get("ai") === "1";
   // 词条目录用来给正文里的词加词卡链接；拿不到也不耽误看文章
   const [e, all] = await Promise.all([
-    api(`/entries/${encodeURIComponent(id)}${draft ? "?draft=1" : ""}`, draft ? { fresh: true } : undefined),
+    api(`/entries/${encodeURIComponent(id)}${draft ? "?draft=1" : allowAi ? "?ai=1" : ""}`, draft ? { fresh: true } : undefined),
     api("/entries").catch(() => null),
   ]);
   if (all) indexWords(all);
   if (e.redirect) {
     location.replace(`#/w/${e.redirect}`);
+    return;
+  }
+
+  // 屏蔽了 AI 内容，又打开了一篇 AI 整理的词（别人分享的链接、以前的记录）：先说一声，点了再看
+  if (e.aiGate && query?.get("ai") !== "1") {
+    render(`
+      <button class="back" data-action="back">${icon("left")}返回</button>
+      <section class="ai-gate">
+        <span class="ai-gate-ic">${icon("spark")}</span>
+        <h1>${esc(e.headword)}</h1>
+        <p>这一篇不在原书里，是 AI 依据资料整理的。你在“我的”里屏蔽了 AI 补写的内容。</p>
+        <div class="acts"><a class="btn sm" href="#/w/${esc(e.id)}?ai=1">仍然查看这一篇</a><a class="btn sm ghost" href="#/me">去改设置</a></div>
+      </section>`);
+    document.title = `${e.headword} · 词源一日`;
     return;
   }
 
@@ -182,10 +198,12 @@ function sourceRows(e) {
     : "";
   const autoNote = (fields, how) => (fields.length ? `「${fields.map((f) => AUTO_NAMES[f] ?? f).join("、")}」${how}，仅供参考。` : "");
   const auto = autoNote((e.auto ?? []).filter((f) => !AUTO_AI.has(f)), "由程序归类") + autoNote((e.auto ?? []).filter((f) => AUTO_AI.has(f)), "由 AI 依据原文补写");
+  // 屏蔽了 AI 内容：说一声这篇藏了哪些
+  const hidden = e.aiHidden?.length ? `AI 补写的「${e.aiHidden.map((f) => FIELD_NAMES[f] ?? AUTO_NAMES[f] ?? f).join("、")}」已按你的设置隐藏。` : "";
   const note = e.bookInfo?.note ?? "正文、释义、例句照原书。";
   return `<div class="r"><span>出处</span><span>${bookWhere(e)}</span></div>
     ${e.bookInfo && (e.bookInfo.author || e.bookInfo.publisher) ? `<p class="src-note">${esc([e.bookInfo.author, e.bookInfo.publisher, e.bookInfo.year].filter(Boolean).join("，"))}</p>` : ""}
-    <p class="src-note">${esc(note)}${auto}${patched}</p>`;
+    <p class="src-note">${esc(note)}${auto}${patched}${hidden}</p>`;
 }
 
 /** 弹出一张卡片（来源说明、报错共用），关掉就移除 */
@@ -446,7 +464,7 @@ function showFinish(id, f) {
       <li><b>${f.today}<small>/${f.goal}</small></b><span>今日目标</span></li>
       ${f.rank ? `<li><b>${f.rank.rank}<small>/${f.rank.of}</small></b><span>今天排名</span></li>` : ""}
     </ul>
-    ${f.tomorrow ? `<a class="fin-letter" href="#/w/${esc(f.tomorrow.id)}"><small>明日预告 · 已拆封</small><span>${rich(f.tomorrow.teaser)}</span></a>` : ""}
+    ${f.tomorrow ? `<a class="fin-letter" href="#/w/${esc(f.tomorrow.id)}"><small>明日预告 · 已拆封</small><span>${f.tomorrow.teaser ? rich(f.tomorrow.teaser) : "这一篇已按你的设置隐藏"}</span></a>` : ""}
     <div class="fin-acts">
       ${next ? `<a class="btn primary next" href="#/w/${esc(next.id)}"><small>再读一个</small><span class="w"><em>${esc(next.headword)}</em>${icon("arrow")}</span></a>` : `<button class="btn primary" data-action="read-another" data-id="${esc(id)}">再读一个${icon("arrow")}</button>`}
       <div class="fin-sub">${viaPaper ? `<a class="btn ghost" href="#/paper">回到日报</a>` : `<a class="btn ghost" href="#/paper">浏览日报</a><a class="btn ghost" href="#/">回到今日</a>`}</div>

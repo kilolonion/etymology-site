@@ -11,6 +11,7 @@
     "dev": "FRONTEND_DIR=../frontend node --disable-warning=ExperimentalWarning --watch src/main.ts",
     "admin": "node --disable-warning=ExperimentalWarning scripts/admin.ts",
     "validate": "node --disable-warning=ExperimentalWarning scripts/validate-entries.ts data/entries.json",
+    "test:hide-ai": "node --disable-warning=ExperimentalWarning scripts/test-hide-ai.ts",
     "typecheck": "tsc"
   },
   "dependencies": {

@@ -166,6 +166,8 @@ export function openDb(path: string): void {
   if (!cols.has("mail_tz")) db.exec("ALTER TABLE users ADD COLUMN mail_tz TEXT");
   // 词书：只推哪几本（JSON 数组，空 = 全部混合推送）
   if (!cols.has("books")) db.exec("ALTER TABLE users ADD COLUMN books TEXT");
+  // 屏蔽 AI 内容：AI 整理的新词不出现，原书词条里 AI 补写的字段不显示（默认不屏蔽）
+  if (!cols.has("hide_ai")) db.exec("ALTER TABLE users ADD COLUMN hide_ai INTEGER NOT NULL DEFAULT 0");
   // RSS：订阅地址里的随机钥匙（空 = 没开）；唯一索引允许多个 NULL
   if (!cols.has("feed_key")) db.exec("ALTER TABLE users ADD COLUMN feed_key TEXT");
   db.exec("CREATE UNIQUE INDEX IF NOT EXISTS users_feed_key ON users(feed_key)");
@@ -608,6 +610,16 @@ export function getOnBoard(uid: number): boolean {
 
 export function setOnBoard(uid: number, on: boolean): void {
   db.prepare("UPDATE users SET on_board = ? WHERE id = ?").run(on ? 1 : 0, uid);
+}
+
+/** 屏蔽 AI 内容（默认不屏蔽） */
+export function getHideAi(uid: number): boolean {
+  const r = db.prepare("SELECT hide_ai FROM users WHERE id = ?").get(uid) as { hide_ai: number } | undefined;
+  return !!r?.hide_ai;
+}
+
+export function setHideAi(uid: number, on: boolean): void {
+  db.prepare("UPDATE users SET hide_ai = ? WHERE id = ?").run(on ? 1 : 0, uid);
 }
 
 /** 排行榜用：每个没停用、没关掉排行榜的成员，以及他在 [since, day] 这几天读完的词条（一行一个；一个没读的也有一行，entry 为 null） */
@@ -1064,6 +1076,11 @@ export function setPaper(uid: number, day: string, data: unknown): void {
     `INSERT INTO paper (user_id, day, data) VALUES (?, ?, ?)
      ON CONFLICT(user_id, day) DO UPDATE SET data = excluded.data`,
   ).run(uid, day, JSON.stringify(data));
+}
+
+/** 删掉某天的日报缓存（改设置后让当天日报按新设置重排） */
+export function deletePaper(uid: number, day: string): void {
+  db.prepare("DELETE FROM paper WHERE user_id = ? AND day = ?").run(uid, day);
 }
 
 /** 有日报的日子（新的在前） */

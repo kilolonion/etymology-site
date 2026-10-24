@@ -103,6 +103,31 @@ export function tomorrowId(uid: number, day = localDay()): string | undefined {
   return lockDay(uid, tomorrow, exclude, tomorrow);
 }
 
+/**
+ * 用户开启“屏蔽 AI 内容”后：今天 / 明天已经锁定、但还没读的 AI 整理新词换掉。
+ * 已经读过的保留（算历史，进度和连续天数不受影响）。换不出来就交给页面的拦截提示兜底。
+ */
+export function relockHiddenAi(uid: number): void {
+  const state = stateMap(uid);
+  const day = localDay();
+  const exclude = new Set(allDaily(uid).flatMap((d) => d.ids));
+  for (const d of [day, nextDay(day)]) {
+    const ids = getDaily(uid, d) ?? [];
+    const kept = ids.filter((id) => {
+      const e = getEntry(id);
+      return !!e && !(e.origin?.kind === "ai" && !state.get(id)?.read);
+    });
+    if (kept.length === ids.length) continue;
+    const [p] = pick(uid, 1, exclude, d, d);
+    if (p) {
+      exclude.add(p.id);
+      setDaily(uid, d, [p.id], { [p.id]: p.reason });
+    } else if (kept.length) {
+      setDaily(uid, d, kept, {});
+    }
+  }
+}
+
 const daysBetween = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / 86_400_000);
 
 /** 旧词重逢的间隔（天）：越久远的记忆越优先；昨天读的还新鲜，不重现 */

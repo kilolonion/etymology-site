@@ -62,6 +62,15 @@ const closeBtn = `<button class="icon-btn sm wc-x" data-action="close-card" aria
 const loading = (word) => `<div class="wc-head"><b>${esc(word)}</b>${closeBtn}</div><div class="wc-wait"><span class="sk"></span><span class="sk"></span></div>`;
 
 function entryCard(c) {
+  // 屏蔽 AI 内容时，AI 整理的新词只给一个说明和出口，不显示释义/故事开头
+  if (c.aiGate) {
+    return `<div class="wc-in">
+      <div class="wc-head"><b>${esc(c.headword)}${srcMark(c)}</b>${closeBtn}</div>
+      <p class="wc-note">这一篇是 AI 整理的，已按你的设置隐藏。</p>
+      <a class="wc-go" href="#/w/${esc(c.id)}?ai=1">仍然查看这一篇 ${icon("arrow")}</a>
+      <a class="wc-go" href="#/me">去改设置 ${icon("arrow")}</a>
+    </div>`;
+  }
   const theme = primaryTheme(c);
   return `<div class="wc-in" style="${tint(c)}">
     <div class="wc-top">${themeTag(theme)}${c.read ? `<i class="seen">已读</i>` : ""}${closeBtn}</div>

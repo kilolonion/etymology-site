@@ -1500,6 +1500,9 @@ a.w-more:hover { color: var(--accent); }
 .w-quiet p em { font-family: var(--display); color: var(--ink-2); }
 .q-go { display: inline-flex; align-items: center; margin-top: 8px; font-size: 12.5px; color: var(--accent); text-decoration: none; }
 .q-go .i { width: 14px; height: 14px; }
+/* 屏蔽 AI 内容时，今天的词换成说明卡：一句解释 + 两个出口 */
+.w-ai-gate .acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; }
+.w-ai-gate .acts .btn { min-height: 32px; padding: 4px 12px; font-size: 12.5px; }
 /* 矮的格子：图标缩小，说明最多两行 */
 @container w (max-height: 175px) and (max-aspect-ratio: 3 / 2) {
   .q-in { gap: 6px; }
@@ -2560,6 +2563,13 @@ button.ae-chip { cursor: pointer; }
   .pw-news .pw-hl em { font-size: 15.5px; }
   .pw-segs { margin-top: 3px; }
 }
+/* 屏蔽了 AI 内容时打开 AI 整理的词 */
+.ai-gate { max-width: 30em; margin: 12vh auto 0; text-align: center; }
+.ai-gate-ic { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--bg-2); color: var(--accent); }
+.ai-gate-ic .i { width: 26px; height: 26px; }
+.ai-gate h1 { margin: 14px 0 8px; font: italic 700 34px var(--display); }
+.ai-gate p { margin: 0 0 18px; font-size: 14.5px; line-height: 1.8; color: var(--ink-2); }
+.ai-gate .acts { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 /* 1-2：只要图标和“日报 · 还剩几篇” */
 .p-1-2 { gap: 10px; padding-inline: 10px; }
 @container w (max-width: 150px) { .p-1-2 .pw-ic { width: 30px; height: 30px; border-radius: 9px; } .p-1-2 .pw-ic .i { width: 16px; height: 16px; } .p-1-2 .pw-title b { font-size: 14px; letter-spacing: .06em; } .p-1-2 .pw-title small { font-size: 11.5px; } }

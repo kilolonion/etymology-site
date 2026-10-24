@@ -11,7 +11,7 @@
 // 没读过的词不够时，空位用温故补上。
 
 import { createHash } from "node:crypto";
-import { allDaily, getDaily, getPaper, readLog, setPaper, stateMap } from "./db.ts";
+import { allDaily, getDaily, getHideAi, getPaper, readLog, setPaper, stateMap } from "./db.ts";
 import { allFull, getEntry, inRotation, themeGroups } from "./entries.ts";
 import { recommend, type Reason } from "./recommend.ts";
 import { shiftDay } from "./daily.ts";
@@ -46,9 +46,10 @@ export function getOrBuildPaper(uid: number, day: string, today: string): Paper 
 
 export function buildPaper(uid: number, day: string): Paper {
   const seed = `${uid}:${day}:paper`;
+  const hide = getHideAi(uid);
   const state = stateMap(uid);
   const todayIds = getDaily(uid, day) ?? [];
-  const todayEntry = todayIds.map((id) => getEntry(id)).find(Boolean);
+  const todayEntry = todayIds.map((id) => getEntry(id)).find((e) => e && !(hide && e.origin?.kind === "ai"));
   // 今天和以后锁定的词不上日报
   const used = new Set<string>([...todayIds, ...allDaily(uid).filter((d) => d.day > day).flatMap((d) => d.ids)]);
   // 最近三天日报里出过、还没读的：尽量不再出现（不够时再放开）
@@ -89,7 +90,7 @@ export function buildPaper(uid: number, day: string): Paper {
 
   // 今日专题：还剩至少三个没读过的专题里，按日期轮换（收藏过的、读得少的更容易轮到）
   const unreadIn = (ids: string[]) => ids.filter((id) => scoreOf.has(id) && !used.has(id) && inRotation(id));
-  const groups = themeGroups()
+  const groups = themeGroups(hide)
     .filter((g) => !VAGUE.has(g.theme))
     .map((g) => ({ ...g, left: unreadIn(g.ids) }))
     .filter((g) => g.left.length >= 3);
@@ -122,7 +123,7 @@ export function buildPaper(uid: number, day: string): Paper {
   const readThemes = new Set(
     [...state].filter(([, s]) => s.read).map(([id]) => getEntry(id)).filter((e): e is FullEntry => !!e).map(primary),
   );
-  const coldGroups = themeGroups().filter((g) => !VAGUE.has(g.theme) && !readThemes.has(g.theme) && unreadIn(g.ids).length);
+  const coldGroups = themeGroups(hide).filter((g) => !VAGUE.has(g.theme) && !readThemes.has(g.theme) && unreadIn(g.ids).length);
   if (coldGroups.length) {
     const g = coldGroups[hash(seed + "cold") % coldGroups.length]!;
     const left = unreadIn(g.ids);
@@ -130,9 +131,11 @@ export function buildPaper(uid: number, day: string): Paper {
     if (id) sections.push({ key: "wild", title: "冷门一篇", en: "Off the Beaten Path", items: [{ id, reason: { type: "fresh", theme: g.theme } }] });
   }
 
-  // 温故的候选：读过三天以上的词
+  // 温故的候选：读过三天以上的词（屏蔽 AI 内容时，读过的 AI 新词也不放进日报）
   const count = () => sections.reduce((n, s) => n + s.items.length, 0) + (lead ? 1 : 0);
-  const log = readLog(uid).filter((r) => r.read_day && r.read_day <= shiftDay(day, -3) && getEntry(r.id) && !used.has(r.id));
+  const log = readLog(uid).filter(
+    (r) => r.read_day && r.read_day <= shiftDay(day, -3) && getEntry(r.id) && !used.has(r.id) && !(hide && getEntry(r.id)?.origin?.kind === "ai"),
+  );
   const recallWant = Math.min(2, log.length);
 
   // 剩下的空位：按推荐分补满“还值得一读”，给温故留两格（读过的词不够就不留）

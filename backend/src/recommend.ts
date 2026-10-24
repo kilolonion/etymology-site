@@ -15,8 +15,8 @@
 // 后台新增、还没核对的词不参与推荐（见 entries.ts 的 inRotation）；关掉的书不推（bookFilter）。
 
 import { createHash } from "node:crypto";
-import { allDaily, getBookPrefs, readLog, stateMap, type BookPrefs } from "./db.ts";
-import { allFull, books, getEntry, headKey, inRotation, kinOf } from "./entries.ts";
+import { allDaily, getBookPrefs, getHideAi, readLog, stateMap, type BookPrefs } from "./db.ts";
+import { allFull, books, getEntry, headKey, inRotation, isAiLink, kinOf } from "./entries.ts";
 import { SUBTHEMES, type FullEntry } from "./types.ts";
 
 export type Reason =
@@ -51,11 +51,13 @@ const levelOf = (p: BookPrefs, id: string) => p.weights[id] ?? p.fallback;
  * 这个用户的推送范围：档位是“关”的书不推。后台新增的词不属于哪本书，照常参与（它们另有 inRotation 把关）；
  * 书目里已经没有的书忽略，万一全关了就退回全部
  */
-export function bookFilter(uid: number): (e: { book?: string }) => boolean {
+export function bookFilter(uid: number): (e: { book?: string; origin?: { kind: string } }) => boolean {
   const prefs = getBookPrefs(uid);
   const on = new Set(books().map((b) => b.id).filter((id) => levelOf(prefs, id) > 0));
-  if (!on.size || on.size === books().length) return () => true;
-  return (e) => !e.book || on.has(e.book);
+  const all = !on.size || on.size === books().length;
+  // 屏蔽 AI 内容的人，AI 整理的新词也不推
+  const noAi = getHideAi(uid);
+  return (e) => (!noAi || e.origin?.kind !== "ai") && (all || !e.book || on.has(e.book));
 }
 
 /** 一本书在推送里的安排：档位、习惯系数、目标占比、最近两周的实际占比，以及系数是怎么来的 */
@@ -169,8 +171,9 @@ export function bookPlan(uid: number, day: string): BookPlan[] {
 
 /** 两个词是否互为“参见” */
 const linked = (a: FullEntry, b: FullEntry) => (a.seeAlso ?? []).includes(b.id) || (b.seeAlso ?? []).includes(a.id);
-/** 书外整理的关系（双向），返回关系类型 */
-const kinType = (a: FullEntry, b: FullEntry) => kinOf(a.id).find((l) => l.id === b.id)?.type;
+/** 书外整理的关系（双向），返回关系类型；屏蔽 AI 内容时不算 AI 补写的关系 */
+const kinType = (a: FullEntry, b: FullEntry, skipAi: boolean) =>
+  skipAi && isAiLink(a.id, b.id) ? undefined : kinOf(a.id).find((l) => l.id === b.id)?.type;
 
 export function recommend(opts: {
   uid: number;
@@ -181,6 +184,7 @@ export function recommend(opts: {
   limit?: number;
 }): Pick[] {
   const { uid, day, seed, exclude = new Set(), anchor, limit = 1 } = opts;
+  const skipAiLinks = getHideAi(uid);
   const state = stateMap(uid);
   const all = allFull();
   const log = readLog(uid).filter((r) => getEntry(r.id));
@@ -226,7 +230,7 @@ export function recommend(opts: {
     if (anchorEntry) {
       const anchorTopics = topics(anchorEntry);
       const shared = topics(e).find((t) => anchorTopics.includes(t));
-      const rel = kinType(e, anchorEntry);
+      const rel = kinType(e, anchorEntry, skipAiLinks);
       if (linked(e, anchorEntry)) {
         score += 4;
         reason = { type: "anchor", word: anchorEntry.headword };
@@ -244,10 +248,10 @@ export function recommend(opts: {
       score += 3;
       reason ??= { type: "link", word: link.headword };
     } else {
-      const kin = readEntries.find((r) => kinType(e, r));
+      const kin = readEntries.find((r) => kinType(e, r, skipAiLinks));
       if (kin) {
         score += 2.5;
-        reason ??= { type: "kin", word: kin.headword, rel: kinType(e, kin)! };
+        reason ??= { type: "kin", word: kin.headword, rel: kinType(e, kin, skipAiLinks)! };
       }
     }
 

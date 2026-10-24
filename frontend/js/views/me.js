@@ -1,6 +1,6 @@
 // 我的：书架、阅读足迹、专题纹章、语源分布，以及收藏、阅读记录、提醒与日报（推送、邮件、RSS）、账号、（管理员）邀请与成员的入口
 
-import { actions, api, copy, empty, esc, fmtDay, getAccent, icon, local, render, rich, row, setAccent, speak, toast } from "../lib.js?v=212dd6fbae";
+import { actions, api, copy, empty, esc, fmtDay, getAccent, icon, invalidate, local, render, rich, row, setAccent, speak, toast } from "../lib.js?v=212dd6fbae";
 import { fold, isWide } from "../components.js?v=212dd6fbae";
 import { emblem, primaryTheme, themeOf, themeTag, tint } from "../themes.js?v=212dd6fbae";
 import { disablePush, enablePush, isStandalone, pushStatus } from "../push.js?v=212dd6fbae";
@@ -50,6 +50,7 @@ export async function viewMe() {
       ${booksVal ? `<a href="#/me/books">${icon("book")}<span class="grow">词书</span><span class="val">${booksVal}</span>${icon("right", "i chev")}</a>` : ""}
       <button class="menu-btn" data-action="accent">${icon("sound")}<span class="grow">发音</span><span class="val accent-val">${ACCENT[getAccent()]}</span><span class="swap">切换</span></button>
       <div class="menu-row">${icon("today")}<span class="grow">每日目标</span><span class="goal-step"><button type="button" class="gs-btn" data-action="goal-minus" aria-label="减少每日目标" ${(me.goal ?? 1) <= 1 ? "disabled" : ""}>−</button><input class="gs-num" id="goal-num" type="number" min="1" max="50" step="1" inputmode="numeric" value="${me.goal ?? 1}" data-cur="${me.goal ?? 1}" aria-label="每日目标个数"><span class="gs-unit">个</span><button type="button" class="gs-btn" data-action="goal-plus" aria-label="增加每日目标" ${(me.goal ?? 1) >= 50 ? "disabled" : ""}>＋</button></span></div>
+      <button class="menu-btn" data-action="hide-ai" data-on="${!!me.hideAi}" title="AI 整理的新词，以及原书词条里 AI 补写的字段（一句话记住、词条关系、钩子、词义演变等）">${icon("spark")}<span class="grow">AI 补写的内容</span><span class="val ai-val">${me.hideAi ? "已屏蔽" : "显示中"}</span><span class="swap">${me.hideAi ? "显示" : "屏蔽"}</span></button>
       <button class="menu-btn" data-action="board-opt" data-on="${!!me.onBoard}">${icon("users")}<span class="grow">参加排行榜</span><span class="val board-val">${me.onBoard ? "参加中" : "已关闭"}</span><span class="swap">${me.onBoard ? "关闭" : "打开"}</span></button>
     </nav>
     <nav class="menu">
@@ -131,6 +132,24 @@ actions["board-opt"] = async (el) => {
     el.querySelector(".board-val").textContent = onBoard ? "参加中" : "已关闭";
     el.querySelector(".swap").textContent = onBoard ? "关闭" : "打开";
     toast(onBoard ? "已加入排行榜" : "已退出排行榜：别人看不到你，你的首页也不再显示排名");
+  } finally {
+    el.disabled = false;
+  }
+};
+
+/** 屏蔽 AI 内容：AI 整理的新词不出现、不推送；原书词条里 AI 补写的字段不显示（读过的历史仍保留） */
+actions["hide-ai"] = async (el) => {
+  const on = el.dataset.on !== "true";
+  el.disabled = true;
+  try {
+    const { hideAi } = await api("/me/hide-ai", { method: "PUT", body: { on } });
+    el.dataset.on = String(hideAi);
+    el.querySelector(".ai-val").textContent = hideAi ? "已屏蔽" : "显示中";
+    el.querySelector(".swap").textContent = hideAi ? "显示" : "屏蔽";
+    invalidate(); // 词条目录、文章、日报都跟着变（服务端也会重排今天/明天的词）
+    toast(hideAi ? "已屏蔽：AI 整理的新词不再出现，原书词条只看书里的内容（读过的历史保留）" : "AI 补写的内容会照常显示（都标着 AI）");
+  } catch (e) {
+    toast(e.message);
   } finally {
     el.disabled = false;
   }
@@ -334,7 +353,7 @@ export async function viewReminder() {
     <header class="page-head"><h1>提醒与日报</h1><p>${STATUS_TEXT[status]}${reminder.devices ? ` · ${reminder.devices} 台设备已订阅` : ""}</p></header>
     <div class="sec-head"><h2>每日提醒</h2><span>网页推送</span></div>
     <div class="reminder-grid">
-      ${notice(today.entry?.teaser, reminder.time)}
+      ${notice(today.entry?.aiGate ? "今天的故事是 AI 整理的，已按你的设置隐藏。" : today.entry?.teaser, reminder.time)}
       <nav class="menu">${panel}</nav>
       ${!isStandalone() && status !== "needs-install" ? `<p class="tip">${icon("phone")}<span>把本站添加到手机主屏幕，打开时没有浏览器边框，用起来就像一个 App。</span></p>` : ""}
     </div>
