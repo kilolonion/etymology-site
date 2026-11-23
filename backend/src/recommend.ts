@@ -6,8 +6,10 @@
 //   + 和当前文章相关（文章末尾“接着读”时）
 //   + 收藏过的专题（个人兴趣）
 //   + 读得少的专题（覆盖面）
-//   − 和昨天、今天同一个主专题（避免单调）
+//   − 和昨天、前天同一个主专题（避免单调）
 //   − 和最近几次推送首字母相同（避免 A、A、A……）
+//   − 之前已经推过但没读的词：冷却期内重罚（并按出现次数递减、避开刚推过的同词头），避免只看邮件不打卡时反复推同一个词；
+//     冷却期外不再加分，也不再把同一个词反复推到榜首
 //   ± 几本书的占比往目标上拉：目标 = 每本书的档位（关 / 少 / 适中 / 多）× 阅读习惯微调，
 //     和最近两周推过、读过的实际占比相比，少了就加分、多了就减分（见 bookPlan）
 //   − 同一个词在别的书里已经读过（换个讲法再读一遍不算新词，排到后面）
@@ -44,6 +46,14 @@ function daysBefore(day: string, n: number): string {
   const [y, m, d] = day.split("-").map(Number) as [number, number, number];
   return new Date(Date.UTC(y, m - 1, d - n)).toISOString().slice(0, 10);
 }
+
+function daysBetween(a: string, b: string): number {
+  return Math.round((Date.parse(b) - Date.parse(a)) / 86_400_000);
+}
+
+/** 推过但没读的词在冷却期内尽量不再出现；同时避免不同词书里的同一词头短期重复 */
+const PUSH_COOLDOWN_DAYS = 30;
+const PUSH_HEAD_COOLDOWN_DAYS = 30;
 
 const levelOf = (p: BookPrefs, id: string) => p.weights[id] ?? p.fallback;
 
@@ -191,13 +201,39 @@ export function recommend(opts: {
   const readEntries = log.map((r) => getEntry(r.id)!);
   const recent = log.filter((r) => r.read_day >= daysBefore(day, 7)).map((r) => getEntry(r.id)!);
 
-  // 最近三次推送（含今天），用于避免单调
+  // 最近三次推送（含今天），用于避免单调；同时统计历史推送的最近出现日期、次数与同词头，防止漏读词反复霸榜
   const daily = allDaily(uid);
+  const pastDaily = daily.filter((d) => d.day < day);
   const picks = daily
     .filter((d) => d.day <= day)
     .slice(0, 3)
     .flatMap((d) => d.ids.map((id) => getEntry(id)).filter((e): e is FullEntry => !!e));
-  const assignedPast = new Set(daily.filter((d) => d.day < day).flatMap((d) => d.ids));
+  const lastPushedDay = new Map<string, string>();
+  const pushCount = new Map<string, number>();
+  for (const d of pastDaily) {
+    for (const id of d.ids) {
+      if (!lastPushedDay.has(id)) lastPushedDay.set(id, d.day); // allDaily 按 day DESC 排序
+      pushCount.set(id, (pushCount.get(id) ?? 0) + 1);
+    }
+  }
+  // 最近 30 天推送过的同词头（含今天）：如果别的书里有同名词，短期内尽量不撞车
+  const recentHeads = new Set<string>();
+  const headSince = daysBefore(day, PUSH_HEAD_COOLDOWN_DAYS);
+  // 最近 7 天推过的专题计数：防止收藏某专题后一直隔天轮番轰炸同一两个专题
+  const recentThemeCount = new Map<string, number>();
+  const themeSince = daysBefore(day, 7);
+  for (const d of daily) {
+    if (d.day > day) continue;
+    for (const id of d.ids) {
+      const entry = getEntry(id);
+      if (!entry) continue;
+      if (d.day >= headSince) recentHeads.add(headKey(entry.headword));
+      if (d.day >= themeSince) {
+        const pt = primary(entry);
+        recentThemeCount.set(pt, (recentThemeCount.get(pt) ?? 0) + 1);
+      }
+    }
+  }
 
   // 收藏偏好与各专题阅读进度
   const tasteCount = new Map<string, number>();
@@ -223,9 +259,10 @@ export function recommend(opts: {
   for (const e of all) {
     // 待核对的新词（以及没打开开关时核对过的新词）只在探索、搜索里出现，不主动推荐
     if (exclude.has(e.id) || state.get(e.id)?.read || !inRotation(e.id) || !allowed(e)) continue;
-    let score = jitter(seed, e.id) * 1.2;
+    let score = jitter(seed, e.id) * 1.6;
     let reason: Reason = null;
     const p = primary(e);
+    const hk = headKey(e.headword);
 
     if (anchorEntry) {
       const anchorTopics = topics(anchorEntry);
@@ -264,6 +301,9 @@ export function recommend(opts: {
 
     if (picks[0] && primary(picks[0]) === p) score -= 2;
     if (picks[1] && primary(picks[1]) === p) score -= 1;
+    if (picks[2] && primary(picks[2]) === p) score -= 0.5;
+    const recentThemeHits = recentThemeCount.get(p) ?? 0;
+    if (!anchorEntry && recentThemeHits >= 2) score -= Math.min(2.4, (recentThemeHits - 1) * 0.8);
     if (picks.some((x) => initial(x) === initial(e))) score -= 0.8;
     const bp = e.book ? plan.get(e.book) : undefined;
     if (bp) {
@@ -272,7 +312,7 @@ export function recommend(opts: {
       score += 1.2 * (bp.target - 1 / plan.size);
       if (picks[0]?.book === e.book) score -= 0.3; // 连着两天同一本书稍微压一压
     }
-    if (readHeads.has(headKey(e.headword))) score -= 3;
+    if (readHeads.has(hk)) score -= 3;
 
     const taste = tasteCount.get(p) ?? 0;
     if (taste) {
@@ -284,7 +324,27 @@ export function recommend(opts: {
     score += (1 - coverage) * 0.8;
     if (!themeRead.get(p) && log.length) reason ??= { type: "new", theme: p };
 
-    if (assignedPast.has(e.id)) score += 0.4; // 之前推过但漏读的
+    // 之前已经推过但没读的词：冷却期内重罚，避免长期不打卡或只看邮件时反复收到同一个词；
+    // 推过多次的词继续递增惩罚，同时压低近 30 天刚推过的同词头（不同词书里的同一词）。
+    // 文章末尾“接着读”（有 anchor）时减轻惩罚，保留关联推荐效果。
+    const lastDay = lastPushedDay.get(e.id);
+    if (lastDay) {
+      const ago = Math.max(1, daysBetween(lastDay, day));
+      const times = pushCount.get(e.id) ?? 1;
+      if (anchorEntry) {
+        score -= ago <= PUSH_COOLDOWN_DAYS ? 1.5 : 0.5;
+      } else {
+        if (ago <= PUSH_COOLDOWN_DAYS) {
+          score -= 8 + 4 * (1 - ago / PUSH_COOLDOWN_DAYS);
+        } else {
+          score -= Math.min(4, 1 + 0.8 * times);
+        }
+        if (times >= 2) score -= Math.min(4, (times - 1) * 1.2);
+      }
+    }
+    if (!anchorEntry && recentHeads.has(hk)) {
+      score -= 10;
+    }
 
     scored.push({ id: e.id, reason, score });
   }

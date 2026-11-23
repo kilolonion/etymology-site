@@ -52,10 +52,11 @@ export function buildPaper(uid: number, day: string): Paper {
   const todayEntry = todayIds.map((id) => getEntry(id)).find((e) => e && !(hide && e.origin?.kind === "ai"));
   // 今天和以后锁定的词不上日报
   const used = new Set<string>([...todayIds, ...allDaily(uid).filter((d) => d.day > day).flatMap((d) => d.ids)]);
-  // 最近三天日报里出过、还没读的：尽量不再出现（不够时再放开）
+  // 最近七天日报里出过（含头条）但还没读的：尽量不再出现（不够时再放开）
   const recentPaper = new Set<string>();
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= 7; i++) {
     const p = getPaper(uid, shiftDay(day, -i)) as Paper | undefined;
+    if (p?.lead && !state.get(p.lead)?.read) recentPaper.add(p.lead);
     for (const s of p?.sections ?? []) for (const it of s.items) if (!state.get(it.id)?.read) recentPaper.add(it.id);
   }
 
